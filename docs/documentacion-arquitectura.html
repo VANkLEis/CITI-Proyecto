@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Arquitectura, actores, casos de uso, drivers y ERD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ucc:#132740; --verde:#80ba27; --aqua:#00a0c6;
+      --bg:#f0f3f6; --card:#fff; --border:#dde3ea;
+      --text:#1a2332; --muted:#5f6b7a;
+      --func:#fef3cd; --qual:#d4edda; --con:#fde8e8;
+      --blue:#2563eb; --purple:#7c3aed; --orange:#c47d0e; --green:#2d8a3e;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Open Sans',sans-serif; background:var(--bg); color:var(--text); line-height:1.75; }
+    .nav { position:sticky; top:0; background:white; border-bottom:3px solid var(--verde); padding:0.9rem 1.5rem; z-index:50; display:flex; gap:1.2rem; flex-wrap:wrap; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+    .nav a { color:var(--muted); font-size:0.82rem; font-weight:600; text-decoration:none; }
+    .nav a:hover { color:var(--verde); }
+    .container { max-width:1100px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+    .hero { background:var(--ucc); color:white; padding:2rem; border-radius:12px; margin-bottom:2rem; }
+    .hero h1 { font-size:1.75rem; margin-bottom:0.4rem; }
+    .hero p { opacity:0.85; font-size:0.92rem; }
+    h2 { font-size:1.35rem; color:var(--ucc); margin:2.5rem 0 1rem; padding-bottom:0.45rem; border-bottom:3px solid var(--verde); }
+    h3 { font-size:1.05rem; margin:1.5rem 0 0.7rem; color:var(--ucc); }
+    h4 { font-size:0.95rem; margin:1rem 0 0.5rem; }
+    p, li { font-size:0.92rem; color:var(--muted); margin-bottom:0.45rem; }
+    li { margin-left:1.3rem; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.4rem; margin:1rem 0; }
+    .badge { display:inline-block; padding:0.15rem 0.55rem; border-radius:5px; font-size:0.72rem; font-weight:700; }
+    .b-prin { background:#d1ecf9; color:#0c5460; }
+    .b-sec { background:#ececec; color:#5f5e5e; }
+    .b-func { background:var(--func); color:#856404; }
+    .b-qual { background:var(--qual); color:#155724; }
+    .b-con { background:var(--con); color:#721c24; }
+    table { width:100%; border-collapse:collapse; font-size:0.84rem; margin:1rem 0; }
+    th { background:var(--ucc); color:white; padding:0.65rem 0.9rem; text-align:left; font-weight:600; }
+    td { padding:0.6rem 0.9rem; border-bottom:1px solid var(--border); vertical-align:top; }
+    tr:nth-child(even) td { background:#fafbfc; }
+    .arch-layer { border:2px solid; border-radius:10px; padding:1rem 1.2rem; margin:0.35rem 0; }
+    .l1 { border-color:var(--blue); background:#eff6ff; }
+    .l2 { border-color:var(--purple); background:#f5f3ff; }
+    .l3 { border-color:var(--orange); background:#fff8e6; }
+    .l4 { border-color:var(--green); background:#ecfdf5; }
+    .arrow { text-align:center; color:var(--muted); font-size:0.78rem; margin:0.2rem 0; }
+    .actor-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .actor { border:1px solid var(--border); border-radius:10px; padding:1.1rem; background:white; }
+    .actor.principal { border-left:4px solid var(--verde); }
+    .actor.secundario { border-left:4px solid var(--muted); }
+    .actor h4 { color:var(--ucc); margin-bottom:0.3rem; }
+    .drivers { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+    .driver { border-radius:10px; padding:1.2rem; border:1px solid; }
+    .d-func { background:var(--func); border-color:#ffe082; }
+    .d-qual { background:var(--qual); border-color:#b7dfc3; }
+    .d-con { background:var(--con); border-color:#f5c6c6; }
+    .driver h4 { margin-bottom:0.7rem; font-size:0.9rem; }
+    .driver li { font-size:0.82rem; }
+    .uc-box { font-family:'JetBrains Mono',monospace; font-size:0.73rem; background:var(--ucc); color:#e2e8f0; padding:1.4rem; border-radius:10px; overflow-x:auto; white-space:pre; line-height:1.55; }
+    .erd-wrap { overflow-x:auto; padding:0.5rem 0; }
+    .note { background:#e8f6fa; border:1px solid #b8e0ed; border-radius:8px; padding:1rem; font-size:0.88rem; color:#0c5460; margin:1rem 0; }
+    @media(max-width:768px){ .actor-grid,.drivers{ grid-template-columns:1fr; } }
+    @media print { .nav { display:none; } }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html">← Índice</a>
+  <a href="#arquitectura">1. Arquitectura</a>
+  <a href="#actores">2. Actores</a>
+  <a href="#casos-uso">3. Casos de uso</a>
+  <a href="#drivers">4. Drivers</a>
+  <a href="#erd">5. ERD</a>
+  <a href="wireframes.html">Wireframes →</a>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>Especificación de arquitectura — Plataforma CITI</h1>
+    <p>Consultorio de Ingeniería, Tecnología e Innovación · UCC · Integración Ingeniería de Sistemas e Ingeniería Civil · Campus Ibagué–Espinal · Versión 2026</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <h2 id="arquitectura">1. Arquitectura de software</h2>
+
+  <div class="card">
+    <h3>1.1 Patrón arquitectónico seleccionado</h3>
+    <p><strong style="color:var(--ucc)">Arquitectura en capas (Layered Architecture / N-capas)</strong>, organizada en cuatro niveles con dependencias unidireccionales: cada capa solo se comunica con la capa inmediatamente inferior.</p>
+    <p style="margin-top:0.6rem">Esta decisión responde a que el CITI tiene <strong>múltiples actores con permisos distintos</strong>, <strong>flujos de aprobación en cadena</strong> (cliente → coordinador → tutor → docente → cliente) y la necesidad de escalar hacia un backend con API REST sin reescribir la lógica de negocio.</p>
+  </div>
+
+  <h3>1.2 Diagrama de capas</h3>
+  <div class="arch-layer l1"><strong>Capa 1 — Presentación (Interfaz de usuario)</strong><br><span style="font-size:0.85rem;color:var(--muted)">Responsabilidad: mostrar información, capturar acciones del usuario y aplicar identidad visual UCC.<br>Implementación actual: HTML5, CSS3, JavaScript · 5 dashboards + landing + login.<br>Patrón interno: <strong>MVC</strong> — View (HTML), Controller (dashboard.js, auth.js), Model (data.js / API futura).</span></div>
+  <div class="arrow">↓ invoca ↓</div>
+  <div class="arch-layer l2"><strong>Capa 2 — Lógica de negocio (Dominio)</strong><br><span style="font-size:0.85rem;color:var(--muted)">Responsabilidad: reglas del consultorio, validaciones, máquina de estados, control de acceso.<br>Componentes: AuthService · PermissionEngine (RBAC) · WorkflowManager · ValidationRules.<br>Implementación actual: auth.js · Evolución: servicios en Node.js o Python.</span></div>
+  <div class="arrow">↓ invoca ↓</div>
+  <div class="arch-layer l3"><strong>Capa 3 — Servicios de aplicación</strong><br><span style="font-size:0.85rem;color:var(--muted)">Responsabilidad: orquestar operaciones de negocio reutilizables.<br>Servicios: SolicitudService · AsignacionService · InformeService · ConsultaService · UsuarioService · InformeInstitucionalService.<br>Patrón: <strong>Service Layer</strong>.</span></div>
+  <div class="arrow">↓ invoca ↓</div>
+  <div class="arch-layer l4"><strong>Capa 4 — Persistencia (Datos)</strong><br><span style="font-size:0.85rem;color:var(--muted)">Responsabilidad: almacenar y recuperar datos de forma persistente.<br>Base de datos relacional: PostgreSQL o MySQL · Patrón: <strong>Repository / DAO</strong>.<br>Almacén documental: PDFs de informes con membrete UCC (filesystem o S3).</span></div>
+
+  <h3>1.3 Patrones y estilos complementarios</h3>
+  <table>
+    <tr><th>Patrón / estilo</th><th>Ubicación</th><th>Propósito específico en CITI</th></tr>
+    <tr><td>Layered Architecture</td><td>Sistema completo</td><td>Separar UI, reglas, servicios y datos para mantenibilidad</td></tr>
+    <tr><td>MVC</td><td>Capa de presentación</td><td>Desacoplar vistas HTML de la lógica de control por dashboard</td></tr>
+    <tr><td>RBAC</td><td>auth.js / PermissionEngine</td><td>5 roles de portal + tipo de estudiante (consultor/tutor) con permisos aislados</td></tr>
+    <tr><td>State Machine</td><td>WorkflowManager</td><td>Estados de solicitud: pendiente → aprobado → en_proceso → completado → cerrado</td></tr>
+    <tr><td>Repository</td><td>Capa de datos</td><td>Abstraer consultas SQL detrás de interfaces por entidad</td></tr>
+    <tr><td>Service Layer</td><td>Capa 3</td><td>Encapsular casos de uso como operaciones atómicas (ej. CU-08 Asignar equipo)</td></tr>
+  </table>
+
+  <h3>1.4 Stack tecnológico</h3>
+  <table>
+    <tr><th>Componente</th><th>Tecnología propuesta</th><th>Justificación</th></tr>
+    <tr><td>Frontend (actual)</td><td>HTML5, CSS3, JavaScript ES6+</td><td>Prototipo funcional sin dependencias; identidad UCC aplicada</td></tr>
+    <tr><td>Frontend (evolución)</td><td>React o Vue.js</td><td>Componentización de dashboards por rol</td></tr>
+    <tr><td>Backend</td><td>Node.js + Express <em>o</em> Python + FastAPI</td><td>API REST para integración con Campus Virtual UCC</td></tr>
+    <tr><td>Base de datos</td><td>PostgreSQL (preferida) o MySQL</td><td>Relaciones complejas, informes, trazabilidad</td></tr>
+    <tr><td>Autenticación</td><td>JWT + sesiones · RBAC</td><td>Login aislado por portal; un usuario = un rol</td></tr>
+    <tr><td>Documentos</td><td>Filesystem / almacenamiento en nube</td><td>Informes PDF con membrete institucional UCC</td></tr>
+  </table>
+
+  <div class="note">
+    <strong>Nota sobre portales:</strong> El sistema expone <strong>5 portales de acceso</strong> (Director, Coordinador, Docente, Estudiante, Cliente). El rol Estudiante concentra dos funciones del documento CITI — consultor de recepción y tutor de casos — diferenciadas por el campo <code>tipo_estudiante</code> en base de datos, sin duplicar portales de login.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <h2 id="actores">2. Actores del sistema</h2>
+
+  <p>Un <strong>actor</strong> es una persona, rol organizacional o entidad externa que interactúa con el sistema CITI. Se clasifican en <span class="badge b-prin">PRINCIPALES</span> (tienen portal y credenciales) y <span class="badge b-sec">SECUNDARIOS</span> (interactúan fuera del software o de forma indirecta).</p>
+
+  <h3>2.1 Actores principales (5 portales)</h3>
+  <div class="actor-grid">
+    <div class="actor principal">
+      <span class="badge b-prin">PRINCIPAL · Portal Director</span>
+      <h4>Director CITI</h4>
+      <p>Representa al director de los programas de Ingeniería de Sistemas e Ingeniería Civil. Gobierna el consultorio: gestiona usuarios, configura semestres y líneas de acción, visualiza métricas globales y genera informes consolidados para las directivas de la UCC.</p>
+      <p><strong>Cuenta demo:</strong> director@citi.ucc.edu.co</p>
+    </div>
+    <div class="actor principal">
+      <span class="badge b-prin">PRINCIPAL · Portal Coordinador</span>
+      <h4>Coordinador de área</h4>
+      <p>Opera el CITI en una de las dos áreas: <em>Ingeniería de Sistemas</em> o <em>Ingeniería Civil</em>. Aprueba o rechaza solicitudes de empresas, asigna estudiante tutor y docente asesor, registra visitas empresariales y envía informe mensual al Director.</p>
+      <p><strong>Cuentas demo:</strong> coord.sistemas@ / coord.civil@ · citi.ucc.edu.co</p>
+    </div>
+    <div class="actor principal">
+      <span class="badge b-prin">PRINCIPAL · Portal Docente</span>
+      <h4>Docente asesor</h4>
+      <p>Profesor de la UCC designado como supervisor académico de uno o más casos. Revisa y aprueba informes parciales de tutores, imparte talleres/seminarios y evalúa prácticas empresariales. No aprueba solicitudes nuevas de empresas.</p>
+      <p><strong>Cuentas demo:</strong> docente@ / docente.civil@ · citi.ucc.edu.co</p>
+    </div>
+    <div class="actor principal">
+      <span class="badge b-prin">PRINCIPAL · Portal Estudiante</span>
+      <h4>Estudiante CITI</h4>
+      <p>Un solo portal con dos funciones según <code>tipo_estudiante</code>:<br>
+      • <strong>Consultor (8° semestre+):</strong> recepción, registro de consultas, correspondencia, bolsa de empleo, programa radial.<br>
+      • <strong>Tutor (3° semestre+):</strong> ejecuta casos asignados, sube informes mensuales, se comunica con docente y empresa.</p>
+      <p><strong>Cuentas demo:</strong> consultor@ / tutor@ / tutor.civil@ · citi.ucc.edu.co</p>
+    </div>
+    <div class="actor principal">
+      <span class="badge b-prin">PRINCIPAL · Portal Cliente</span>
+      <h4>Cliente / Empresa (PyME)</h4>
+      <p>Usuario externo — empresa, institución o emprendimiento del Tolima. Solicita asesorías, capacitaciones o prácticas; consulta el estado de sus casos; descarga y firma informes finales. Solo ve datos de su propia organización.</p>
+      <p><strong>Cuentas demo:</strong> gerente@constructoratolima.com · admin@techpyme.com</p>
+    </div>
+  </div>
+
+  <h3>2.2 Actores secundarios (sin portal propio)</h3>
+  <div class="actor-grid">
+    <div class="actor secundario">
+      <span class="badge b-sec">SECUNDARIO</span>
+      <h4>Subdirección académica UCC</h4>
+      <p>Recibe informes mensuales e institucionales generados por el Director CITI. Ejerce control y seguimiento de la extensión universitaria. No opera el sistema directamente.</p>
+    </div>
+    <div class="actor secundario">
+      <span class="badge b-sec">SECUNDARIO</span>
+      <h4>Gremios y entidades públicas</h4>
+      <p>Cámara de Comercio, gremios sectoriales, entidades del estado. Refieren empresas al CITI y participan en diagnósticos sectoriales. Interacción fuera del software (correo, visitas).</p>
+    </div>
+    <div class="actor secundario">
+      <span class="badge b-sec">SECUNDARIO</span>
+      <h4>Colegios (grado 11)</h4>
+      <p>Beneficiarios del servicio de exploración profesional y orientación vocacional ofrecido por el CITI. No tienen cuenta en la plataforma.</p>
+    </div>
+    <div class="actor secundario">
+      <span class="badge b-sec">SECUNDARIO</span>
+      <h4>Empresas aliadas (convenios)</h4>
+      <p>Organizaciones con convenio formal con la UCC que proveen talento especializado cuando el CITI no tiene capacidad interna. Registradas en entidad CONVENIO del ERD.</p>
+    </div>
+  </div>
+
+  <h3>2.3 Matriz actor ↔ portal ↔ área</h3>
+  <table>
+    <tr><th>Actor</th><th>Portal</th><th>Ámbito de datos</th><th>Semestre mínimo</th></tr>
+    <tr><td>Director CITI</td><td>director.html</td><td>Global (todas las áreas)</td><td>N/A (docente/administrativo)</td></tr>
+    <tr><td>Coordinador</td><td>coordinador.html</td><td>Solo su área (Sistemas o Civil)</td><td>N/A</td></tr>
+    <tr><td>Docente asesor</td><td>docente.html</td><td>Casos donde fue asignado</td><td>N/A</td></tr>
+    <tr><td>Estudiante — consultor</td><td>estudiante.html</td><td>Consultas y recepción del día</td><td>8° semestre</td></tr>
+    <tr><td>Estudiante — tutor</td><td>estudiante.html</td><td>Solo casos asignados por coordinador</td><td>3° semestre</td></tr>
+    <tr><td>Cliente / Empresa</td><td>cliente.html</td><td>Solo su empresa</td><td>N/A</td></tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <h2 id="casos-uso">3. Casos de uso</h2>
+
+  <p>El sistema CITI implementa <strong>21 casos de uso</strong>: 19 específicos por actor y 2 transversales (autenticación y validación de permisos). A continuación el diagrama general y la especificación detallada de los principales.</p>
+
+  <div class="uc-box">┌──────────────────────────────────────────────────────────────────────────────┐
+│                    SISTEMA CITI — DIAGRAMA DE CASOS DE USO                   │
+│              Consultorio de Ingeniería, Tecnología e Innovación              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  ACTOR: CLIENTE / EMPRESA
+  ├── (CU-01) Solicitar asesoría, capacitación o práctica empresarial
+  ├── (CU-02) Consultar estado de mis casos e historial
+  └── (CU-03) Descargar y firmar informe final
+
+  ACTOR: ESTUDIANTE — tipo CONSULTOR (recepción)
+  ├── (CU-04) Registrar consulta de público en recepción
+  ├── (CU-05) Gestionar correspondencia (entrada / salida)
+  └── (CU-06) Administrar bolsa de empleo y programa radial
+
+  ACTOR: COORDINADOR DE ÁREA
+  ├── (CU-07) Aprobar o rechazar solicitud de empresa
+  ├── (CU-08) Asignar estudiante tutor y docente asesor a un caso
+  ├── (CU-09) Registrar visita empresarial
+  └── (CU-10) Generar y enviar informe mensual de área al Director
+
+  ACTOR: ESTUDIANTE — tipo TUTOR
+  ├── (CU-11) Ejecutar caso de asesoría asignado
+  └── (CU-12) Subir informe parcial mensual
+
+  ACTOR: DOCENTE ASESOR
+  ├── (CU-13) Revisar, aprobar o devolver informe de tutor
+  ├── (CU-14) Impartir taller o seminario
+  └── (CU-15) Evaluar práctica empresarial
+
+  ACTOR: DIRECTOR CITI
+  ├── (CU-16) Gestionar usuarios y roles del consultorio
+  ├── (CU-17) Consultar métricas globales y todos los casos
+  ├── (CU-18) Configurar semestre activo y líneas de acción
+  └── (CU-19) Generar informe consolidado para directivas UCC
+
+  TRANSVERSALES (todos los actores con portal)
+  ├── <<include>> (CU-20) Autenticarse en portal por rol
+  └── <<include>> (CU-21) Validar permisos antes de cada acción (RBAC)</div>
+
+  <h3>3.1 Especificación detallada — Casos de uso principales</h3>
+  <table>
+    <tr><th>ID</th><th>Nombre</th><th>Actor</th><th>Descripción</th><th>Precondición</th><th>Flujo principal</th><th>Postcondición</th></tr>
+    <tr>
+      <td><strong>CU-01</strong></td>
+      <td>Solicitar asesoría</td>
+      <td>Cliente</td>
+      <td>La empresa solicita un servicio del CITI (asesoría PyME, taller, práctica o convenio).</td>
+      <td>Sesión activa en portal Cliente.</td>
+      <td>1. Selecciona tipo de servicio y área (Sistemas/Civil). 2. Describe la necesidad. 3. Envía formulario.</td>
+      <td>Solicitud creada con estado <em>pendiente</em>. Notificación al coordinador del área.</td>
+    </tr>
+    <tr>
+      <td><strong>CU-07</strong></td>
+      <td>Aprobar solicitud</td>
+      <td>Coordinador</td>
+      <td>El coordinador revisa una solicitud entrante de su área y la aprueba o rechaza.</td>
+      <td>Solicitud en estado pendiente del área del coordinador.</td>
+      <td>1. Revisa detalle. 2. Aprueba o rechaza con observación. 3. Sistema notifica al cliente.</td>
+      <td>Estado cambia a <em>aprobado</em> o <em>rechazado</em>.</td>
+    </tr>
+    <tr>
+      <td><strong>CU-08</strong></td>
+      <td>Asignar equipo</td>
+      <td>Coordinador</td>
+      <td>Designa el estudiante tutor y el docente asesor para un caso aprobado.</td>
+      <td>Solicitud aprobada sin asignación.</td>
+      <td>1. Selecciona tutor disponible. 2. Selecciona docente del área. 3. Confirma asignación.</td>
+      <td>Registro en ASIGNACION. Estado del caso: <em>en_proceso</em>.</td>
+    </tr>
+    <tr>
+      <td><strong>CU-12</strong></td>
+      <td>Subir informe parcial</td>
+      <td>Estudiante tutor</td>
+      <td>El tutor documenta las actividades mensuales realizadas en el caso asignado.</td>
+      <td>Caso en_proceso asignado al tutor autenticado.</td>
+      <td>1. Selecciona caso. 2. Redacta actividades y resultados. 3. Envía informe.</td>
+      <td>Informe parcial registrado. Docente asesor notificado para revisión (CU-13).</td>
+    </tr>
+    <tr>
+      <td><strong>CU-13</strong></td>
+      <td>Revisar informe</td>
+      <td>Docente asesor</td>
+      <td>El docente valida el informe del tutor o lo devuelve con correcciones.</td>
+      <td>Informe parcial en estado <em>enviado</em>.</td>
+      <td>1. Lee informe. 2. Aprueba o devuelve con observaciones.</td>
+      <td>Informe <em>aprobado</em> o <em>devuelto</em>.</td>
+    </tr>
+    <tr>
+      <td><strong>CU-03</strong></td>
+      <td>Firmar informe final</td>
+      <td>Cliente</td>
+      <td>El representante de la empresa firma digitalmente el informe final del caso.</td>
+      <td>Caso en estado <em>completado</em> con informe final generado.</td>
+      <td>1. Descarga informe. 2. Revisa contenido. 3. Confirma firma digital.</td>
+      <td>Registro FIRMA creado. Caso pasa a <em>cerrado</em>.</td>
+    </tr>
+    <tr>
+      <td><strong>CU-20</strong></td>
+      <td>Autenticarse</td>
+      <td>Todos</td>
+      <td>Login aislado: cada usuario accede únicamente al portal de su rol.</td>
+      <td>Credenciales registradas en USUARIO.</td>
+      <td>1. Selecciona rol. 2. Ingresa correo y contraseña. 3. Sistema valida rol + credenciales.</td>
+      <td>Sesión JWT/localStorage activa. Redirección al dashboard correcto.</td>
+    </tr>
+  </table>
+
+  <h3>3.2 Flujo integrado CU-01 (Solicitud de asesoría — caso completo)</h3>
+  <table>
+    <tr><th>Paso</th><th>Actor</th><th>Acción</th><th>Estado del caso</th></tr>
+    <tr><td>1</td><td>Cliente</td><td>Envía solicitud (CU-01)</td><td>pendiente</td></tr>
+    <tr><td>2</td><td>Estudiante consultor</td><td>Opcional: registra consulta en recepción (CU-04)</td><td>pendiente</td></tr>
+    <tr><td>3</td><td>Coordinador</td><td>Aprueba solicitud (CU-07)</td><td>aprobado</td></tr>
+    <tr><td>4</td><td>Coordinador</td><td>Asigna tutor + docente (CU-08)</td><td>en_proceso</td></tr>
+    <tr><td>5</td><td>Estudiante tutor</td><td>Ejecuta caso e informes mensuales (CU-11, CU-12)</td><td>en_proceso</td></tr>
+    <tr><td>6</td><td>Docente asesor</td><td>Revisa y aprueba informes (CU-13)</td><td>en_proceso</td></tr>
+    <tr><td>7</td><td>Estudiante tutor + Docente</td><td>Generan informe final</td><td>completado</td></tr>
+    <tr><td>8</td><td>Cliente</td><td>Firma informe final (CU-03)</td><td>cerrado</td></tr>
+    <tr><td>9</td><td>Director CITI</td><td>Consolida métricas en informe UCC (CU-19)</td><td>—</td></tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <h2 id="drivers">4. Drivers de arquitectura</h2>
+
+  <p>Los <strong>drivers</strong> son factores que influyen en las decisiones de diseño. Se agrupan en tres categorías según el estándar de documentación de arquitectura de software.</p>
+
+  <div class="drivers">
+    <div class="driver d-func">
+      <h4><span class="badge b-func">FUNCIONALES</span> Requisitos del dominio CITI</h4>
+      <ul>
+        <li>5 portales con autenticación aislada por rol (RBAC)</li>
+        <li>Diferenciación de estudiante: consultor (recepción) vs tutor (casos)</li>
+        <li>Flujo completo: solicitud → aprobación → asignación → ejecución → cierre</li>
+        <li>Informes parciales mensuales y informe final con firma de empresa</li>
+        <li>Registro diario de consultas en recepción del CITI</li>
+        <li>Gestión de correspondencia, bolsa de empleo y programa radial</li>
+        <li>Banco de empresas del Tolima (PyMEs atendidas)</li>
+        <li>6 líneas de acción del consultorio (asesoría, talleres, prácticas, convenios, exploración vocacional, diagnóstico sectorial)</li>
+        <li>Integración de Ingeniería de Sistemas e Ingeniería Civil en un solo consultorio</li>
+        <li>Posibilidad de homologación como trabajo de grado del estudiante tutor</li>
+        <li>Informes mensuales del coordinador al Director y del Director a directivas UCC</li>
+      </ul>
+    </div>
+    <div class="driver d-qual">
+      <h4><span class="badge b-qual">DE CALIDAD</span> Atributos no funcionales</h4>
+      <ul>
+        <li><strong>Seguridad:</strong> RBAC estricto, login por portal, contraseñas hasheadas, JWT en producción</li>
+        <li><strong>Usabilidad:</strong> dashboard específico por actor, identidad visual UCC, lenguaje claro</li>
+        <li><strong>Mantenibilidad:</strong> capas separadas, servicios desacoplados, código modular</li>
+        <li><strong>Escalabilidad:</strong> BD relacional normalizada, API REST futura, multi-área</li>
+        <li><strong>Trazabilidad:</strong> auditoría de cambios de estado en solicitudes e informes</li>
+        <li><strong>Disponibilidad:</strong> horario académico UCC (lunes a viernes)</li>
+        <li><strong>Portabilidad:</strong> aplicación web responsive, multi-navegador</li>
+        <li><strong>Confidencialidad:</strong> cliente solo ve datos de su empresa; tutor solo sus casos</li>
+      </ul>
+    </div>
+    <div class="driver d-con">
+      <h4><span class="badge b-con">RESTRICCIONES</span> Límites del proyecto</h4>
+      <ul>
+        <li>Entidad sin ánimo de lucro — asesorías gratuitas a PyMEs</li>
+        <li>Estudiante tutor desde 3er semestre; consultor desde 8° semestre</li>
+        <li>Supervisión docente obligatoria en toda tutoría</li>
+        <li>Infraestructura física provista por la UCC (oficina CITI)</li>
+        <li>Formatos oficiales con membrete institucional UCC</li>
+        <li>Presupuesto limitado — preferencia por software libre</li>
+        <li>Normativa Ley 30 de 1992 (misión de extensión universitaria)</li>
+        <li>Protección de datos — Habeas Data Colombia (Ley 1581 de 2012)</li>
+        <li>Dos áreas académicas con coordinadores independientes</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <h2 id="erd">5. Diagrama Entidad-Relación (ERD)</h2>
+
+  <p>Modelo de datos relacional para la persistencia del CITI. Contiene <strong>10 entidades</strong> principales. Las cardinalidades siguen la notación crow's foot simplificada.</p>
+
+  <div class="card erd-wrap">
+    <svg viewBox="0 0 1100 760" width="100%" style="min-width:900px">
+      <!-- USUARIO -->
+      <rect x="20" y="20" width="200" height="145" rx="6" fill="#eff6ff" stroke="#132740" stroke-width="2"/>
+      <text x="120" y="44" text-anchor="middle" font-weight="700" font-size="13" fill="#132740">USUARIO</text>
+      <text x="30" y="64" font-size="10" fill="#334155">PK  id_usuario</text>
+      <text x="30" y="79" font-size="10" fill="#334155">email, password_hash</text>
+      <text x="30" y="94" font-size="10" fill="#334155">nombre_completo</text>
+      <text x="30" y="109" font-size="10" fill="#334155">rol ENUM (5 valores)</text>
+      <text x="30" y="124" font-size="10" fill="#334155">tipo_estudiante ENUM</text>
+      <text x="30" y="139" font-size="10" fill="#334155">area, activo, FK id_empresa</text>
+
+      <!-- EMPRESA -->
+      <rect x="20" y="220" width="200" height="115" rx="6" fill="#ecfdf5" stroke="#2d8a3e" stroke-width="2"/>
+      <text x="120" y="244" text-anchor="middle" font-weight="700" font-size="13" fill="#155724">EMPRESA</text>
+      <text x="30" y="264" font-size="10" fill="#334155">PK  id_empresa</text>
+      <text x="30" y="279" font-size="10" fill="#334155">razon_social, nit</text>
+      <text x="30" y="294" font-size="10" fill="#334155">direccion, telefono</text>
+      <text x="30" y="309" font-size="10" fill="#334155">sector_economico</text>
+      <text x="30" y="324" font-size="10" fill="#334155">nombre_gerente</text>
+
+      <!-- SOLICITUD -->
+      <rect x="290" y="90" width="210" height="155" rx="6" fill="#fff8e6" stroke="#c47d0e" stroke-width="2"/>
+      <text x="395" y="114" text-anchor="middle" font-weight="700" font-size="13" fill="#856404">SOLICITUD</text>
+      <text x="300" y="134" font-size="10" fill="#334155">PK  id_solicitud</text>
+      <text x="300" y="149" font-size="10" fill="#334155">FK  id_empresa, id_cliente</text>
+      <text x="300" y="164" font-size="10" fill="#334155">tipo, area, descripcion</text>
+      <text x="300" y="179" font-size="10" fill="#334155">estado ENUM (workflow)</text>
+      <text x="300" y="194" font-size="10" fill="#334155">fecha_solicitud</text>
+      <text x="300" y="209" font-size="10" fill="#334155">FK  id_coordinador_aprueba</text>
+      <text x="300" y="224" font-size="10" fill="#334155">observacion_rechazo</text>
+
+      <!-- ASIGNACION -->
+      <rect x="570" y="70" width="200" height="115" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+      <text x="670" y="94" text-anchor="middle" font-weight="700" font-size="13" fill="#5b21b6">ASIGNACION</text>
+      <text x="580" y="114" font-size="10" fill="#334155">PK  id_asignacion</text>
+      <text x="580" y="129" font-size="10" fill="#334155">FK  id_solicitud (UNIQUE)</text>
+      <text x="580" y="144" font-size="10" fill="#334155">FK  id_tutor (usuario)</text>
+      <text x="580" y="159" font-size="10" fill="#334155">FK  id_docente (usuario)</text>
+      <text x="580" y="174" font-size="10" fill="#334155">fecha_asignacion</text>
+
+      <!-- INFORME -->
+      <rect x="570" y="230" width="200" height="135" rx="6" fill="#fef3cd" stroke="#856404" stroke-width="2"/>
+      <text x="670" y="254" text-anchor="middle" font-weight="700" font-size="13" fill="#856404">INFORME</text>
+      <text x="580" y="274" font-size="10" fill="#334155">PK  id_informe</text>
+      <text x="580" y="289" font-size="10" fill="#334155">FK  id_solicitud, id_tutor</text>
+      <text x="580" y="304" font-size="10" fill="#334155">tipo (parcial / final)</text>
+      <text x="580" y="319" font-size="10" fill="#334155">contenido, ruta_pdf</text>
+      <text x="580" y="334" font-size="10" fill="#334155">estado, fecha_envio</text>
+      <text x="580" y="349" font-size="10" fill="#334155">FK  id_docente_revisor</text>
+
+      <!-- CONSULTA -->
+      <rect x="290" y="310" width="210" height="105" rx="6" fill="#e8f6fa" stroke="#00a0c6" stroke-width="2"/>
+      <text x="395" y="334" text-anchor="middle" font-weight="700" font-size="13" fill="#0c5460">CONSULTA</text>
+      <text x="300" y="354" font-size="10" fill="#334155">PK  id_consulta</text>
+      <text x="300" y="369" font-size="10" fill="#334155">fecha, razon_social</text>
+      <text x="300" y="384" font-size="10" fill="#334155">descripcion, area</text>
+      <text x="300" y="399" font-size="10" fill="#334155">FK  id_consultor (usuario)</text>
+
+      <!-- TALLER -->
+      <rect x="20" y="400" width="200" height="105" rx="6" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+      <text x="120" y="424" text-anchor="middle" font-weight="700" font-size="13" fill="#9d174d">TALLER</text>
+      <text x="30" y="444" font-size="10" fill="#334155">PK  id_taller</text>
+      <text x="30" y="459" font-size="10" fill="#334155">tema, objetivo, fecha</text>
+      <text x="30" y="474" font-size="10" fill="#334155">FK  id_docente, id_empresa</text>
+      <text x="30" y="489" font-size="10" fill="#334155">num_asistentes, costo</text>
+
+      <!-- CONVENIO -->
+      <rect x="290" y="470" width="210" height="95" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+      <text x="395" y="494" text-anchor="middle" font-weight="700" font-size="13" fill="#334155">CONVENIO</text>
+      <text x="300" y="514" font-size="10" fill="#334155">PK  id_convenio</text>
+      <text x="300" y="529" font-size="10" fill="#334155">FK  id_empresa_aliada</text>
+      <text x="300" y="544" font-size="10" fill="#334155">objeto, vigencia, costo</text>
+
+      <!-- FIRMA -->
+      <rect x="820" y="230" width="170" height="90" rx="6" fill="#fde8e8" stroke="#c53030" stroke-width="2"/>
+      <text x="905" y="254" text-anchor="middle" font-weight="700" font-size="13" fill="#721c24">FIRMA</text>
+      <text x="830" y="274" font-size="10" fill="#334155">PK  id_firma</text>
+      <text x="830" y="289" font-size="10" fill="#334155">FK  id_informe (UNIQUE)</text>
+      <text x="830" y="304" font-size="10" fill="#334155">FK  id_usuario, fecha</text>
+
+      <!-- CORRESPONDENCIA -->
+      <rect x="570" y="420" width="200" height="90" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+      <text x="670" y="444" text-anchor="middle" font-weight="700" font-size="12" fill="#334155">CORRESPONDENCIA</text>
+      <text x="580" y="464" font-size="10" fill="#334155">PK  id_correspondencia</text>
+      <text x="580" y="479" font-size="10" fill="#334155">tipo (entrada/salida)</text>
+      <text x="580" y="494" font-size="10" fill="#334155">FK  id_consultor, fecha</text>
+
+      <!-- VISITA -->
+      <rect x="820" y="420" width="170" height="90" rx="6" fill="#e2f0d0" stroke="#80ba27" stroke-width="2"/>
+      <text x="905" y="444" text-anchor="middle" font-weight="700" font-size="12" fill="#4a7a15">VISITA_EMPRESARIAL</text>
+      <text x="830" y="464" font-size="10" fill="#334155">PK  id_visita</text>
+      <text x="830" y="479" font-size="10" fill="#334155">FK  id_coordinador</text>
+      <text x="830" y="494" font-size="10" fill="#334155">FK  id_empresa, fecha</text>
+
+      <!-- Relaciones -->
+      <line x1="120" y1="165" x2="120" y2="220" stroke="#64748b" stroke-width="1.5"/>
+      <text x="128" y="198" font-size="9" fill="#64748b">N:1 pertenece</text>
+      <line x1="220" y1="100" x2="290" y2="140" stroke="#64748b" stroke-width="1.5"/>
+      <text x="240" y="110" font-size="9" fill="#64748b">1:N crea</text>
+      <line x1="220" y1="270" x2="290" y2="190" stroke="#64748b" stroke-width="1.5"/>
+      <text x="240" y="240" font-size="9" fill="#64748b">1:N solicita</text>
+      <line x1="500" y1="150" x2="570" y2="120" stroke="#64748b" stroke-width="1.5"/>
+      <text x="520" y="125" font-size="9" fill="#64748b">1:1 asigna</text>
+      <line x1="500" y1="180" x2="570" y2="270" stroke="#64748b" stroke-width="1.5"/>
+      <text x="520" y="230" font-size="9" fill="#64748b">1:N genera</text>
+      <line x1="770" y1="280" x2="820" y2="270" stroke="#64748b" stroke-width="1.5"/>
+      <text x="778" y="268" font-size="9" fill="#64748b">1:1 firma</text>
+      <line x1="120" y1="165" x2="395" y2="310" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+      <text x="200" y="260" font-size="9" fill="#64748b">1:N registra</text>
+      <line x1="120" y1="165" x2="670" y2="70" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+      <text x="350" y="80" font-size="9" fill="#64748b">1:N tutor/docente</text>
+    </svg>
+  </div>
+
+  <h3>5.1 Relaciones entre entidades</h3>
+  <table>
+    <tr><th>Relación</th><th>Entidad A</th><th>Entidad B</th><th>Cardinalidad</th><th>Descripción</th></tr>
+    <tr><td>Empresa — Usuario (cliente)</td><td>EMPRESA</td><td>USUARIO</td><td>1:N</td><td>Una empresa puede tener varios usuarios cliente registrados</td></tr>
+    <tr><td>Empresa — Solicitud</td><td>EMPRESA</td><td>SOLICITUD</td><td>1:N</td><td>Una empresa puede generar múltiples solicitudes a lo largo del tiempo</td></tr>
+    <tr><td>Usuario (cliente) — Solicitud</td><td>USUARIO</td><td>SOLICITUD</td><td>1:N</td><td>El representante de la empresa crea las solicitudes</td></tr>
+    <tr><td>Solicitud — Asignación</td><td>SOLICITUD</td><td>ASIGNACION</td><td>1:1</td><td>Cada solicitud aprobada tiene exactamente una asignación tutor+docente</td></tr>
+    <tr><td>Solicitud — Informe</td><td>SOLICITUD</td><td>INFORME</td><td>1:N</td><td>Un caso genera informes parciales mensuales y un informe final</td></tr>
+    <tr><td>Informe — Firma</td><td>INFORME</td><td>FIRMA</td><td>1:1</td><td>El informe final requiere firma del representante de la empresa</td></tr>
+    <tr><td>Usuario (consultor) — Consulta</td><td>USUARIO</td><td>CONSULTA</td><td>1:N</td><td>El estudiante consultor registra múltiples consultas diarias</td></tr>
+    <tr><td>Usuario (docente) — Taller</td><td>USUARIO</td><td>TALLER</td><td>1:N</td><td>Un docente puede impartir varios talleres por semestre</td></tr>
+    <tr><td>Usuario (coordinador) — Visita</td><td>USUARIO</td><td>VISITA_EMPRESARIAL</td><td>1:N</td><td>El coordinador registra visitas a empresas de su área</td></tr>
+    <tr><td>Empresa — Convenio</td><td>EMPRESA</td><td>CONVENIO</td><td>1:N</td><td>Empresa aliada puede tener convenios activos con la UCC</td></tr>
+  </table>
+
+  <h3>5.2 Enumeraciones (ENUM) del modelo</h3>
+  <table>
+    <tr><th>Campo</th><th>Tabla</th><th>Valores permitidos</th></tr>
+    <tr><td>rol</td><td>USUARIO</td><td><code>director</code>, <code>coordinador</code>, <code>docente</code>, <code>estudiante</code>, <code>cliente</code></td></tr>
+    <tr><td>tipo_estudiante</td><td>USUARIO</td><td><code>consultor</code>, <code>tutor</code>, <code>NULL</code> (si rol ≠ estudiante)</td></tr>
+    <tr><td>area</td><td>USUARIO / SOLICITUD</td><td><code>sistemas</code>, <code>civil</code>, <code>mixto</code></td></tr>
+    <tr><td>estado</td><td>SOLICITUD</td><td><code>pendiente</code>, <code>aprobado</code>, <code>rechazado</code>, <code>en_proceso</code>, <code>completado</code>, <code>cerrado</code></td></tr>
+    <tr><td>tipo</td><td>SOLICITUD</td><td><code>asesoria</code>, <code>taller</code>, <code>practica</code>, <code>convenio</code>, <code>exploracion</code></td></tr>
+    <tr><td>tipo</td><td>INFORME</td><td><code>parcial</code>, <code>final</code></td></tr>
+    <tr><td>estado</td><td>INFORME</td><td><code>borrador</code>, <code>enviado</code>, <code>en_revision</code>, <code>aprobado</code>, <code>devuelto</code></td></tr>
+    <tr><td>tipo</td><td>CORRESPONDENCIA</td><td><code>entrada</code>, <code>salida</code></td></tr>
+  </table>
+
+  <p style="margin-top:2.5rem;text-align:center">
+    <a href="wireframes.html" style="background:var(--verde);color:white;padding:0.7rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:700">Ver wireframes de pantallas →</a>
+    &nbsp;
+    <a href="index.html" style="color:var(--ucc);font-weight:600">← Volver al índice</a>
+  </p>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Docente{% endblock %}
+{% block page_title %}Mis asesorías{% endblock %}
+{% block page_subtitle %}Docente asesor{% endblock %}
+
+{% block dashboard_content %}
+<div class="stats-row">
+  <div class="stat-card accent"><strong>{{ kpis.asignados }}</strong><span>Mis casos asignados</span></div>
+  <div class="stat-card"><strong>{{ kpis.semana }}</strong><span>Citas de la semana</span></div>
+  <div class="stat-card"><strong>{{ kpis.pendientes_cierre }}</strong><span>Pendientes de cierre</span></div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Mis casos activos</h2></div>
+  <div class="card-body" style="padding:0;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Área</th>
+          <th>Subespecialidad</th>
+          <th>Empresa</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in casos_activos %}
+          <tr class="cita-row-clickable" data-cita-row="{{ cita.pk }}" title="Clic para ver detalle">
+            <td>{{ cita.franja.inicio|date:"d/m/Y H:i" }}</td>
+            <td>
+              {% if cita.franja.area == 'sistemas' %}
+                <span class="badge badge-area-sistemas">{{ cita.franja.get_area_display }}</span>
+              {% else %}
+                <span class="badge badge-area-civil">{{ cita.franja.get_area_display }}</span>
+              {% endif %}
+            </td>
+            <td>{{ cita.get_subespecialidad_display }}</td>
+            <td>{{ cita.cliente.empresa.razon_social|default:cita.cliente.email }}</td>
+            <td><span class="badge badge-estado-{{ cita.estado }}">{{ cita.get_estado_display }}</span></td>
+            <td class="cita-row-actions">
+              <button type="button" class="btn btn-sm btn-secondary" data-cita-detalle="{{ cita.pk }}">Ver detalles</button>
+              <a href="{% url 'portal:docente_caso_detalle' cita.pk %}" class="btn btn-sm btn-primary">Gestionar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" style="padding:1rem;color:var(--muted);">No tiene casos activos asignados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

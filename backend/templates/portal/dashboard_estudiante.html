@@ -1,0 +1,71 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Estudiante{% endblock %}
+{% block page_title %}Portal estudiante{% endblock %}
+{% block page_subtitle %}{% if request.user.student_type %}{{ request.user.get_student_type_display }}{% else %}Estudiante{% endif %}{% endblock %}
+
+{% block dashboard_content %}
+<div class="stats-row">
+  <div class="stat-card accent"><strong>{{ kpis.horas_creditos }}</strong><span>Horas / créditos acumulados</span></div>
+  <div class="stat-card"><strong>{{ kpis.casos_asignados }}</strong><span>Casos asignados</span></div>
+  <div class="stat-card">
+    <strong>{% if perfil %}{{ perfil.promedio_general }}{% else %}—{% endif %}</strong>
+    <span>Promedio académico</span>
+  </div>
+</div>
+
+{% if perfil %}
+<div class="eligibility-banner {% if puede_ser_tutor %}ok{% else %}pending{% endif %}">
+  <span class="eligibility-icon">{% if puede_ser_tutor %}✓{% else %}!{% endif %}</span>
+  <div>
+    <strong>{% if puede_ser_tutor %}Habilitado como Estudiante Consultor{% else %}Aún no cumple los requisitos de tutor CITI{% endif %}</strong>
+    <span>
+      Semestre {{ perfil.semestre }} · Promedio {{ perfil.promedio_general }} ·
+      {{ perfil.creditos_aprobados }} créditos aprobados.
+      Requisitos: 8° semestre, promedio ≥ 4.0 y 130 créditos.
+    </span>
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-header"><h2>Bandeja de tareas (apoyo técnico)</h2></div>
+  <div class="card-body" style="padding:0;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Área</th>
+          <th>Subespecialidad</th>
+          <th>Docente</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in tareas %}
+          <tr class="cita-row-clickable" data-cita-row="{{ cita.pk }}" title="Clic para ver detalle">
+            <td>{{ cita.franja.inicio|date:"d/m/Y H:i" }}</td>
+            <td>
+              {% if cita.franja.area == 'sistemas' %}
+                <span class="badge badge-area-sistemas">{{ cita.franja.get_area_display }}</span>
+              {% else %}
+                <span class="badge badge-area-civil">{{ cita.franja.get_area_display }}</span>
+              {% endif %}
+            </td>
+            <td>{{ cita.get_subespecialidad_display }}</td>
+            <td>{{ cita.docente_asignado.nombre_completo|default:"—" }}</td>
+            <td><span class="badge badge-estado-{{ cita.estado }}">{{ cita.get_estado_display }}</span></td>
+            <td class="cita-row-actions">
+              <button type="button" class="btn btn-sm btn-secondary" data-cita-detalle="{{ cita.pk }}">Ver detalles</button>
+              <a href="{% url 'portal:estudiante_caso_nota' cita.pk %}" class="btn btn-sm btn-primary">Bitácora</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" style="padding:1rem;color:var(--muted);">No tiene casos de apoyo asignados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Documentación técnica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ucc:#132740; --verde:#80ba27; --bg:#f0f3f6; --card:#fff; --border:#dde3ea; --muted:#5f6b7a; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Open Sans',sans-serif; background:var(--bg); color:var(--ucc); line-height:1.7; }
+    header { background:var(--ucc); color:white; padding:2.5rem 2rem; border-bottom:4px solid var(--verde); }
+    header h1 { font-size:1.8rem; margin-bottom:0.4rem; }
+    header p { opacity:0.85; font-size:0.95rem; }
+    .wrap { max-width:900px; margin:0 auto; padding:2rem; }
+    .cards { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:1rem; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.5rem; box-shadow:0 1px 3px rgba(19,39,64,.08); }
+    .card h2 { font-size:1.05rem; margin-bottom:0.5rem; color:var(--ucc); }
+    .card p { font-size:0.88rem; color:var(--muted); margin-bottom:1rem; }
+    .card a { display:inline-block; background:var(--verde); color:white; padding:0.55rem 1.2rem; border-radius:8px; text-decoration:none; font-weight:600; font-size:0.85rem; }
+    .card a.secondary { background:white; color:var(--ucc); border:1px solid var(--border); margin-left:0.5rem; }
+    .summary { background:white; border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin-bottom:1.5rem; }
+    .summary h2 { font-size:1.1rem; margin-bottom:0.8rem; border-bottom:2px solid var(--verde); padding-bottom:0.4rem; }
+    .summary ul { margin-left:1.2rem; font-size:0.9rem; color:var(--muted); }
+    .summary li { margin:0.35rem 0; }
+    footer { text-align:center; padding:2rem; color:var(--muted); font-size:0.82rem; }
+    @media(max-width:700px){ .cards{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Documentación técnica — CITI</h1>
+  <p>Consultorio de Ingeniería, Tecnología e Innovación · Universidad Cooperativa de Colombia · Campus Ibagué–Espinal · 2026</p>
+</header>
+<div class="wrap">
+  <div class="summary">
+    <h2>Contenido de este paquete</h2>
+    <ul>
+      <li><strong>Arquitectura de software:</strong> patrón en capas, MVC, RBAC y stack tecnológico.</li>
+      <li><strong>Actores:</strong> 5 principales (portales del sistema) y 4 secundarios (externos al software).</li>
+      <li><strong>Casos de uso:</strong> 21 casos documentados con flujos, precondiciones y postcondiciones.</li>
+      <li><strong>Drivers:</strong> funcionales, de calidad y restricciones del dominio CITI.</li>
+      <li><strong>Diagrama Entidad-Relación:</strong> 10 entidades, relaciones y enumeraciones.</li>
+      <li><strong>Wireframes:</strong> 9 pantallas en baja fidelidad alineadas al prototipo actual.</li>
+    </ul>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <h2>Arquitectura, actores, casos de uso, drivers y ERD</h2>
+      <p>Documento principal con toda la especificación técnica del sistema CITI.</p>
+      <a href="documentacion-arquitectura.html">Abrir documentación</a>
+    </div>
+    <div class="card">
+      <h2>Wireframes de pantallas</h2>
+      <p>Estructura visual de landing, login, 5 dashboards y flujo CU-01.</p>
+      <a href="wireframes.html">Abrir wireframes</a>
+    </div>
+    <div class="card">
+      <h2>Prototipo funcional (Hi-Fi)</h2>
+      <p>Plataforma web navegable con identidad visual UCC.</p>
+      <a href="../index.html">Ir al CITI</a>
+      <a href="../login.html" class="secondary">Login</a>
+    </div>
+    <div class="card">
+      <h2>Matriz de roles</h2>
+      <p>Permisos y credenciales de demostración por actor.</p>
+      <a href="roles-permisos.html">Ver roles</a>
+    </div>
+  </div>
+</div>
+<footer>Universidad Cooperativa de Colombia · CITI · Documentación v2 — 5 portales · 2026</footer>
+</body>
+</html>

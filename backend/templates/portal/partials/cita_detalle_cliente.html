@@ -1,0 +1,23 @@
+<div class="cita-modal-inner">
+  <div class="cita-modal-header-inline">
+    <h3>Cita #{{ cita.pk }} — {{ cita.franja.get_area_display }}</h3>
+    <button type="button" class="btn-icon-close cita-modal-close" aria-label="Cerrar">&times;</button>
+  </div>
+  {% include "portal/partials/cita_info_block.html" %}
+
+  {% if cita.estado == 'finalizada' and not cita.calificacion %}
+  <div class="cita-modal-actions">
+    <h4>Comentario de aprobación</h4>
+    <p class="cita-muted" style="margin-bottom:0.75rem;">Registre su visto bueno y califique la asesoría recibida.</p>
+    <a href="{% url 'portal:cliente_feedback' cita.pk %}" class="btn btn-primary">Calificar asesoría</a>
+  </div>
+  {% endif %}
+
+  {% if cita.calificacion %}
+  <div class="cita-modal-actions">
+    <h4>Su feedback</h4>
+    <p><strong>Calificación:</strong> {{ cita.calificacion }}/5</p>
+    <p class="cita-muted">{{ cita.comentario_cliente|default:"Sin comentario adicional."|linebreaksbr }}</p>
+  </div>
+  {% endif %}
+</div>

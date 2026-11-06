@@ -1,0 +1,12 @@
+{% if cita.esta_cancelada %}
+<div class="timeline-cancelled">Esta cita fue cancelada el {{ cita.actualizada_en|date:"d/m/Y H:i" }}. El flujo de atención no continuará.</div>
+{% endif %}
+<div class="cita-timeline">
+  {% for paso in cita.timeline %}
+    <div class="timeline-step{% if paso.hecho %} hecho{% endif %}{% if paso.actual %} actual{% endif %}">
+      <div class="timeline-marker">{% if paso.hecho %}✓{% else %}{{ forloop.counter }}{% endif %}</div>
+      <div class="timeline-label">{{ paso.label }}</div>
+      {% if paso.fecha %}<span class="timeline-date">{{ paso.fecha|date:"d/m/Y H:i" }}</span>{% endif %}
+    </div>
+  {% endfor %}
+</div>

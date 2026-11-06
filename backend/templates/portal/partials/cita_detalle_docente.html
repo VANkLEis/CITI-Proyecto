@@ -1,0 +1,44 @@
+<div class="cita-modal-inner">
+  <div class="cita-modal-header-inline">
+    <h3>Caso #{{ cita.pk }}</h3>
+    <button type="button" class="btn-icon-close cita-modal-close" aria-label="Cerrar">&times;</button>
+  </div>
+  {% include "portal/partials/cita_info_block.html" %}
+
+  <div class="cita-modal-actions">
+    <h4>Estado del caso</h4>
+    <form method="post" action="{% url 'portal:cita_detalle' cita.pk %}" class="estado-rapido-form">
+      {% csrf_token %}
+      <input type="hidden" name="embed" value="1">
+      <input type="hidden" name="accion" value="estado_rapido">
+      <div class="btn-row-estado">
+        <button type="submit" name="nuevo_estado" value="en_proceso" class="btn btn-secondary" {% if cita.estado == 'en_proceso' %}disabled{% endif %}>En proceso</button>
+        <button type="submit" name="nuevo_estado" value="finalizada" class="btn btn-primary" {% if cita.estado == 'finalizada' %}disabled{% endif %}>Finalizada</button>
+      </div>
+    </form>
+    {% if cita.estado == 'finalizada' %}
+      <a href="{% url 'portal:docente_generar_acta' cita.pk %}" class="btn btn-secondary" target="_blank" rel="noopener" style="margin-top:0.75rem;">Descargar acta (PDF / imprimir)</a>
+    {% endif %}
+  </div>
+
+  <div class="cita-modal-actions">
+    <h4>Gestión y apoyo técnico</h4>
+    <form method="post" action="{% url 'portal:cita_detalle' cita.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="embed" value="1">
+      <input type="hidden" name="accion" value="gestionar">
+      {% for field in form_gestion %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<small class="field-error">{{ field.errors }}</small>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </form>
+  </div>
+
+  <div class="cita-bitacora-preview">
+    <a href="{% url 'portal:docente_caso_detalle' cita.pk %}" class="btn btn-sm btn-secondary">Abrir vista completa</a>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+# Entornos virtuales
+venv/
+.venv/
+backend/venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+*.log
+localsettings.py
+
+# Variables de entorno
+.env
+
+# Media subidas
+media/
+
+# IDE / SO
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Acta de asesoría #{{ cita.pk }} — CITI UCC</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: 2rem auto; color: #1a2332; line-height: 1.5; }
+    h1 { color: #132740; font-size: 1.4rem; border-bottom: 3px solid #80ba27; padding-bottom: 0.5rem; }
+    .meta { margin: 1.5rem 0; }
+    .meta p { margin: 0.35rem 0; }
+    .firma { margin-top: 3rem; display: flex; justify-content: space-between; }
+    .firma div { width: 45%; border-top: 1px solid #333; padding-top: 0.5rem; text-align: center; font-size: 0.85rem; }
+    @media print { body { margin: 1cm; } .no-print { display: none; } }
+  </style>
+</head>
+<body>
+  <button class="no-print" onclick="window.print()" style="margin-bottom:1rem;padding:0.5rem 1rem;">Imprimir / Guardar como PDF</button>
+  <h1>Acta de cierre de asesoría — CITI UCC</h1>
+  <div class="meta">
+    <p><strong>Acta No.</strong> CITI-{{ cita.pk }}-{{ cita.franja.inicio|date:"Y" }}</p>
+    <p><strong>Fecha de la sesión:</strong> {{ cita.franja.inicio|date:"d/m/Y H:i" }} – {{ cita.franja.fin|date:"H:i" }}</p>
+    <p><strong>Área:</strong> {{ cita.franja.get_area_display }}</p>
+    <p><strong>Subespecialidad:</strong> {{ cita.get_subespecialidad_display }}</p>
+    <p><strong>Empresa:</strong> {{ cita.cliente.empresa.razon_social|default:"—" }} · NIT {{ cita.nit_empresa }}</p>
+    <p><strong>Representante:</strong> {{ cita.cliente.nombre_completo }} ({{ cita.cliente.email }})</p>
+    <p><strong>Docente asesor:</strong> {{ cita.docente_asignado.nombre_completo|default:"—" }}</p>
+    <p><strong>Asunto:</strong> {{ cita.asunto|default:"Asesoría CITI" }}</p>
+  </div>
+  <h2 style="font-size:1rem;color:#132740;">Resumen de cierre</h2>
+  <p>{{ cita.resumen_cierre|default:"Sesión de asesoría completada conforme a los acuerdos del CITI."|linebreaksbr }}</p>
+  {% if cita.calificacion %}
+    <p><strong>Calificación del cliente:</strong> {{ cita.calificacion }}/5</p>
+    {% if cita.comentario_cliente %}<p><strong>Comentario:</strong> {{ cita.comentario_cliente }}</p>{% endif %}
+  {% endif %}
+  <div class="firma">
+    <div>Firma docente asesor</div>
+    <div>Firma representante empresa</div>
+  </div>
+  <p style="margin-top:2rem;font-size:0.75rem;color:#666;">Universidad Cooperativa de Colombia — CITI · Campus Ibagué–Espinal</p>
+</body>
+</html>

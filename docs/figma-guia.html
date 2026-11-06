@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>CITI — Guía Figma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: Inter, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.7; color: #334155; }
+    h1 { color: #003366; }
+    h2 { color: #e85d04; margin-top: 2rem; }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .step { background: #f8fafc; border-left: 4px solid #003366; padding: 1rem 1.2rem; margin: 1rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+    th, td { border: 1px solid #e2e8f0; padding: 0.6rem; text-align: left; }
+    th { background: #003366; color: white; }
+  </style>
+</head>
+<body>
+  <h1>Guía para replicar en Figma</h1>
+  <p>El prototipo HTML hi-fi es la referencia visual exacta. Sigue estos pasos en Figma.</p>
+
+  <h2>Paso 1 — Crear archivo Figma</h2>
+  <div class="step">3 páginas: <strong>Design System</strong> · <strong>Flujos</strong> · <strong>Pantallas</strong><br>Frame base desktop: <code>1440 × 900</code> · Mobile opcional: <code>390 × 844</code></div>
+
+  <h2>Paso 2 — Design System (copiar de design-system.html)</h2>
+  <table>
+    <tr><th>Token</th><th>Valor</th></tr>
+    <tr><td>Azul UCC</td><td>#003366</td></tr>
+    <tr><td>Naranja CITI</td><td>#E85D04</td></tr>
+    <tr><td>BG dashboard</td><td>#0B1120</td></tr>
+    <tr><td>Card</td><td>#1A2332</td></tr>
+    <tr><td>Borde</td><td>#243044</td></tr>
+    <tr><td>Texto</td><td>#E2E8F0</td></tr>
+    <tr><td>Font</td><td>Inter</td></tr>
+    <tr><td>Radius botones/cards</td><td>8px / 12px</td></tr>
+  </table>
+  <p>Componentes: Button/Primary, Button/Secondary, Badge/Pending|Process|Done|Reject, Sidebar/Item, StatCard, Alert/Info|Warn|Error, Input, Table/Row, UserChip, Modal, Toast.</p>
+
+  <h2>Paso 3 — Frames (10 pantallas)</h2>
+  <table>
+    <tr><th>Frame</th><th>Referencia HTML</th></tr>
+    <tr><td>WF-01 Landing</td><td>index.html</td></tr>
+    <tr><td>WF-02 Login</td><td>login.html</td></tr>
+    <tr><td>WF-02b Error rol</td><td>login.html?demo=error</td></tr>
+    <tr><td>WF-03 Admin</td><td>dashboards/admin.html</td></tr>
+    <tr><td>WF-04 Coordinador</td><td>dashboards/coordinador.html</td></tr>
+    <tr><td>WF-05 Docente</td><td>dashboards/docente.html</td></tr>
+    <tr><td>WF-06 Consultor</td><td>dashboards/consultor.html</td></tr>
+    <tr><td>WF-07 Tutor</td><td>dashboards/tutor.html</td></tr>
+    <tr><td>WF-08 Cliente</td><td>dashboards/cliente.html</td></tr>
+    <tr><td>Empty state</td><td>design-system.html</td></tr>
+  </table>
+
+  <h2>Paso 4 — Prototype connections</h2>
+  <div class="step"><strong>Flujo 1:</strong> Landing [Acceder] → Login [Ingresar] → Dashboard(role)</div>
+  <div class="step"><strong>Flujo 2:</strong> Login Admin + credenciales cliente → Frame Error → [Ir portal Cliente] → Login Cliente → Dashboard Cliente</div>
+  <div class="step"><strong>Flujo 3:</strong> Cliente [Nueva solicitud] → Toast → Coordinador [Aprobar][Asignar] → Tutor [Informe] → Docente [Aprobar] → Cliente [Firmar]</div>
+  <div class="step"><strong>Flujo 4:</strong> Consultor [Registrar] → Toast → Tabla actualizada</div>
+  <div class="step"><strong>Flujo 5:</strong> Dashboard [Cerrar sesión] → Login</div>
+
+  <h2>Paso 5 — Anotaciones por frame</h2>
+  <p>Sticky note en cada pantalla: <code>Capa: Presentación</code> · En login agregar <code>Capa: Lógica (AuthService)</code> · En tablas <code>Capa: Datos (BD)</code></p>
+
+  <h2>Figma AI / Make</h2>
+  <p>Pega el prompt completo del chat en Figma Make, adjunta capturas de <code>design-system.html</code> y <code>dashboards/cliente.html</code> como referencia visual.</p>
+
+  <p><a href="../prototipo-flujos.html">← Abrir prototipo interactivo HTML</a></p>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Manual de Identidad Visual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ucc-blue: #003366;
+      --ucc-blue-light: #1a4d80;
+      --accent: #e85d04;
+      --green: #2d6a4f;
+      --graphite: #334155;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; color: var(--graphite); line-height: 1.7; background: #fafbfc; }
+    .header {
+      background: var(--ucc-blue); color: white; padding: 3rem 2rem; text-align: center;
+    }
+    .header img { width: 100px; height: 100px; border-radius: 12px; margin-bottom: 1rem; }
+    .header h1 { font-family: 'Montserrat', sans-serif; font-size: 2rem; }
+    .header p { opacity: 0.85; margin-top: 0.5rem; }
+    .container { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
+  section { margin-bottom: 4rem; }
+    h2 {
+      font-family: 'Montserrat', sans-serif; color: var(--ucc-blue);
+      font-size: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem;
+      border-bottom: 3px solid var(--accent);
+    }
+    h3 { color: var(--ucc-blue); margin: 1.5rem 0 0.8rem; font-size: 1.1rem; }
+    p { margin-bottom: 1rem; }
+    .colors { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+    .color-swatch {
+      border-radius: 12px; overflow: hidden; border: 1px solid var(--gray-200);
+    }
+    .color-swatch .preview { height: 80px; }
+    .color-swatch .info { padding: 1rem; background: white; }
+    .color-swatch .info strong { display: block; }
+    .color-swatch .info code { font-size: 0.8rem; color: #64748b; }
+    .logo-variants {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;
+    }
+    .logo-box {
+      padding: 2rem; border-radius: 12px; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    }
+    .logo-box.light { background: white; border: 1px solid var(--gray-200); }
+    .logo-box.dark { background: var(--ucc-blue); color: white; }
+    .logo-box img { width: 80px; height: 80px; border-radius: 8px; }
+    .typography-sample { background: white; padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-200); }
+    .typography-sample .h1-sample { font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 700; color: var(--ucc-blue); }
+    .typography-sample .h2-sample { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 600; color: var(--ucc-blue); margin-top: 1rem; }
+    .typography-sample .body-sample { font-family: 'Inter', sans-serif; font-size: 1rem; margin-top: 0.5rem; }
+    .format-preview {
+      border: 2px solid var(--gray-200); border-radius: 8px; padding: 2rem;
+      background: white; font-size: 0.85rem;
+    }
+    .format-header {
+      text-align: center; border-bottom: 2px solid var(--ucc-blue);
+      padding-bottom: 1rem; margin-bottom: 1rem;
+    }
+    .format-header strong { color: var(--ucc-blue); display: block; }
+    .format-header span { font-size: 0.75rem; color: #64748b; }
+    .icons-grid { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1rem; }
+    .icon-item { text-align: center; font-size: 0.85rem; }
+    .icon-circle {
+      width: 56px; height: 56px; border-radius: 12px; display: flex;
+      align-items: center; justify-content: center; font-size: 1.5rem;
+      margin: 0 auto 0.5rem;
+    }
+    .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .do, .dont { padding: 1.5rem; border-radius: 12px; }
+    .do { background: #ecfdf5; border: 1px solid #a7f3d0; }
+    .dont { background: #fef2f2; border: 1px solid #fecaca; }
+    .do h4 { color: var(--green); }
+    .dont h4 { color: #dc2626; }
+    .do li, .dont li { margin: 0.4rem 0; font-size: 0.9rem; margin-left: 1.2rem; }
+    .nav-back { display: inline-block; margin: 1rem 2rem; color: var(--ucc-blue); font-weight: 600; }
+    @media print { .nav-back { display: none; } }
+  </style>
+</head>
+<body>
+<a href="index.html" class="nav-back">← Volver al sitio CITI</a>
+
+<div class="header">
+  <img src="assets/citi-logo.png" alt="Logo CITI">
+  <h1>Manual de Identidad Visual</h1>
+  <p>Consultorio de Ingeniería, Tecnología e Innovación — CITI</p>
+  <p>Universidad Cooperativa de Colombia · 2026</p>
+</div>
+
+<div class="container">
+
+  <section>
+    <h2>1. Nombre y sigla</h2>
+    <p><strong>Nombre completo:</strong> Consultorio de Ingeniería, Tecnología e Innovación</p>
+    <p><strong>Sigla:</strong> CITI</p>
+    <p><strong>Tagline:</strong> Conocimiento que construye región</p>
+    <p><strong>Institución:</strong> Universidad Cooperativa de Colombia — Campus Ibagué–Espinal</p>
+    <p><strong>Programas:</strong> Ingeniería de Sistemas · Ingeniería Civil</p>
+  </section>
+
+  <section>
+    <h2>2. Paleta de colores</h2>
+    <div class="colors">
+      <div class="color-swatch">
+        <div class="preview" style="background:#003366;"></div>
+        <div class="info"><strong>Azul UCC</strong><code>#003366</code><br>Institucional, confianza</div>
+      </div>
+      <div class="color-swatch">
+        <div class="preview" style="background:#1a4d80;"></div>
+        <div class="info"><strong>Azul claro</strong><code>#1A4D80</code><br>Variaciones, fondos</div>
+      </div>
+      <div class="color-swatch">
+        <div class="preview" style="background:#e85d04;"></div>
+        <div class="info"><strong>Naranja CITI</strong><code>#E85D04</code><br>Innovación, CTAs</div>
+      </div>
+      <div class="color-swatch">
+        <div class="preview" style="background:#2d6a4f;"></div>
+        <div class="info"><strong>Verde</strong><code>#2D6A4F</code><br>Impacto social</div>
+      </div>
+      <div class="color-swatch">
+        <div class="preview" style="background:#334155;"></div>
+        <div class="info"><strong>Grafito</strong><code>#334155</code><br>Textos, ingeniería civil</div>
+      </div>
+      <div class="color-swatch">
+        <div class="preview" style="background:#f8fafc;border-bottom:1px solid #e2e8f0;"></div>
+        <div class="info"><strong>Blanco / Gris 50</strong><code>#F8FAFC</code><br>Fondos, espacios</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Logotipo</h2>
+    <p>El isotipo combina un engranaje (tecnología) con elementos estructurales (ingeniería civil), formando la letra "C" de CITI.</p>
+    <div class="logo-variants">
+      <div class="logo-box light">
+        <img src="assets/citi-logo.png" alt="Logo fondo claro">
+        <strong>Versión fondo claro</strong>
+        <span>Uso en documentos, web, afiches</span>
+      </div>
+      <div class="logo-box dark">
+        <img src="assets/citi-logo.png" alt="Logo fondo oscuro">
+        <strong>Versión fondo oscuro</strong>
+        <span>Uso en presentaciones, señalética</span>
+      </div>
+    </div>
+    <div class="do-dont">
+      <div class="do">
+        <h4>✓ Uso correcto</h4>
+        <ul>
+          <li>Mantener zona de protección igual al 25% del ancho del logo</li>
+          <li>Usar sobre fondos lisos azul, blanco o gris claro</li>
+          <li>Acompañar siempre con el nombre institucional UCC</li>
+        </ul>
+      </div>
+      <div class="dont">
+        <h4>✗ Uso incorrecto</h4>
+        <ul>
+          <li>Deformar, rotar o cambiar colores del isotipo</li>
+          <li>Colocar sobre fondos con poco contraste</li>
+          <li>Usar sin la sigla CITI o sin referencia a la universidad</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. Tipografía</h2>
+    <div class="typography-sample">
+      <div class="h1-sample">Consultorio de Ingeniería, Tecnología e Innovación</div>
+      <div class="h2-sample">Montserrat — Títulos y encabezados</div>
+      <div class="body-sample">Inter — Cuerpo de texto, formularios y documentos. Legible en impresión y pantalla. Tamaño mínimo recomendado: 10pt en documentos, 14px en web.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. Iconografía por área</h2>
+    <div class="icons-grid">
+      <div class="icon-item"><div class="icon-circle" style="background:#dbeafe;">💻</div>Sistemas</div>
+      <div class="icon-item"><div class="icon-circle" style="background:#fef3c7;">🏗️</div>Civil</div>
+      <div class="icon-item"><div class="icon-circle" style="background:#d1fae5;">📚</div>Capacitación</div>
+      <div class="icon-item"><div class="icon-circle" style="background:#ede9fe;">🤝</div>Convenios</div>
+      <div class="icon-item"><div class="icon-circle" style="background:#ffedd5;">📻</div>Programa radial</div>
+      <div class="icon-item"><div class="icon-circle" style="background:#fce7f3;">🎓</div>Exploración</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. Formato de documentos oficiales</h2>
+    <p>Todos los formatos del CITI deben incluir el siguiente encabezado unificado:</p>
+    <div class="format-preview">
+      <div class="format-header">
+        <strong>FACULTAD DE INGENIERÍA</strong>
+        <span>PROGRAMA DE INGENIERÍA DE SISTEMAS · PROGRAMA DE INGENIERÍA CIVIL</span><br>
+        <strong style="color:#e85d04;margin-top:0.5rem;">CONSULTORIO DE INGENIERÍA, TECNOLOGÍA E INNOVACIÓN — CITI</strong><br>
+        <span>IBAGUÉ · 2026</span>
+      </div>
+      <p style="text-align:center;color:#64748b;">[Contenido del formato]</p>
+    </div>
+    <h3>Formatos disponibles</h3>
+    <ul>
+      <li><a href="plantillas/registro-consultas.html">Registro de consultas</a></li>
+      <li><a href="plantillas/informe-asesoria.html">Informe final de asesoría</a></li>
+      <li>Asistencia consultores · Programa radial · Oferta/demanda empleo</li>
+      <li>Informe parcial · Informe capacitación · Consolidado talleres</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>7. Señalética de oficina</h2>
+    <ul>
+      <li><strong>Entrada:</strong> Logo CITI + "Consultorio de Ingeniería, Tecnología e Innovación" + horario</li>
+      <li><strong>Recepción:</strong> "Atención al usuario" — fondo azul UCC, texto blanco</li>
+      <li><strong>Coordinación Sistemas:</strong> Acento azul, icono computadora</li>
+      <li><strong>Coordinación Civil:</strong> Acento naranja, icono casco/plano</li>
+      <li><strong>Sala capacitación:</strong> "Seminarios y talleres CITI"</li>
+    </ul>
+  </section>
+
+</div>
+</body>
+</html>

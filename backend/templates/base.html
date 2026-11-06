@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CITI — UCC{% endblock %}</title>
+  <link rel="icon" href="{% static 'ucc-logo.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{% static 'ucc-logo.svg' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/hifi.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% block flash_messages %}
+  {% if messages %}
+    <div class="django-messages" role="status" aria-live="polite">
+      {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warn{% else %}info{% endif %} django-message-item">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% endblock %}
+  {% block content %}{% endblock %}
+  {% block extra_js %}{% endblock %}
+  <script>
+  (function () {
+    document.querySelectorAll('.django-message-item').forEach(function (el) {
+      setTimeout(function () {
+        el.style.transition = 'opacity 0.35s ease';
+        el.style.opacity = '0';
+        setTimeout(function () { el.remove(); }, 400);
+      }, 5000);
+    });
+  })();
+  </script>
+</body>
+</html>

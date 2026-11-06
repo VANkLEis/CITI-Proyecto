@@ -1,0 +1,29 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Evaluar asesoría{% endblock %}
+{% block page_title %}Evaluar asesoría{% endblock %}
+{% block page_subtitle %}Caso #{{ cita.pk }}{% endblock %}
+
+{% block dashboard_content %}
+<div class="card" style="max-width:520px;">
+  <div class="card-header"><h2>Su opinión nos importa</h2></div>
+  <div class="card-body">
+    <p style="color:var(--muted);margin-bottom:1rem;">
+      {{ cita.franja.get_area_display }} · {{ cita.get_subespecialidad_display }} ·
+      {{ cita.franja.inicio|date:"d/m/Y" }}
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<small style="color:var(--danger)">{{ field.errors }}</small>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Enviar evaluación</button>
+      <a href="{% url 'portal:cliente_dashboard' %}" class="btn btn-secondary" style="margin-left:0.5rem;">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Asignar Caso{% endblock %}
+{% block page_title %}Asignar docente o estudiante consultor{% endblock %}
+{% block page_subtitle %}{{ cita.franja.get_area_display }}{% endblock %}
+
+{% block dashboard_content %}
+<div class="card" style="max-width: 650px; margin: 0 auto;">
+  <div class="card-header">
+    <h2>Solicitud #{{ cita.pk }}</h2>
+  </div>
+  <div class="card-body">
+    <p><strong>Empresa / Cliente:</strong> {{ cita.cliente.empresa.razon_social|default:cita.cliente.email }} · NIT {{ cita.nit_empresa }}</p>
+    <p><strong>Franja:</strong> {{ cita.franja.inicio|date:"d/m/Y H:i" }} — {{ cita.franja.get_area_display }}</p>
+    <p><strong>Tipo de servicio:</strong> <span class="badge badge-info">{{ cita.get_tipo_servicio_display }}</span></p>
+    <p><strong>Subespecialidad:</strong> {{ cita.get_subespecialidad_display }}</p>
+    <p><strong>Asunto:</strong> {{ cita.asunto|default:"—" }}</p>
+    
+    {% if cita.archivo_adjunto %}
+      <p style="margin-top: 0.75rem;">
+        <strong>Documentación adjunta:</strong><br>
+        <a href="{{ cita.archivo_adjunto.url }}" target="_blank" class="btn btn-sm btn-outline-primary" style="margin-top: 0.25rem; inline-size: fit-content;">
+          Descargar documento adjunto
+        </a>
+      </p>
+    {% endif %}
+
+    <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border);">
+
+    <form method="post">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<small class="cita-muted">{{ field.help_text }}</small>{% endif %}
+          {% if field.errors %}<small class="field-error">{{ field.errors }}</small>{% endif %}
+        </div>
+      {% endfor %}
+
+      <p class="cita-muted" style="font-size:0.8rem;margin-bottom:1rem;">
+        Solo aparecen estudiantes que cumplen simultáneamente: 8° semestre o superior,
+        promedio acumulado ≥ 4.0 y 130 créditos aprobados.
+      </p>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="btn btn-primary">Confirmar asignación</button>
+        <a href="{% url 'portal:coordinador_dashboard' %}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

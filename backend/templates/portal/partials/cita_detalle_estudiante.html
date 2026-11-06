@@ -1,0 +1,29 @@
+<div class="cita-modal-inner">
+  <div class="cita-modal-header-inline">
+    <h3>Apoyo técnico — Cita #{{ cita.pk }}</h3>
+    <button type="button" class="btn-icon-close cita-modal-close" aria-label="Cerrar">&times;</button>
+  </div>
+  {% include "portal/partials/cita_info_block.html" %}
+
+  <div class="cita-modal-actions">
+    <h4>Bitácora / notas de avance</h4>
+    <p class="cita-muted" style="margin-bottom:0.75rem;">Registre aquí sus reportes para revisión del docente.</p>
+    <form method="post" action="{% url 'portal:cita_detalle' cita.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="embed" value="1">
+      <input type="hidden" name="accion" value="bitacora">
+      {% for field in form_bitacora %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<small class="field-error">{{ field.errors }}</small>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Guardar reporte</button>
+    </form>
+  </div>
+
+  <div class="cita-bitacora-preview">
+    <a href="{% url 'portal:estudiante_caso_nota' cita.pk %}" class="btn btn-sm btn-secondary">Abrir vista completa</a>
+  </div>
+</div>

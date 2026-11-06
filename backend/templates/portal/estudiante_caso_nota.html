@@ -1,0 +1,71 @@
+{% extends "dashboard_base.html" %}
+
+
+
+{% block title %}CITI — Bitácora{% endblock %}
+
+{% block page_title %}Detalle y bitácora — Caso #{{ cita.pk }}{% endblock %}
+
+{% block page_subtitle %}{{ cita.get_subespecialidad_display }}{% endblock %}
+
+
+
+{% block dashboard_content %}
+
+<div class="card" style="margin-bottom:1.5rem;">
+
+  <div class="card-header"><h2>Caso asignado</h2></div>
+
+  <div class="card-body">
+
+    {% include "portal/partials/cita_info_block.html" %}
+
+  </div>
+
+</div>
+
+
+
+<div>
+
+  <div class="card">
+
+    <div class="card-header"><h2>Nueva entrada de bitácora</h2></div>
+
+    <div class="card-body">
+
+      <p class="cita-muted" style="margin-bottom:0.75rem;">Documente avances, hallazgos y tareas para revisión del docente.</p>
+
+      <form method="post">
+
+        {% csrf_token %}
+
+        {% for field in form %}
+
+          <div class="form-group">
+
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+            {{ field }}
+
+            {% if field.errors %}<small class="field-error">{{ field.errors }}</small>{% endif %}
+
+          </div>
+
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Guardar reporte</button>
+
+        <a href="{% url 'portal:estudiante_dashboard' %}" class="btn btn-secondary" style="margin-left:0.5rem;">Volver</a>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+{% endblock %}
+

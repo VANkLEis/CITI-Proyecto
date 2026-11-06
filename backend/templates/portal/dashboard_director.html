@@ -1,0 +1,20 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Director{% endblock %}
+{% block page_title %}Panel general{% endblock %}
+{% block page_subtitle %}Director CITI{% endblock %}
+
+{% block dashboard_content %}
+<div class="stats-row">
+  <div class="stat-card accent"><strong>{{ total_usuarios }}</strong><span>Usuarios registrados</span></div>
+  <div class="stat-card"><strong>{{ franjas_activas }}</strong><span>Franjas activas</span></div>
+  <div class="stat-card"><strong>{{ citas_reservadas }}</strong><span>Citas reservadas</span></div>
+</div>
+<div class="card">
+  <div class="card-header"><h2>Administración</h2></div>
+  <div class="card-body">
+    <p style="color:var(--muted);margin-bottom:1rem;">Gestione usuarios, franjas horarias y citas desde el panel de administración.</p>
+    <a href="/admin/" class="btn btn-primary">Ir al administrador Django</a>
+  </div>
+</div>
+{% endblock %}

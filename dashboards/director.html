@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Director</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../app/css/styles.css">
+  <link rel="stylesheet" href="../app/css/hifi.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><img src="../assets/ucc-logo.svg" alt="UCC"><div><strong>CITI</strong><span>UCC · Ibagué–Espinal</span></div></div>
+    <div class="sidebar-role-badge" id="roleBadge"></div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer"><button class="btn-logout" id="btnLogout">Cerrar sesión</button></div>
+  </aside>
+  <main class="main-content">
+    <header class="topbar-dash">
+      <div><h1 id="pageTitle">Panel general</h1><p id="pageSubtitle">Director CITI</p></div>
+      <div id="userHeader"></div>
+    </header>
+    <div class="page-content">
+      <div class="page-section active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat-card accent"><strong>24</strong><span>Solicitudes activas</span></div>
+          <div class="stat-card"><strong>8</strong><span>Pendientes</span></div>
+          <div class="stat-card"><strong>56</strong><span>Empresas</span></div>
+          <div class="stat-card"><strong>32</strong><span>Estudiantes</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2>Todas las solicitudes</h2><button class="btn btn-sm btn-primary">Exportar informe</button></div>
+          <div class="card-body" style="padding:0">
+            <table class="data-table">
+              <thead><tr><th>Empresa</th><th>Área</th><th>Tipo</th><th>Estado</th><th>Tutor</th><th>Acciones</th></tr></thead>
+              <tbody id="tblSolicitudes"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-solicitudes"><div class="card"><div class="card-body" id="solicitudesAdmin"></div></div></div>
+      <div class="page-section" id="page-usuarios">
+        <div class="card">
+          <div class="card-header"><h2>Usuarios</h2><button class="btn btn-sm btn-primary">+ Crear</button></div>
+          <div class="card-body" style="padding:0">
+            <table class="data-table">
+              <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th></tr></thead>
+              <tbody id="tblUsuarios"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-informes"><div class="card"><div class="card-body"><button class="btn btn-primary">Generar informe UCC — marzo 2026</button></div></div></div>
+      <div class="page-section" id="page-empresas"><div class="card"><div class="card-body"><p style="color:var(--muted)">Banco de empresas del CITI.</p></div></div></div>
+      <div class="page-section" id="page-config"><div class="card"><div class="card-body"><div class="form-group"><label>Semestre</label><select><option>2026-1</option></select></div></div></div></div>
+    </div>
+  </main>
+</div>
+<script src="../app/js/data.js"></script>
+<script src="../app/js/auth.js"></script>
+<script src="../app/js/ui.js"></script>
+<script src="../app/js/hifi-boot.js"></script>
+<script src="../app/js/dashboard.js"></script>
+<script>
+  const session = initDashboard('director', 'dashboard', 'Panel general', 'Director CITI');
+  if (session) {
+    const rows = CITI_DATA.solicitudes.map(s =>
+      `<tr><td>${s.empresa}</td><td>${s.area}</td><td>${s.tipo}</td><td>${estadoBadge(s.estado)}</td><td>${s.tutor || '—'}</td>
+      <td><button class="btn btn-sm btn-secondary">Ver</button></td></tr>`).join('');
+    document.getElementById('tblSolicitudes').innerHTML = rows;
+    document.getElementById('solicitudesAdmin').innerHTML = `<table class="data-table"><tbody>${rows}</tbody></table>`;
+    document.getElementById('tblUsuarios').innerHTML = CITI_DATA.users.map(u => {
+      const rol = CITI_DATA.roles[u.role]?.label || u.role;
+      const tipo = u.studentType ? ` (${CITI_DATA.studentTypes[u.studentType]?.label || u.studentType})` : '';
+      return `<tr><td>${u.name}</td><td>${u.email}</td><td>${rol}${tipo}</td><td><span class="badge badge-done">Activo</span></td></tr>`;
+    }).join('');
+  }
+</script>
+</body>
+</html>

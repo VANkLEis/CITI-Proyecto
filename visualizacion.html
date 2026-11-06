@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Visualización Completa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ucc: #003366; --accent: #e85d04; --sis: #2563eb; --civ: #d97706;
+      --green: #059669; --bg: #0b1120; --card: #151d2e; --border: #1e293b;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:#e2e8f0; }
+
+    /* TOP BAR */
+    .topbar {
+      position:sticky; top:0; z-index:50; background:rgba(11,17,32,0.92);
+      backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+      padding:0.8rem 2rem; display:flex; align-items:center; justify-content:space-between;
+    }
+    .topbar-brand { display:flex; align-items:center; gap:10px; }
+    .topbar-brand img { width:36px; height:36px; border-radius:6px; }
+    .topbar-brand span { font-weight:700; color:white; font-size:0.95rem; }
+    .tabs { display:flex; gap:4px; }
+    .tab {
+      padding:0.5rem 1rem; border-radius:8px; border:none; cursor:pointer;
+      background:transparent; color:#94a3b8; font-family:inherit; font-size:0.85rem; font-weight:500;
+      transition:all 0.2s;
+    }
+    .tab:hover { color:white; background:rgba(255,255,255,0.05); }
+    .tab.active { background:var(--accent); color:white; }
+
+    /* PANELS */
+    .panel { display:none; padding:2rem; max-width:1400px; margin:0 auto; animation:fadeUp 0.4s ease; }
+    .panel.active { display:block; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+
+    .panel-title { font-size:1.8rem; font-weight:800; color:white; margin-bottom:0.3rem; }
+    .panel-sub { color:#64748b; margin-bottom:2rem; font-size:0.95rem; }
+
+    /* ── VISTA GENERAL ── */
+    .overview-hero {
+      background:linear-gradient(135deg,#003366 0%,#1a4d80 50%,#0f2744 100%);
+      border-radius:20px; padding:3rem; margin-bottom:2rem; position:relative; overflow:hidden;
+    }
+    .overview-hero::before {
+      content:''; position:absolute; right:-80px; top:-80px;
+      width:300px; height:300px; border-radius:50%; background:rgba(232,93,4,0.12);
+    }
+    .overview-hero h1 { font-size:2.2rem; font-weight:800; color:white; margin-bottom:0.5rem; }
+    .overview-hero p { color:rgba(255,255,255,0.8); font-size:1.05rem; max-width:600px; }
+    .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:2rem; }
+    .kpi { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:1.2rem; text-align:center; }
+    .kpi strong { display:block; font-size:2rem; color:var(--accent); }
+    .kpi span { font-size:0.8rem; color:rgba(255,255,255,0.7); }
+
+    .img-showcase { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:2rem; }
+    .img-card { border-radius:16px; overflow:hidden; border:1px solid var(--border); background:var(--card); }
+    .img-card img { width:100%; display:block; }
+    .img-card .caption { padding:1rem 1.2rem; }
+    .img-card .caption h3 { font-size:0.95rem; color:white; margin-bottom:0.2rem; }
+    .img-card .caption p { font-size:0.8rem; color:#64748b; }
+
+    /* ── ORGANIGRAMA SVG ── */
+    .org-wrap { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:2rem; overflow-x:auto; }
+    .org-wrap svg text { font-family:'Inter',sans-serif; }
+    .org-node { cursor:default; }
+    .org-node rect { transition:filter 0.2s; }
+    .org-node:hover rect { filter:brightness(1.15); }
+
+    /* ── PLANO VISUAL ── */
+    .floor-visual {
+      background:#0f172a; border:2px solid #334155; border-radius:16px;
+      padding:1.5rem; position:relative; min-height:520px;
+    }
+    .fv-zone {
+      position:absolute; border:2px solid; border-radius:10px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:0.8rem; transition:transform 0.2s, box-shadow 0.2s;
+      cursor:default;
+    }
+    .fv-zone:hover { transform:scale(1.02); box-shadow:0 0 20px rgba(255,255,255,0.08); }
+    .fv-zone h4 { font-size:0.75rem; font-weight:700; margin-bottom:0.3rem; }
+    .fv-zone .tags { display:flex; flex-wrap:wrap; gap:3px; justify-content:center; margin-top:0.4rem; }
+    .fv-zone .tag { font-size:0.6rem; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:3px; }
+    .fv-reception { top:10px; left:10px; right:10px; height:130px; border-color:var(--ucc); background:rgba(0,51,102,0.35); }
+    .fv-sis { top:155px; left:10px; width:calc(50% - 15px); height:120px; border-color:var(--sis); background:rgba(37,99,235,0.2); }
+    .fv-civ { top:155px; right:10px; width:calc(50% - 15px); height:120px; border-color:var(--civ); background:rgba(217,119,6,0.2); }
+    .fv-training { top:290px; left:10px; right:10px; height:110px; border-color:var(--green); background:rgba(5,150,105,0.2); }
+    .fv-archive { top:415px; left:10px; right:10px; height:90px; border-color:#64748b; background:rgba(100,116,139,0.2); }
+    .fv-door {
+      position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+      width:60px; height:8px; background:#475569; border-radius:4px 4px 0 0;
+    }
+    .fv-label { position:absolute; font-size:0.65rem; color:#475569; }
+    .floor-legend { display:flex; gap:1.5rem; margin-top:1rem; flex-wrap:wrap; }
+    .fl-item { display:flex; align-items:center; gap:6px; font-size:0.8rem; color:#94a3b8; }
+    .fl-dot { width:12px; height:12px; border-radius:3px; }
+
+    /* ── FLUJO ── */
+    .flow { display:flex; align-items:stretch; gap:0; overflow-x:auto; padding:1rem 0; }
+    .flow-step {
+      flex:1; min-width:140px; text-align:center; position:relative; padding:0 0.5rem;
+    }
+    .flow-box {
+      background:var(--card); border:2px solid var(--border); border-radius:12px;
+      padding:1.2rem 0.8rem; margin-bottom:0.5rem; transition:border-color 0.2s;
+    }
+    .flow-step:hover .flow-box { border-color:var(--accent); }
+    .flow-num {
+      width:32px; height:32px; border-radius:50%; background:var(--ucc);
+      color:white; font-weight:700; font-size:0.85rem;
+      display:flex; align-items:center; justify-content:center; margin:0 auto 0.6rem;
+    }
+    .flow-box h4 { font-size:0.8rem; color:white; margin-bottom:0.2rem; }
+    .flow-box p { font-size:0.7rem; color:#64748b; }
+    .flow-arrow {
+      position:absolute; right:-12px; top:50%; transform:translateY(-50%);
+      color:var(--accent); font-size:1.2rem; z-index:2;
+    }
+    .flow-step:last-child .flow-arrow { display:none; }
+
+    /* ── ACTORES ── */
+    .actors-visual { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+    .actor-group h3 { font-size:1rem; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:2px solid; }
+    .actor-group.primary h3 { border-color:var(--accent); color:var(--accent); }
+    .actor-group.secondary h3 { border-color:#64748b; color:#94a3b8; }
+    .actor-bubble {
+      display:flex; align-items:center; gap:12px; background:var(--card);
+      border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:0.6rem;
+      transition:border-color 0.2s;
+    }
+    .actor-bubble:hover { border-color:var(--accent); }
+    .actor-avatar {
+      width:44px; height:44px; border-radius:10px; display:flex;
+      align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;
+    }
+    .actor-bubble strong { display:block; font-size:0.85rem; color:white; }
+    .actor-bubble span { font-size:0.75rem; color:#64748b; }
+
+    /* ── SERVICIOS ── */
+    .services-visual { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+    .svc {
+      background:var(--card); border:1px solid var(--border); border-radius:14px;
+      padding:1.5rem; position:relative; overflow:hidden; transition:transform 0.2s;
+    }
+    .svc:hover { transform:translateY(-3px); border-color:#334155; }
+    .svc::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+    .svc:nth-child(1)::before { background:var(--sis); }
+    .svc:nth-child(2)::before { background:var(--civ); }
+    .svc:nth-child(3)::before { background:var(--green); }
+    .svc:nth-child(4)::before { background:#8b5cf6; }
+    .svc:nth-child(5)::before { background:#ec4899; }
+    .svc:nth-child(6)::before { background:var(--accent); }
+    .svc .icon { font-size:1.8rem; margin-bottom:0.8rem; }
+    .svc h4 { font-size:0.9rem; color:white; margin-bottom:0.4rem; }
+    .svc p { font-size:0.78rem; color:#64748b; line-height:1.5; }
+    .svc .badge { display:inline-block; margin-top:0.6rem; font-size:0.65rem; padding:2px 8px; border-radius:4px; font-weight:600; }
+    .badge-sis { background:rgba(37,99,235,0.2); color:#60a5fa; }
+    .badge-civ { background:rgba(217,119,6,0.2); color:#fbbf24; }
+    .badge-both { background:rgba(5,150,105,0.2); color:#34d399; }
+
+    /* ── RADIAL ── */
+    .radial-timeline { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:2rem; }
+    .rt-bar { display:flex; height:48px; border-radius:8px; overflow:hidden; margin:1.5rem 0; }
+    .rt-seg { display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:600; color:white; text-align:center; padding:0 4px; }
+    .rt-legend { display:grid; grid-template-columns:repeat(3,1fr); gap:0.8rem; }
+    .rt-item { display:flex; align-items:center; gap:8px; font-size:0.8rem; }
+    .rt-color { width:14px; height:14px; border-radius:3px; flex-shrink:0; }
+
+    /* LINKS */
+    .quick-links { display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap; }
+    .ql {
+      padding:0.7rem 1.4rem; border-radius:10px; font-weight:600; font-size:0.85rem;
+      text-decoration:none; transition:all 0.2s;
+    }
+    .ql-primary { background:var(--accent); color:white; }
+    .ql-primary:hover { background:#d45303; }
+    .ql-ghost { background:var(--card); color:#94a3b8; border:1px solid var(--border); }
+    .ql-ghost:hover { color:white; border-color:#475569; }
+
+    @media(max-width:900px) {
+      .kpi-row,.img-showcase,.actors-visual,.services-visual { grid-template-columns:1fr; }
+      .tabs { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="assets/citi-logo.png" alt="CITI">
+    <span>CITI Visualización</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel('general')">Vista general</button>
+    <button class="tab" onclick="showPanel('org')">Organigrama</button>
+    <button class="tab" onclick="showPanel('oficina')">Oficina</button>
+    <button class="tab" onclick="showPanel('flujo')">Proceso</button>
+    <button class="tab" onclick="showPanel('actores')">Actores</button>
+    <button class="tab" onclick="showPanel('servicios')">Servicios</button>
+    <button class="tab" onclick="showPanel('radial')">Programa radial</button>
+  </div>
+</div>
+
+<!-- ═══ VISTA GENERAL ═══ -->
+<div id="general" class="panel active">
+  <div class="overview-hero">
+    <h1>Consultorio Integrado de Ingeniería</h1>
+    <p>CITI — Universidad Cooperativa de Colombia · Campus Ibagué–Espinal · Ingeniería de Sistemas + Ingeniería Civil</p>
+    <div class="kpi-row">
+      <div class="kpi"><strong>6</strong><span>Líneas de acción</span></div>
+      <div class="kpi"><strong>2</strong><span>Programas integrados</span></div>
+      <div class="kpi"><strong>Gratis</strong><span>Asesorías PyME</span></div>
+      <div class="kpi"><strong>3°+</strong><span>Semestre estudiantes</span></div>
+    </div>
+  </div>
+
+  <div class="img-showcase">
+    <div class="img-card">
+      <img src="assets/citi-oficina-mockup.png" alt="Mockup oficina CITI" onerror="this.src='assets/citi-logo.png'">
+      <div class="caption"><h3>Oficina CITI — Render 3D</h3><p>Recepción, coordinaciones Sistemas y Civil, sala de capacitación</p></div>
+    </div>
+    <div class="img-card">
+      <img src="assets/citi-organigrama.png" alt="Organigrama CITI" onerror="this.src='assets/citi-logo.png'">
+      <div class="caption"><h3>Organigrama institucional</h3><p>Estructura de gobernanza y equipos de ejecución</p></div>
+    </div>
+  </div>
+
+  <div class="quick-links">
+    <a href="index.html" class="ql ql-primary">Sitio web completo</a>
+    <a href="presentacion.html" class="ql ql-ghost">Presentación (12 slides)</a>
+    <a href="manual-identidad.html" class="ql ql-ghost">Manual de identidad</a>
+    <a href="plano-oficina.html" class="ql ql-ghost">Plano detallado</a>
+  </div>
+</div>
+
+<!-- ═══ ORGANIGRAMA ═══ -->
+<div id="org" class="panel">
+  <div class="panel-title">Estructura Organizacional</div>
+  <div class="panel-sub">Gobernanza universitaria → Dirección → Coordinaciones → Ejecución</div>
+  <div class="org-wrap">
+    <svg viewBox="0 0 900 480" width="100%" style="min-width:700px">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#475569"/></marker>
+      </defs>
+      <!-- Lines -->
+      <line x1="450" y1="58" x2="450" y2="88" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="450" y1="138" x2="450" y2="168" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="200" y1="188" x2="200" y2="218" stroke="#475569" stroke-width="2"/>
+      <line x1="450" y1="188" x2="450" y2="218" stroke="#475569" stroke-width="2"/>
+      <line x1="700" y1="188" x2="700" y2="218" stroke="#475569" stroke-width="2"/>
+      <line x1="200" y1="218" x2="700" y2="218" stroke="#475569" stroke-width="2"/>
+      <line x1="450" y1="218" x2="450" y2="248" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="450" y1="298" x2="450" y2="328" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="300" y1="378" x2="300" y2="400" stroke="#475569" stroke-width="2"/>
+      <line x1="600" y1="378" x2="600" y2="400" stroke="#475569" stroke-width="2"/>
+      <line x1="300" y1="400" x2="600" y2="400" stroke="#475569" stroke-width="2"/>
+      <line x1="450" y1="400" x2="450" y2="420" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+      <!-- Nodes -->
+      <g class="org-node"><rect x="310" y="10" width="280" height="48" rx="8" fill="#1e3a5f" stroke="#003366" stroke-width="2"/><text x="450" y="38" text-anchor="middle" fill="white" font-size="13" font-weight="600">Subdirección Académica UCC</text></g>
+      <g class="org-node"><rect x="310" y="88" width="280" height="50" rx="8" fill="#e85d04" stroke="#d45303" stroke-width="2"/><text x="450" y="110" text-anchor="middle" fill="white" font-size="12" font-weight="700">Director CITI</text><text x="450" y="126" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">Programas Sistemas + Civil</text></g>
+      <g class="org-node"><rect x="80" y="168" width="240" height="44" rx="8" fill="#1e3a8a" stroke="#2563eb" stroke-width="2"/><text x="200" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="600">Coord. Sistemas</text></g>
+      <g class="org-node"><rect x="330" y="168" width="240" height="44" rx="8" fill="#78350f" stroke="#d97706" stroke-width="2"/><text x="450" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="600">Coord. Civil</text></g>
+      <g class="org-node"><rect x="580" y="168" width="240" height="44" rx="8" fill="#1e3a5f" stroke="#599CE7" stroke-width="2"/><text x="700" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="600">Coord. Electrónica</text></g>
+      <g class="org-node"><rect x="280" y="248" width="340" height="50" rx="8" fill="#064e3b" stroke="#059669" stroke-width="2"/><text x="450" y="270" text-anchor="middle" fill="white" font-size="12" font-weight="600">Consultor Permanente</text><text x="450" y="286" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10">Estudiante 8° semestre en adelante</text></g>
+      <g class="org-node"><rect x="160" y="328" width="280" height="50" rx="8" fill="#1e293b" stroke="#475569" stroke-width="2"/><text x="300" y="350" text-anchor="middle" fill="white" font-size="12" font-weight="600">Estudiantes Asesores</text><text x="300" y="366" text-anchor="middle" fill="#94a3b8" font-size="10">3° semestre en adelante</text></g>
+      <g class="org-node"><rect x="460" y="328" width="280" height="50" rx="8" fill="#1e293b" stroke="#475569" stroke-width="2"/><text x="600" y="350" text-anchor="middle" fill="white" font-size="12" font-weight="600">Docentes Asesores</text><text x="600" y="366" text-anchor="middle" fill="#94a3b8" font-size="10">Dirección técnica</text></g>
+      <g class="org-node"><rect x="230" y="420" width="440" height="44" rx="8" fill="#0f2744" stroke="#003366" stroke-width="2" stroke-dasharray="6 3"/><text x="450" y="447" text-anchor="middle" fill="#94a3b8" font-size="11">PyMEs · Empresas · Colegios · Gremios · Comunidad Tolima</text></g>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ OFICINA ═══ -->
+<div id="oficina" class="panel">
+  <div class="panel-title">Distribución de la Oficina</div>
+  <div class="panel-sub">Plano visual interactivo — Facultad de Ingeniería UCC</div>
+  <div class="floor-visual">
+    <div class="fv-zone fv-reception">
+      <h4>RECEPCIÓN / ATENCIÓN AL USUARIO</h4>
+      <div class="tags">
+        <span class="tag">Mostrador</span><span class="tag">Logo CITI</span>
+        <span class="tag">PC ×3</span><span class="tag">Registro consultas</span>
+        <span class="tag">Sillas espera</span>
+      </div>
+    </div>
+    <div class="fv-zone fv-sis">
+      <h4>COORD. SISTEMAS</h4>
+      <div class="tags"><span class="tag">Pizarra digital</span><span class="tag">Archivador</span></div>
+    </div>
+    <div class="fv-zone fv-civ">
+      <h4>COORD. CIVIL</h4>
+      <div class="tags"><span class="tag">Planos</span><span class="tag">NSR-10</span></div>
+    </div>
+    <div class="fv-zone fv-training">
+      <h4>SALA CAPACITACIÓN (8–12 personas)</h4>
+      <div class="tags"><span class="tag">Proyector</span><span class="tag">Mesas</span><span class="tag">Video beam</span></div>
+    </div>
+    <div class="fv-zone fv-archive">
+      <h4>ARCHIVO DOCUMENTAL</h4>
+      <div class="tags"><span class="tag">7 carpetas</span><span class="tag">Banco empresas</span></div>
+    </div>
+    <div class="fv-door"></div>
+    <span class="fv-label" style="bottom:-20px;left:50%;transform:translateX(-50%)">ENTRADA</span>
+  </div>
+  <div class="floor-legend">
+    <div class="fl-item"><div class="fl-dot" style="background:var(--ucc)"></div>Recepción</div>
+    <div class="fl-item"><div class="fl-dot" style="background:var(--sis)"></div>Sistemas</div>
+    <div class="fl-item"><div class="fl-dot" style="background:var(--civ)"></div>Civil</div>
+    <div class="fl-item"><div class="fl-dot" style="background:var(--green)"></div>Capacitación</div>
+    <div class="fl-item"><div class="fl-dot" style="background:#64748b"></div>Archivo</div>
+  </div>
+  <div class="img-showcase" style="margin-top:2rem">
+    <div class="img-card">
+      <img src="assets/citi-oficina-mockup.png" alt="Render oficina" onerror="this.style.display='none'">
+      <div class="caption"><h3>Vista 3D de la oficina</h3><p>Render conceptual del espacio físico CITI</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROCESO ═══ -->
+<div id="flujo" class="panel">
+  <div class="panel-title">Flujo de Atención</div>
+  <div class="panel-sub">Desde la solicitud de la empresa hasta la socialización de resultados</div>
+  <div class="flow">
+    <div class="flow-step"><div class="flow-box"><div class="flow-num">1</div><h4>Solicitud</h4><p>Empresa presenta necesidad por escrito</p></div><span class="flow-arrow">→</span></div>
+    <div class="flow-step"><div class="flow-box"><div class="flow-num">2</div><h4>Registro</h4><p>Formato de consultas en recepción</p></div><span class="flow-arrow">→</span></div>
+    <div class="flow-step"><div class="flow-box"><div class="flow-num">3</div><h4>Revisión</h4><p>Coordinadores clasifican el caso</p></div><span class="flow-arrow">→</span></div>
+    <div class="flow-step"><div class="flow-box"><div class="flow-num">4</div><h4>Asignación</h4><p>Estudiante + docente asesor</p></div><span class="flow-arrow">→</span></div>
+    <div class="flow-step"><div class="flow-box"><div class="flow-num">5</div><h4>Ejecución</h4><p>Informes mensuales al CITI</p></div><span class="flow-arrow">→</span></div>
+    <div class="flow-step"><div class="flow-box"><div class="flow-num">6</div><h4>Cierre</h4><p>Informe final + firmas + socialización</p></div></div>
+  </div>
+</div>
+
+<!-- ═══ ACTORES ═══ -->
+<div id="actores" class="panel">
+  <div class="panel-title">Actores del Ecosistema</div>
+  <div class="panel-sub">Principales (decisión y atención) y secundarios (ejecución y apoyo)</div>
+  <div class="actors-visual">
+    <div class="actor-group primary">
+      <h3>Actores Principales</h3>
+      <div class="actor-bubble"><div class="actor-avatar" style="background:#e85d04">👤</div><div><strong>Director CITI</strong><span>Gobernanza, informes mensuales, aprobación</span></div></div>
+      <div class="actor-bubble"><div class="actor-avatar" style="background:#2563eb">📋</div><div><strong>Coordinadores de área</strong><span>Promoción, supervisión, visitas empresariales</span></div></div>
+      <div class="actor-bubble"><div class="actor-avatar" style="background:#059669">🎧</div><div><strong>Estudiante consultor</strong><span>Atención al público, registro, programa radial</span></div></div>
+      <div class="actor-bubble"><div class="actor-avatar" style="background:#003366">🏢</div><div><strong>PyMEs y empresas</strong><span>Usuarios del servicio, firman informes</span></div></div>
+    </div>
+    <div class="actor-group secondary">
+      <h3>Actores Secundarios</h3>
+      <div class="actor-bubble"><div class="actor-avatar" style="background:#334155">📚</div><div><strong>Estudiantes asesores</strong><span>Ejecución desde 3er semestre</span></div></div>
+      <div class="actor-bubble"><div class="actor-avatar" style="background:#334155">👨‍🏫</div><div><strong>Docentes y egresados</strong><span>Dirección técnica especializada</span></div></div>
+      <div class="actor-bubble"><div class="actor-avatar" style="background:#334155">🤝</div><div><strong>Gremios y entidades públicas</strong><span>Aliados estratégicos</span></div></div>
+      <div class="actor-bubble"><div class="actor-avatar" style="background:#334155">🎓</div><div><strong>Colegios grado 11</strong><span>Exploración profesional</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SERVICIOS ═══ -->
+<div id="servicios" class="panel">
+  <div class="panel-title">Líneas de Acción</div>
+  <div class="panel-sub">6 servicios de extensión universitaria integrados</div>
+  <div class="services-visual">
+    <div class="svc"><div class="icon">💼</div><h4>Práctica Empresarial</h4><p>Aprendizaje en el trabajo con empresas del Tolima.</p><span class="badge badge-both">Sistemas + Civil</span></div>
+    <div class="svc"><div class="icon">🏢</div><h4>Asesorías PyME</h4><p>Casos simples y complejos con informes mensuales.</p><span class="badge badge-both">Sistemas + Civil</span></div>
+    <div class="svc"><div class="icon">📚</div><h4>Educación No Formal</h4><p>Seminarios: ofimática, NSR-10, BIM, programación.</p><span class="badge badge-both">Sistemas + Civil</span></div>
+    <div class="svc"><div class="icon">🎓</div><h4>Exploración Profesional</h4><p>Orientación vocacional en colegios de la región.</p><span class="badge badge-both">Sistemas + Civil</span></div>
+    <div class="svc"><div class="icon">🤝</div><h4>Convenios</h4><p>Alianzas externas. CITI audita cumplimiento.</p><span class="badge badge-both">Sistemas + Civil</span></div>
+    <div class="svc"><div class="icon">📻</div><h4>Programa Radial</h4><p>Consultas técnicas y bolsa de empleo semanal.</p><span class="badge badge-both">Sistemas + Civil</span></div>
+  </div>
+</div>
+
+<!-- ═══ RADIAL ═══ -->
+<div id="radial" class="panel">
+  <div class="panel-title">Programa Radial CITI</div>
+  <div class="panel-sub">Estructura semanal del espacio en emisora universitaria (~48 min total)</div>
+  <div class="radial-timeline">
+    <div class="rt-bar">
+      <div class="rt-seg" style="flex:20;background:#003366">Invitado especial<br>20 min</div>
+      <div class="rt-seg" style="flex:7;background:#2563eb">Momento<br>ingenieril 7m</div>
+      <div class="rt-seg" style="flex:6;background:#059669">Reflexión<br>6 min</div>
+      <div class="rt-seg" style="flex:6;background:#d97706">Consulta<br>técnica 6m</div>
+      <div class="rt-seg" style="flex:5;background:#e85d04">Bolsa empleo<br>5 min</div>
+      <div class="rt-seg" style="flex:4;background:#64748b">Cuñas UCC<br>4 min</div>
+    </div>
+    <div class="rt-legend">
+      <div class="rt-item"><div class="rt-color" style="background:#003366"></div>Experto / empresario invitado</div>
+      <div class="rt-item"><div class="rt-color" style="background:#2563eb"></div>Estudiante — tema tecnológico</div>
+      <div class="rt-item"><div class="rt-color" style="background:#059669"></div>Estudiante — reflexión social</div>
+      <div class="rt-item"><div class="rt-color" style="background:#d97706"></div>Especialista — consulta ciudadana</div>
+      <div class="rt-item"><div class="rt-color" style="background:#e85d04"></div>Intermediación oferta/demanda</div>
+      <div class="rt-item"><div class="rt-color" style="background:#64748b"></div>Publicidad institucional UCC</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

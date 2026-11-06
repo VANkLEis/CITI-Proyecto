@@ -1,0 +1,60 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Coordinador{% endblock %}
+{% block page_title %}Coordinación de área{% endblock %}
+{% block page_subtitle %}{{ area_label }}{% endblock %}
+
+{% block dashboard_content %}
+<div class="stats-row">
+  <div class="stat-card accent"><strong>{{ kpis.nuevas }}</strong><span>Solicitudes nuevas</span></div>
+  <div class="stat-card"><strong>{{ kpis.en_proceso }}</strong><span>Casos en proceso</span></div>
+  <div class="stat-card"><strong>{{ kpis.finalizadas }}</strong><span>Asesorías finalizadas</span></div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Bandeja de asignación — {{ area_label }}</h2></div>
+  <div class="card-body" style="padding:0;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Empresa / NIT</th>
+          <th>Tipo / Subespecialidad</th>
+          <th>Asunto</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in solicitudes %}
+          <tr class="cita-row-clickable" data-cita-row="{{ cita.pk }}" title="Clic para ver detalle">
+            <td>{{ cita.franja.inicio|date:"d/m/Y H:i" }}</td>
+            <td>
+              {{ cita.cliente.empresa.razon_social|default:cita.cliente.email }}<br>
+              <small style="color:var(--muted);">NIT: {{ cita.nit_empresa }}</small>
+            </td>
+            <td>
+              <small style="display:block; font-weight:600; color:var(--primary);">{{ cita.get_tipo_servicio_display }}</small>
+              {% if cita.franja.area == 'sistemas' %}
+                <span class="badge badge-area-sistemas">{{ cita.get_subespecialidad_display }}</span>
+              {% else %}
+                <span class="badge badge-area-civil">{{ cita.get_subespecialidad_display }}</span>
+              {% endif %}
+            </td>
+            <td>
+              {{ cita.asunto|default:"—" }}
+              {% if cita.archivo_adjunto %}
+                <br><small style="color:var(--ucc-verde-solidario);">📎 Incluye archivo</small>
+              {% endif %}
+            </td>
+            <td class="cita-row-actions">
+              <a href="{% url 'portal:coordinador_asignar' cita.pk %}" class="btn btn-sm btn-primary">Asignar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" style="padding:1rem;color:var(--muted);">No hay solicitudes pendientes en su área.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

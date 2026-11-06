@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="{% static 'ucc-logo.svg' %}" alt="CITI">
+      <div>
+        <strong>CITI</strong>
+        <span>UCC · Ibagué–Espinal</span>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">{{ role_label }}</div>
+    <nav class="sidebar-nav">
+      {% block sidebar_nav %}{% endblock %}
+    </nav>
+    <div class="sidebar-footer">
+      <form method="post" action="{% url 'accounts:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-logout">Cerrar sesión</button>
+      </form>
+    </div>
+  </aside>
+  <main class="main-content">
+    <header class="topbar-dash">
+      <div>
+        <h1>{% block page_title %}Panel{% endblock %}</h1>
+        <p>{% block page_subtitle %}{{ role_label }}{% endblock %}</p>
+      </div>
+      <div style="text-align:right;font-size:0.85rem;">
+        <strong>{{ request.user.get_full_name|default:request.user.email }}</strong><br>
+        <span style="color:var(--muted)">{{ request.user.email }}</span>
+      </div>
+    </header>
+    <div class="page-content">
+      {% if messages %}
+        <div class="django-messages" role="status" aria-live="polite">
+          {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warn{% else %}info{% endif %} django-message-item">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% block dashboard_content %}{% endblock %}
+    </div>
+  </main>
+</div>
+
+<div id="citaModalOverlay" class="modal-overlay cita-modal-overlay" hidden aria-hidden="true">
+  <div class="modal cita-modal-panel" role="dialog" aria-modal="true" aria-labelledby="citaModalTitle">
+    <div id="citaModalBody" class="modal-body cita-modal-body"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/portal-cita-modal.js' %}"></script>
+{% block dashboard_extra_js %}{% endblock %}
+{% endblock %}

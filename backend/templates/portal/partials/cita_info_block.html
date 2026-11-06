@@ -1,0 +1,62 @@
+<div class="cita-info-grid">
+  <section class="cita-info-section">
+    <h4>Problema / asesoría</h4>
+    <p class="cita-descripcion">{{ cita.asunto|default:"Sin descripción registrada."|linebreaksbr }}</p>
+    <p><strong>Tipo de servicio:</strong> {{ cita.get_tipo_servicio_display }}</p>
+    <p><strong>Subespecialidad:</strong>
+      {% if cita.franja.area == 'sistemas' %}
+        <span class="badge badge-area-sistemas">{{ cita.get_subespecialidad_display }}</span>
+      {% else %}
+        <span class="badge badge-area-civil">{{ cita.get_subespecialidad_display }}</span>
+      {% endif %}
+    </p>
+  </section>
+  <section class="cita-info-section">
+    <h4>Empresa y contacto</h4>
+    <p><strong>Razón social:</strong> {{ cita.cliente.empresa.razon_social|default:"—" }}</p>
+    <p><strong>NIT:</strong> {{ cita.nit_empresa }}</p>
+    {% if cita.cliente.empresa.telefono %}
+      <p><strong>Teléfono empresa:</strong> {{ cita.cliente.empresa.telefono }}</p>
+    {% endif %}
+    {% if cita.cliente.empresa.direccion %}
+      <p><strong>Dirección:</strong> {{ cita.cliente.empresa.direccion }}</p>
+    {% endif %}
+    <p><strong>Contacto:</strong> {{ cita.cliente.nombre_completo|default:cita.cliente.email }}</p>
+    <p><strong>Correo:</strong> <a href="mailto:{{ cita.cliente.email }}">{{ cita.cliente.email }}</a></p>
+  </section>
+  <section class="cita-info-section">
+    <h4>Agenda</h4>
+    <p><strong>Área:</strong> {{ cita.franja.get_area_display }}</p>
+    <p><strong>Fecha y hora:</strong> {{ cita.franja.inicio|date:"l d/m/Y" }} · {{ cita.franja.inicio|date:"H:i" }} – {{ cita.franja.fin|date:"H:i" }}</p>
+    <p><strong>Estado:</strong> <span class="badge badge-estado-{{ cita.estado }}">{{ cita.get_estado_display }}</span></p>
+    <p><strong>Solicitud creada:</strong> {{ cita.creada_en|date:"d/m/Y H:i" }}</p>
+    {% if cita.docente_asignado %}
+      <p><strong>Docente:</strong> {{ cita.docente_asignado.nombre_completo }}</p>
+    {% endif %}
+    {% if cita.estudiante_apoyo %}
+      <p><strong>Apoyo técnico:</strong> {{ cita.estudiante_apoyo.nombre_completo }}</p>
+    {% endif %}
+  </section>
+</div>
+
+{% include "portal/partials/cita_timeline.html" %}
+
+{% if cita.archivo_adjunto %}
+<div class="attachment-box">
+  <strong>Documento adjunto:</strong>
+  <a href="{{ cita.archivo_adjunto.url }}" target="_blank" rel="noopener">{{ cita.archivo_adjunto.name }}</a>
+</div>
+{% endif %}
+
+{% if cita.notas.all %}
+<div class="timeline-bitacora">
+  <h4>Bitácora del caso</h4>
+  {% for nota in cita.notas.all|slice:":10" %}
+    <div class="bitacora-entry">
+      <strong>{{ nota.autor.nombre_completo }}</strong>
+      <span class="cita-muted"> · {{ nota.creada_en|date:"d/m/Y H:i" }}</span>
+      <p>{{ nota.texto|linebreaksbr }}</p>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}

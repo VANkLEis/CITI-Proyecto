@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Portal Cliente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../app/css/styles.css">
+  <link rel="stylesheet" href="../app/css/hifi.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><img src="../assets/ucc-logo.svg" alt="CITI"><div><strong>CITI</strong><span>Portal empresas</span></div></div>
+    <div class="sidebar-role-badge" id="roleBadge"></div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer"><button class="btn-logout" id="btnLogout">Cerrar sesión</button></div>
+  </aside>
+  <main class="main-content">
+    <header class="topbar-dash">
+      <div><h1 id="pageTitle">Inicio</h1><p id="pageSubtitle">Portal del cliente</p></div>
+      <div id="userHeader"></div>
+    </header>
+    <div class="page-content">
+      <div class="page-section active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat-card accent"><strong id="statActivos">0</strong><span>Casos activos</span></div>
+          <div class="stat-card"><strong id="statPendientes">0</strong><span>Solicitudes pendientes</span></div>
+          <div class="stat-card"><strong id="statCompletados">0</strong><span>Completados</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2>Mis solicitudes</h2><button class="btn btn-sm btn-primary" onclick="document.querySelector('[data-page=solicitar]').click()">+ Nueva solicitud</button></div>
+          <div class="card-body" style="padding:0">
+            <table class="data-table">
+              <thead><tr><th>Fecha</th><th>Tipo</th><th>Área</th><th>Estado</th><th>Tutor asignado</th></tr></thead>
+              <tbody id="tblMisCasos"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-solicitar">
+        <div class="card">
+          <div class="card-header"><h2>Solicitar asesoría o capacitación</h2></div>
+          <div class="card-body">
+            <div class="form-group"><label>Tipo de servicio</label>
+              <select><option>Asesoría a PyME</option><option>Práctica empresarial</option><option>Taller / Seminario</option><option>Convenio</option></select>
+            </div>
+            <div class="form-group"><label>Área requerida</label>
+              <select><option>Ingeniería de Sistemas</option><option>Ingeniería Civil</option><option>Ambas áreas</option></select>
+            </div>
+            <div class="form-group"><label>Descripción de la necesidad</label><textarea rows="5" placeholder="Describe el problema o servicio que necesitas..."></textarea></div>
+            <button class="btn btn-primary" id="btnEnviarSol">Enviar solicitud</button>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-mis-casos"><div class="card"><div class="card-body" id="detalleCasos"></div></div></div>
+      <div class="page-section" id="page-informes">
+        <div class="card">
+          <div class="card-header"><h2>Informes finales</h2></div>
+          <div class="card-body">
+            <table class="data-table"><thead><tr><th>Caso</th><th>Fecha</th><th>Estado</th><th>Acción</th></tr></thead>
+              <tbody>
+                <tr><td>Taller ofimática</td><td>Ene 2026</td><td><span class="badge badge-done">Completado</span></td>
+                <td><button class="btn btn-sm btn-primary">Descargar</button> <button class="btn btn-sm btn-secondary" id="btnFirmar">Firmar</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-historial"><div class="card"><div class="card-body"><p style="color:var(--muted)">Servicios anteriores de tu empresa.</p></div></div></div>
+    </div>
+  </main>
+</div>
+<script src="../app/js/data.js"></script>
+<script src="../app/js/auth.js"></script>
+<script src="../app/js/ui.js"></script>
+<script src="../app/js/dashboard.js"></script>
+<script src="../app/js/hifi-boot.js"></script>
+<script>
+  const session = initDashboard('cliente', 'dashboard', 'Inicio', 'Portal de empresas e instituciones');
+  if (session && session.empresaId) {
+    const mis = CITI_DATA.solicitudes.filter(s => s.empresaId === session.empresaId);
+    document.getElementById('statActivos').textContent = mis.filter(s => s.estado === 'en_proceso').length;
+    document.getElementById('statPendientes').textContent = mis.filter(s => s.estado === 'pendiente').length;
+    document.getElementById('statCompletados').textContent = mis.filter(s => s.estado === 'completado').length;
+    const rows = mis.map(s => `<tr><td>${s.fecha}</td><td>${s.tipo}</td><td>${s.area}</td><td>${estadoBadge(s.estado)}</td><td>${s.tutor || 'Por asignar'}</td></tr>`).join('');
+    document.getElementById('tblMisCasos').innerHTML = rows || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Aún no tienes solicitudes</td></tr>';
+    document.getElementById('detalleCasos').innerHTML = '<table class="data-table"><tbody>' + rows + '</tbody></table>';
+  }
+  document.getElementById('btnEnviarSol')?.addEventListener('click', () => {
+    CITI_UI.toast('Solicitud enviada correctamente', 'success');
+    CITI_FLOW.advance();
+    if (new URLSearchParams(location.search).get('flow') === '3') {
+      setTimeout(() => location.href = 'coordinador.html?flow=3', 700);
+    }
+  });
+  document.getElementById('btnFirmar')?.addEventListener('click', () => {
+    CITI_UI.modal({ title: 'Firmar informe', body: '¿Confirma la firma del informe final?', confirmText: 'Firmar', onConfirm: () => CITI_UI.toast('Informe firmado', 'success') });
+  });
+  if (new URLSearchParams(location.search).get('flow') === '3') document.querySelector('[data-page=solicitar]')?.click();
+</script>
+</body>
+</html>

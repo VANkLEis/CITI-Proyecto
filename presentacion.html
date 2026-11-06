@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Presentación Institucional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ucc: #003366; --accent: #e85d04; --bg: #0f172a; --slide-bg: #ffffff; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); overflow: hidden; height: 100vh; }
+    .deck { height: 100vh; position: relative; }
+    .slide {
+      position: absolute; inset: 0; display: none; flex-direction: column;
+      justify-content: center; padding: 4rem 6rem; background: var(--slide-bg);
+      animation: fadeIn 0.4s ease;
+    }
+    .slide.active { display: flex; }
+    .slide.dark { background: linear-gradient(135deg, var(--ucc), #1a4d80); color: white; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .slide-num { position: absolute; bottom: 2rem; right: 3rem; font-size: 0.85rem; color: #94a3b8; }
+    .slide.dark .slide-num { color: rgba(255,255,255,0.5); }
+    h1 { font-size: 2.8rem; color: var(--ucc); margin-bottom: 1rem; line-height: 1.2; }
+    .slide.dark h1 { color: white; }
+    h2 { font-size: 2rem; color: var(--ucc); margin-bottom: 1.5rem; }
+    .slide.dark h2 { color: white; }
+    .subtitle { font-size: 1.2rem; color: #64748b; margin-bottom: 2rem; }
+    .slide.dark .subtitle { color: rgba(255,255,255,0.8); }
+    .accent { color: var(--accent); }
+    ul { list-style: none; }
+    ul li { padding: 0.6rem 0; font-size: 1.1rem; border-bottom: 1px solid #f1f5f9; padding-left: 1.5rem; position: relative; }
+    ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem; }
+    .card { background: #f8fafc; border-radius: 12px; padding: 1.5rem; border-left: 4px solid var(--ucc); }
+    .card.orange { border-left-color: var(--accent); }
+    .card h3 { color: var(--ucc); margin-bottom: 0.8rem; font-size: 1.1rem; }
+    .card p, .card li { font-size: 0.95rem; color: #475569; }
+    .card li { border: none; padding: 0.3rem 0; }
+    .card li::before { content: '•'; color: var(--accent); }
+    .stats { display: flex; gap: 3rem; margin-top: 2rem; }
+    .stat strong { display: block; font-size: 2.5rem; color: var(--accent); }
+    .stat span { font-size: 0.9rem; color: #64748b; }
+    .org { font-family: monospace; font-size: 0.75rem; line-height: 1.6; background: #f8fafc; padding: 1.5rem; border-radius: 8px; overflow-x: auto; }
+    .controls {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 1rem; z-index: 100;
+    }
+    .controls button {
+      padding: 0.6rem 1.5rem; border: none; border-radius: 8px; cursor: pointer;
+      font-weight: 600; font-family: inherit; background: var(--accent); color: white;
+    }
+    .controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); transition: width 0.3s; z-index: 100; }
+    .logo-slide { display: flex; align-items: center; gap: 2rem; }
+    .logo-slide img { width: 120px; height: 120px; border-radius: 16px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+    th { background: var(--ucc); color: white; padding: 0.8rem; text-align: left; }
+    td { padding: 0.7rem; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    .timeline { display: flex; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .timeline-item { flex: 1; min-width: 120px; text-align: center; padding: 1rem; background: #f8fafc; border-radius: 8px; font-size: 0.8rem; }
+    .timeline-item strong { display: block; color: var(--ucc); margin-bottom: 0.3rem; }
+    .back { position: fixed; top: 1.5rem; left: 2rem; z-index: 100; color: var(--ucc); font-weight: 600; text-decoration: none; }
+    .slide.dark ~ .back, body:has(.slide.dark.active) .back { color: white; }
+  </style>
+</head>
+<body>
+<a href="index.html" class="back">← Volver al sitio</a>
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <div class="slide dark active">
+    <div class="logo-slide">
+      <img src="assets/citi-logo.png" alt="CITI">
+      <div>
+        <h1>Consultorio de Ingeniería,<br>Tecnología e Innovación</h1>
+        <p class="subtitle">Universidad Cooperativa de Colombia · Campus Ibagué–Espinal · 2026</p>
+        <p class="subtitle">Ingeniería de Sistemas + Ingeniería Civil</p>
+      </div>
+    </div>
+    <span class="slide-num">1 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Objetivo general</h2>
+    <p style="font-size:1.15rem;line-height:1.8;color:#334155;max-width:800px;">
+      Ofrecer a la comunidad tolimense un espacio de <strong class="accent">asesorías, capacitación, orientación profesional, convenios y exploración profesional</strong> que conecte el conocimiento académico con las necesidades de empresarios, instituciones y ciudadanía.
+    </p>
+    <div class="stats">
+      <div class="stat"><strong>Gratis</strong><span>Asesorías a PyMEs</span></div>
+      <div class="stat"><strong>6</strong><span>Líneas de acción</span></div>
+      <div class="stat"><strong>2</strong><span>Programas integrados</span></div>
+    </div>
+    <span class="slide-num">2 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Justificación</h2>
+    <ul>
+      <li>Ibagué presenta crecimiento económico con numerosas PyMEs que necesitan orientación tecnológica e infraestructural</li>
+      <li>La universidad no puede vivir de espaldas al sector productivo</li>
+      <li>Los estudiantes necesitan confrontar conocimientos teóricos con la realidad empresarial</li>
+      <li>Primera iniciativa de este tipo en la región — ventaja comparativa para la UCC</li>
+    </ul>
+    <span class="slide-num">3 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Estructura organizacional</h2>
+    <div class="org">
+Subdirección Académica UCC
+        │
+   Director CITI (Programas Sistemas + Civil)
+        │
+   ┌────┼────┐
+   │    │    │
+Coord. Coord. Coord.
+Sist.  Civil  Elect.
+   │    │    │
+   └────┼────┘
+        │
+ Consultor permanente (8° sem+)
+        │
+ Estudiantes asesores (3° sem+) ← Docentes asesores
+    </div>
+    <span class="slide-num">4 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Líneas de acción</h2>
+    <div class="grid-2">
+      <div class="card"><h3>1. Práctica empresarial</h3><p>Aprendizaje en el trabajo con empresas del Tolima.</p></div>
+      <div class="card"><h3>2. Asesorías PyME</h3><p>Casos simples y complejos con informes mensuales.</p></div>
+      <div class="card orange"><h3>3. Educación no formal</h3><p>Seminarios y talleres a costo mínimo.</p></div>
+      <div class="card orange"><h3>4. Exploración profesional</h3><p>Colegios de Ibagué y municipios — grado 11.</p></div>
+      <div class="card"><h3>5. Convenios</h3><p>Alianzas externas cuando se requiere talento especializado.</p></div>
+      <div class="card"><h3>6. Programa radial</h3><p>Consultas, bolsa de empleo y divulgación semanal.</p></div>
+    </div>
+    <span class="slide-num">5 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Servicios por área</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Ingeniería de Sistemas</h3>
+        <ul>
+          <li>Auditoría de sistemas y software</li>
+          <li>Desarrollo web y e-commerce</li>
+          <li>Ofimática y programación</li>
+          <li>Redes, telecomunicaciones, IoT</li>
+        </ul>
+      </div>
+      <div class="card orange">
+        <h3>Ingeniería Civil</h3>
+        <ul>
+          <li>Revisión de planos y metrados</li>
+          <li>Asesoría NSR-10</li>
+          <li>Gestión de proyectos de obra</li>
+          <li>CAD/BIM y sostenibilidad</li>
+        </ul>
+      </div>
+    </div>
+    <span class="slide-num">6 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Actores del ecosistema</h2>
+    <table>
+      <tr><th>Actor</th><th>Tipo</th><th>Rol</th></tr>
+      <tr><td>Director CITI</td><td>Principal</td><td>Gobernanza y aprobación</td></tr>
+      <tr><td>Coordinadores</td><td>Principal</td><td>Supervisión y promoción</td></tr>
+      <tr><td>Estudiante consultor</td><td>Principal</td><td>Atención al público</td></tr>
+      <tr><td>PyMEs / empresas</td><td>Principal</td><td>Usuarios del servicio</td></tr>
+      <tr><td>Estudiantes asesores</td><td>Secundario</td><td>Ejecución de casos</td></tr>
+      <tr><td>Docentes / egresados</td><td>Secundario</td><td>Dirección técnica</td></tr>
+      <tr><td>Gremios / entidades públicas</td><td>Secundario</td><td>Aliados estratégicos</td></tr>
+    </table>
+    <span class="slide-num">7 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Proceso de atención</h2>
+    <div class="timeline">
+      <div class="timeline-item"><strong>1</strong>Solicitud escrita</div>
+      <div class="timeline-item"><strong>2</strong>Revisión coordinadores</div>
+      <div class="timeline-item"><strong>3</strong>Aprobación programa</div>
+      <div class="timeline-item"><strong>4</strong>Asignación equipo</div>
+      <div class="timeline-item"><strong>5</strong>Ejecución + informes</div>
+      <div class="timeline-item"><strong>6</strong>Cierre y socialización</div>
+    </div>
+    <p style="margin-top:2rem;color:#64748b;">El consultorio es veedor del proceso. Posible homologación como trabajo de grado.</p>
+    <span class="slide-num">8 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Programa radial CITI</h2>
+    <table>
+      <tr><th>Segmento</th><th>Duración</th><th>Responsable</th></tr>
+      <tr><td>Invitado especial</td><td>20 min</td><td>Experto / empresario</td></tr>
+      <tr><td>Momento ingenieril</td><td>7 min</td><td>Estudiante</td></tr>
+      <tr><td>Reflexión social</td><td>6 min</td><td>Estudiante</td></tr>
+      <tr><td>Consulta técnica</td><td>6 min</td><td>Especialista</td></tr>
+      <tr><td>Bolsa de empleo</td><td>5 min</td><td>Consultor CITI</td></tr>
+    </table>
+    <span class="slide-num">9 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Infraestructura y apoyo logístico</h2>
+    <ul>
+      <li>Oficina con computadoras, mobiliario y espacio de atención al usuario</li>
+      <li>Oficinas para coordinadores de Sistemas y Civil</li>
+      <li>Sala de capacitación para 8–12 personas</li>
+      <li>Archivo documental con 7+ carpetas de registro</li>
+      <li>Presupuesto universitario: papelería, dotación, gastos generales</li>
+    </ul>
+    <span class="slide-num">10 / 12</span>
+  </div>
+
+  <div class="slide">
+    <h2>Cronograma 2026-1</h2>
+    <div class="timeline">
+      <div class="timeline-item"><strong>Feb</strong>Diagnóstico sectorial</div>
+      <div class="timeline-item"><strong>Mar</strong>Apertura oficina</div>
+      <div class="timeline-item"><strong>Mar</strong>Capacitación consultores</div>
+      <div class="timeline-item"><strong>Abr</strong>Programa radial</div>
+      <div class="timeline-item"><strong>Abr-Mayo</strong>Exploración colegios</div>
+      <div class="timeline-item"><strong>Semestre</strong>Asesorías PyME</div>
+      <div class="timeline-item"><strong>Jun</strong>Archivo semestral</div>
+    </div>
+    <span class="slide-num">11 / 12</span>
+  </div>
+
+  <div class="slide dark">
+    <h1>¿Listos para transformar<br>el Tolima?</h1>
+    <p class="subtitle">CITI — Conocimiento que construye región</p>
+    <p class="subtitle" style="margin-top:2rem;">Universidad Cooperativa de Colombia<br>Facultad de Ingeniería · Ibagué–Espinal · 2026</p>
+    <span class="slide-num">12 / 12</span>
+  </div>
+
+</div>
+
+<div class="controls">
+  <button id="prev" disabled>← Anterior</button>
+  <button id="next">Siguiente →</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const progress = document.getElementById('progress');
+  let current = 0;
+
+  function show(i) {
+    slides.forEach((s, j) => s.classList.toggle('active', j === i));
+    prev.disabled = i === 0;
+    next.disabled = i === slides.length - 1;
+    progress.style.width = ((i + 1) / slides.length * 100) + '%';
+    const back = document.querySelector('.back');
+    back.style.color = slides[i].classList.contains('dark') ? 'white' : '#003366';
+  }
+
+  prev.onclick = () => { if (current > 0) show(--current); };
+  next.onclick = () => { if (current < slides.length - 1) show(++current); };
+  document.onkeydown = (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); if (current < slides.length - 1) show(++current); }
+    if (e.key === 'ArrowLeft') { if (current > 0) show(--current); }
+  };
+  show(0);
+</script>
+</body>
+</html>

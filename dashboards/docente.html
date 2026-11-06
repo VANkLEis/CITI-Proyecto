@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Portal Docente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../app/css/styles.css">
+  <link rel="stylesheet" href="../app/css/hifi.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><img src="../assets/ucc-logo.svg" alt="UCC"><div><strong>CITI</strong><span>UCC · Ibagué–Espinal</span></div></div>
+    <div class="sidebar-role-badge" id="roleBadge"></div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer"><button class="btn-logout" id="btnLogout">Cerrar sesión</button></div>
+  </aside>
+  <main class="main-content">
+    <header class="topbar-dash">
+      <div><h1 id="pageTitle">Mis tutorías</h1><p id="pageSubtitle">Supervisión docente</p></div>
+      <div id="userHeader"></div>
+    </header>
+    <div class="page-content">
+      <div class="page-section active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat-card accent"><strong>3</strong><span>Casos bajo supervisión</span></div>
+          <div class="stat-card"><strong>2</strong><span>Informes por revisar</span></div>
+          <div class="stat-card"><strong>1</strong><span>Taller programado</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2>Casos que superviso</h2></div>
+          <div class="card-body" style="padding:0">
+            <table class="data-table">
+              <thead><tr><th>Empresa</th><th>Tutor asignado</th><th>Área</th><th>Estado informe</th><th>Acción</th></tr></thead>
+              <tbody>
+                <tr><td>Constructora del Tolima</td><td>Juan David Castro</td><td>Civil</td><td><span class="badge badge-pending">Parcial pendiente</span></td><td><button class="btn btn-sm btn-primary">Revisar</button></td></tr>
+                <tr><td>TechPyME Soluciones</td><td>María Fernanda López</td><td>Sistemas</td><td><span class="badge badge-active">En revisión</span></td><td><button class="btn btn-sm btn-primary">Revisar</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-casos"><div class="card"><div class="card-body"><p style="color:var(--muted)">Casos asignados como docente asesor.</p></div></div></div>
+      <div class="page-section" id="page-informes">
+        <div class="card"><div class="card-header"><h2>Informes de estudiantes tutores</h2></div>
+          <div class="card-body">
+            <table class="data-table"><thead><tr><th>Estudiante</th><th>Caso</th><th>Tipo</th><th>Acción</th></tr></thead>
+              <tbody>
+                <tr><td>María Fernanda López</td><td>TechPyME — Diagnóstico TI</td><td>Parcial marzo</td><td><button class="btn btn-sm btn-primary">Aprobar informe</button> <button class="btn btn-sm btn-secondary">Devolver correcciones</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-talleres"><div class="card"><div class="card-body"><p>Taller programado: <strong>Ofimática avanzada</strong> — 15 marzo 2026</p><button class="btn btn-primary" style="margin-top:1rem">Ver programa del taller</button></div></div></div>
+      <div class="page-section" id="page-practicas"><div class="card"><div class="card-body"><p style="color:var(--muted)">Evaluación de prácticas empresariales.</p></div></div></div>
+    </div>
+  </main>
+</div>
+<script src="../app/js/data.js"></script>
+<script src="../app/js/auth.js"></script>
+<script src="../app/js/ui.js"></script>
+<script src="../app/js/hifi-boot.js"></script>
+<script src="../app/js/dashboard.js"></script>
+<script>initDashboard('docente', 'dashboard', 'Mis tutorías', 'Supervisión docente de casos asignados');</script>
+</body>
+</html>

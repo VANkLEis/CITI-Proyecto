@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}CITI — Registro de empresa{% endblock %}
+{% block body_class %}no-sidebar{% endblock %}
+
+{% block content %}
+<div class="login-page">
+  <div class="login-left">
+    <a href="{% url 'portal:landing' %}" class="back-home">← Inicio</a>
+    <div class="login-brand">
+      <img src="{% static 'ucc-logo.svg' %}" alt="UCC">
+      <div class="login-brand-text">
+        <strong>Universidad Cooperativa de Colombia</strong>
+        <span>CITI · Portal empresas</span>
+      </div>
+    </div>
+    <h1>Registro de empresa</h1>
+    <p>Crea una cuenta de cliente para solicitar asesorías, capacitaciones y convenios con el CITI.</p>
+  </div>
+
+  <div class="login-right" style="width:480px;max-width:100%;overflow-y:auto;">
+    <h2>Nueva cuenta</h2>
+    <p class="portal-name">Cliente / Empresa</p>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<small style="color:var(--danger)">{{ field.errors }}</small>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem">Crear cuenta</button>
+    </form>
+
+    <p style="margin-top:1.25rem;font-size:0.85rem;color:var(--muted);">
+      ¿Ya tiene cuenta?
+      <a href="{% url 'accounts:login' %}?rol=cliente" style="color:var(--ucc-verde-solidario);font-weight:600;">Iniciar sesión</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

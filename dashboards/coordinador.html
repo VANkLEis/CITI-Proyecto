@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Portal Coordinador</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../app/css/styles.css">
+  <link rel="stylesheet" href="../app/css/hifi.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><img src="../assets/ucc-logo.svg" alt="UCC"><div><strong>CITI</strong><span>UCC · Ibagué–Espinal</span></div></div>
+    <div class="sidebar-role-badge" id="roleBadge"></div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer"><button class="btn-logout" id="btnLogout">Cerrar sesión</button></div>
+  </aside>
+  <main class="main-content">
+    <header class="topbar-dash">
+      <div><h1 id="pageTitle">Mi área</h1><p id="pageSubtitle">Coordinación de área</p></div>
+      <div id="userHeader"></div>
+    </header>
+    <div class="page-content">
+      <div class="page-section active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat-card accent"><strong id="statPendientes">0</strong><span>Pendientes de aprobación</span></div>
+          <div class="stat-card"><strong id="statActivos">0</strong><span>Casos activos</span></div>
+          <div class="stat-card"><strong>6</strong><span>Tutores disponibles</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2>Solicitudes de mi área</h2></div>
+          <div class="card-body" style="padding:0"><table class="data-table"><thead><tr><th>Empresa</th><th>Tipo</th><th>Estado</th><th>Fecha</th><th>Acción</th></tr></thead><tbody id="tblArea"></tbody></table></div>
+        </div>
+      </div>
+      <div class="page-section" id="page-solicitudes">
+        <div class="card"><div class="card-body" id="aprobaciones"></div></div>
+      </div>
+      <div class="page-section" id="page-asignaciones">
+        <div class="card"><div class="card-header"><h2>Asignar tutor y docente</h2></div>
+          <div class="card-body">
+            <div class="form-group"><label>Solicitud</label><select id="selSol"><option>TechPyME — Asesoría Sistemas</option></select></div>
+            <div class="grid-2">
+              <div class="form-group"><label>Estudiante tutor</label><select><option>María Fernanda López</option><option>— Otro tutor</option></select></div>
+              <div class="form-group"><label>Docente asesor</label><select><option>Mg. Patricia Gómez</option></select></div>
+            </div>
+            <button class="btn btn-primary">Confirmar asignación</button>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-estudiantes"><div class="card"><div class="card-body"><p style="color:var(--muted)">Estudiantes tutores y consultores de tu área.</p></div></div></div>
+      <div class="page-section" id="page-visitas"><div class="card"><div class="card-body"><button class="btn btn-primary">+ Registrar visita empresarial</button></div></div></div>
+      <div class="page-section" id="page-informes"><div class="card"><div class="card-body"><button class="btn btn-primary">Enviar informe mensual</button></div></div></div>
+    </div>
+  </main>
+</div>
+<script src="../app/js/data.js"></script>
+<script src="../app/js/auth.js"></script>
+<script src="../app/js/ui.js"></script>
+<script src="../app/js/hifi-boot.js"></script>
+<script src="../app/js/dashboard.js"></script>
+<script>
+  const session = initDashboard('coordinador', 'dashboard', 'Mi área', 'Coordinación de área');
+  if (session) {
+    const area = session.area || 'sistemas';
+    const areaLabel = area === 'sistemas' ? 'Ingeniería de Sistemas' : 'Ingeniería Civil';
+    document.getElementById('pageSubtitle').textContent = areaLabel;
+    const filtered = CITI_DATA.solicitudes.filter(s => s.area === area);
+    document.getElementById('statPendientes').textContent = filtered.filter(s => s.estado === 'pendiente').length;
+    document.getElementById('statActivos').textContent = filtered.filter(s => s.estado === 'en_proceso').length;
+    const rows = filtered.map(s => `<tr><td>${s.empresa}</td><td>${s.tipo}</td><td>${estadoBadge(s.estado)}</td><td>${s.fecha}</td>
+      <td>${s.estado === 'pendiente' ? '<button class="btn btn-sm btn-primary">Aprobar</button> <button class="btn btn-sm btn-secondary">Rechazar</button>' : '<button class="btn btn-sm btn-secondary">Ver</button>'}</td></tr>`).join('');
+    document.getElementById('tblArea').innerHTML = rows || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Sin solicitudes en tu área</td></tr>';
+    document.getElementById('aprobaciones').innerHTML = '<table class="data-table"><tbody>' + rows + '</tbody></table>';
+  }
+</script>
+</body>
+</html>

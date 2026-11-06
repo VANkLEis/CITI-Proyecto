@@ -1,0 +1,111 @@
+{% extends "dashboard_base.html" %}
+
+
+
+{% block title %}CITI — Caso #{{ cita.pk }}{% endblock %}
+
+{% block page_title %}Detalle del caso #{{ cita.pk }}{% endblock %}
+
+{% block page_subtitle %}{{ cita.franja.get_area_display }}{% endblock %}
+
+
+
+{% block dashboard_content %}
+
+<div class="card" style="margin-bottom:1.5rem;">
+
+  <div class="card-header"><h2>Información del caso</h2></div>
+
+  <div class="card-body">
+
+    {% include "portal/partials/cita_info_block.html" %}
+
+  </div>
+
+</div>
+
+
+
+<div class="grid-2">
+
+  <div class="card">
+
+    <div class="card-header"><h2>Acciones rápidas</h2></div>
+
+    <div class="card-body">
+
+      <form method="post">
+
+        {% csrf_token %}
+
+        <input type="hidden" name="accion" value="estado_rapido">
+
+        <div class="btn-row-estado">
+
+          <button type="submit" name="nuevo_estado" value="en_proceso" class="btn btn-secondary" {% if cita.estado == 'en_proceso' %}disabled{% endif %}>Marcar en proceso</button>
+
+          <button type="submit" name="nuevo_estado" value="finalizada" class="btn btn-primary" {% if cita.estado == 'finalizada' %}disabled{% endif %}>Marcar finalizada</button>
+
+        </div>
+
+      </form>
+
+      {% if cita.estado == 'finalizada' %}
+
+        <a href="{% url 'portal:docente_generar_acta' cita.pk %}" class="btn btn-secondary" target="_blank" rel="noopener" style="margin-top:1rem;">Descargar acta (PDF / imprimir)</a>
+
+      {% else %}
+
+        <p class="cita-muted" style="margin-top:1rem;font-size:0.85rem;">El acta estará disponible al finalizar el caso.</p>
+
+      {% endif %}
+
+    </div>
+
+  </div>
+
+
+
+  <div class="card">
+
+    <div class="card-header"><h2>Gestión del caso</h2></div>
+
+    <div class="card-body">
+
+      <form method="post">
+
+        {% csrf_token %}
+
+        <input type="hidden" name="accion" value="gestionar">
+
+        {% for field in form %}
+
+          <div class="form-group">
+
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+            {{ field }}
+
+            {% if field.errors %}<small class="field-error">{{ field.errors }}</small>{% endif %}
+
+          </div>
+
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+
+        <a href="{% url 'portal:docente_dashboard' %}" class="btn btn-secondary" style="margin-left:0.5rem;">Volver</a>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+{% endblock %}
+

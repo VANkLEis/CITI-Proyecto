@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Iniciar sesión</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app/css/styles.css">
+  <link rel="stylesheet" href="app/css/hifi.css">
+  <style>
+    .account-picker { margin-bottom: 1rem; }
+    .account-picker label { font-size: 0.75rem; font-weight: 600; color: var(--ucc-gris-equidad); display: block; margin-bottom: 0.4rem; }
+    .account-picker select { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.85rem; }
+    .cred-hint {
+      margin-top: 1.25rem; padding: 0.85rem 1rem; background: #f0f3f6; border-radius: 8px;
+      font-size: 0.78rem; color: var(--muted); border: 1px solid var(--border);
+    }
+    .cred-hint strong { color: var(--ucc); display: block; margin-bottom: 0.35rem; font-size: 0.8rem; }
+    .cred-hint code { color: var(--ucc-verde-solidario); font-size: 0.76rem; }
+  </style>
+</head>
+<body class="no-sidebar">
+  <div class="login-page">
+    <div class="login-left">
+      <a href="index.html" class="back-home">← Inicio</a>
+      <div class="login-brand">
+        <img src="assets/ucc-logo.svg" alt="UCC">
+        <div class="login-brand-text">
+          <strong>Universidad Cooperativa de Colombia</strong>
+          <span>CITI · Campus Ibagué–Espinal</span>
+        </div>
+      </div>
+      <h1>Iniciar sesión</h1>
+      <p>Selecciona tu rol y la cuenta de demostración.</p>
+      <div class="role-list" id="roleList"></div>
+    </div>
+
+    <div class="login-right">
+      <h2>Acceso</h2>
+      <p class="portal-name" id="portalName">Selecciona un rol</p>
+
+      <div id="accountPicker" class="account-picker" style="display:none">
+        <label id="accountPickerLabel">Cuenta</label>
+        <select id="accountSelect"></select>
+      </div>
+
+      <div id="loginAlert"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="email" placeholder="correo@ucc.edu.co" required disabled>
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="password" placeholder="••••••••" required disabled>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem" id="btnLogin" disabled>
+          Ingresar
+        </button>
+      </form>
+
+      <div class="cred-hint" id="credHint" style="display:none"></div>
+    </div>
+  </div>
+
+  <script src="app/js/data.js"></script>
+  <script src="app/js/auth.js"></script>
+  <script src="app/js/ui.js"></script>
+  <script>
+    let selectedRole = null;
+
+    function usersForRole(roleId) {
+      return CITI_DATA.users.filter(u => u.role === roleId);
+    }
+
+    function accountLabel(u) {
+      if (u.studentType === 'consultor') return `${u.name} — Recepción`;
+      if (u.studentType === 'tutor') return `${u.name} — Tutor · ${u.area === 'civil' ? 'Civil' : 'Sistemas'}`;
+      if (u.role === 'coordinador') return `${u.name} — ${u.area === 'civil' ? 'Civil' : 'Sistemas'}`;
+      if (u.role === 'docente') return `${u.name} — ${u.area === 'civil' ? 'Civil' : 'Sistemas'}`;
+      if (u.role === 'cliente') return u.name;
+      return u.name;
+    }
+
+    function fillCredentials(user) {
+      document.getElementById('email').value = user.email;
+      document.getElementById('password').value = user.password;
+      document.getElementById('credHint').style.display = 'block';
+      document.getElementById('credHint').innerHTML = `
+        <strong>Credenciales</strong>
+        Correo: <code>${user.email}</code><br>
+        Contraseña: <code>${user.password}</code>`;
+    }
+
+    function renderRoles() {
+      document.getElementById('roleList').innerHTML = Object.values(CITI_DATA.roles).map(role => `
+        <div class="role-option" data-role="${role.id}">
+          <span class="role-icon">${role.icon}</span>
+          <div>
+            <strong>${role.label}</strong>
+            <span>${role.portal}</span>
+          </div>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.role-option').forEach(el => {
+        el.addEventListener('click', () => selectRole(el.dataset.role));
+      });
+    }
+
+    function selectRole(roleId, userEmail) {
+      selectedRole = roleId;
+      const role = CITI_DATA.roles[roleId];
+      const accounts = usersForRole(roleId);
+
+      document.querySelectorAll('.role-option').forEach(el => {
+        el.classList.toggle('selected', el.dataset.role === roleId);
+      });
+
+      document.getElementById('portalName').textContent = role.portal;
+      document.getElementById('email').disabled = false;
+      document.getElementById('password').disabled = false;
+      document.getElementById('btnLogin').disabled = false;
+      document.getElementById('loginAlert').innerHTML = '';
+
+      const picker = document.getElementById('accountPicker');
+      const select = document.getElementById('accountSelect');
+
+      if (accounts.length > 1) {
+        picker.style.display = 'block';
+        document.getElementById('accountPickerLabel').textContent =
+          roleId === 'estudiante' ? 'Tipo de estudiante' :
+          roleId === 'coordinador' ? 'Área' :
+          roleId === 'docente' ? 'Área' :
+          roleId === 'cliente' ? 'Empresa' : 'Cuenta';
+        select.innerHTML = accounts.map(u =>
+          `<option value="${u.email}">${accountLabel(u)}</option>`).join('');
+        select.onchange = () => {
+          const u = accounts.find(a => a.email === select.value);
+          if (u) fillCredentials(u);
+        };
+      } else {
+        picker.style.display = 'none';
+      }
+
+      const user = userEmail
+        ? accounts.find(u => u.email === userEmail)
+        : accounts[0];
+      if (user) {
+        if (accounts.length > 1) select.value = user.email;
+        fillCredentials(user);
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!selectedRole) return;
+
+      const result = CITI_AUTH.login(
+        document.getElementById('email').value,
+        document.getElementById('password').value,
+        selectedRole
+      );
+
+      if (result.ok) {
+        CITI_UI.toast('Bienvenido', 'success');
+        if (typeof CITI_FLOW !== 'undefined') CITI_FLOW.advance();
+        setTimeout(() => { window.location.href = CITI_DATA.roles[selectedRole].dashboard; }, 500);
+      } else {
+        CITI_UI.toast(result.error, 'error');
+        let html = `<div class="alert alert-error">${result.error}</div>`;
+        if (result.redirectRole) {
+          const correct = CITI_DATA.roles[result.redirectRole];
+          html += `<div class="alert alert-info">Tu cuenta es de <strong>${correct.label}</strong>. <a href="#" onclick="selectRole('${result.redirectRole}');return false;" style="color:var(--highlight);text-decoration:underline">Cambiar portal</a></div>`;
+        }
+        document.getElementById('loginAlert').innerHTML = html;
+      }
+    });
+
+    const existing = CITI_AUTH.getSession();
+    if (existing) window.location.href = CITI_DATA.roles[existing.role].dashboard;
+
+    renderRoles();
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('flow')) CITI_FLOW.renderBar();
+
+    const urlRole = params.get('role');
+    const legacyMap = { admin: 'director', consultor: 'estudiante', tutor: 'estudiante' };
+    const role = legacyMap[urlRole] || urlRole;
+    if (role && CITI_DATA.roles[role]) {
+      const emailMap = {
+        consultor: 'consultor@citi.ucc.edu.co',
+        tutor: 'tutor@citi.ucc.edu.co',
+        admin: 'director@citi.ucc.edu.co',
+      };
+      selectRole(role, emailMap[urlRole] || params.get('email') || null);
+    }
+
+    if (params.get('demo') === 'mismatch' || params.get('demo') === 'error') {
+      selectRole('director');
+      document.getElementById('email').value = 'gerente@constructoratolima.com';
+      document.getElementById('password').value = 'cliente2026';
+      setTimeout(() => {
+        const result = CITI_AUTH.login('gerente@constructoratolima.com', 'cliente2026', 'director');
+        if (!result.ok) {
+          document.getElementById('loginAlert').innerHTML =
+            `<div class="alert alert-error">Esta cuenta es del portal <strong>Cliente</strong>.</div>`;
+          CITI_UI.toast('Rol incorrecto', 'error');
+        }
+      }, 400);
+    }
+  </script>
+</body>
+</html>

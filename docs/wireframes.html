@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Wireframes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --wire-bg:#e2e8f0; --wire-box:#fff; --wire-border:#94a3b8; --wire-text:#475569; --ucc:#132740; --verde:#80ba27; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Open Sans',sans-serif; background:#f0f3f6; color:#1a2332; }
+    .header { background:var(--ucc); color:white; padding:2rem; text-align:center; border-bottom:4px solid var(--verde); }
+    .header h1 { font-size:1.5rem; }
+    .header p { opacity:0.85; font-size:0.88rem; margin-top:0.3rem; }
+    .tabs { display:flex; gap:0; background:white; border-bottom:1px solid #dde3ea; overflow-x:auto; padding:0 1rem; position:sticky; top:0; z-index:10; }
+    .tab { padding:0.75rem 1rem; border:none; background:none; cursor:pointer; font-family:inherit; font-size:0.78rem; font-weight:600; color:var(--wire-text); white-space:nowrap; border-bottom:3px solid transparent; }
+    .tab.active { color:var(--ucc); border-bottom-color:var(--verde); }
+    .panel { display:none; padding:2rem; max-width:1100px; margin:0 auto; }
+    .panel.active { display:block; }
+    .wf-label { font-size:0.88rem; font-weight:700; color:var(--ucc); margin-bottom:0.3rem; }
+    .wf-desc { font-size:0.8rem; color:var(--wire-text); margin-bottom:1rem; }
+    .wf { background:var(--wire-box); border:2px solid var(--wire-border); border-radius:6px; overflow:hidden; }
+    .wf-bar { background:var(--wire-bg); border-bottom:1px solid var(--wire-border); padding:0.45rem 1rem; display:flex; align-items:center; gap:0.5rem; font-size:0.68rem; color:var(--wire-text); }
+    .wf-dot { width:8px; height:8px; border-radius:50%; background:var(--wire-border); }
+    .wf-body { padding:1rem; min-height:180px; }
+    .wf-row { display:flex; gap:0.5rem; margin-bottom:0.5rem; }
+    .wf-block { background:var(--wire-bg); border:1px dashed var(--wire-border); border-radius:3px; padding:0.55rem; font-size:0.62rem; color:var(--wire-text); text-align:center; margin-bottom:0.35rem; }
+    .wf-block.dark { background:#cbd5e1; }
+    .wf-block.accent { background:#e2f0d0; border-color:var(--verde); color:#4a7a15; }
+    .wf-block.tall { min-height:55px; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+    .wf-block.xtall { min-height:110px; }
+    .wf-sidebar { width:130px; background:#f8fafc; border-right:1px solid var(--wire-border); padding:0.5rem; flex-shrink:0; }
+    .wf-sidebar .wf-block { text-align:left; font-size:0.58rem; padding:0.35rem 0.45rem; }
+    .wf-sidebar .wf-block.active { background:#e2f0d0; border-color:var(--verde); }
+    .wf-main { flex:1; padding:0.75rem; }
+    .wf-topbar { display:flex; justify-content:space-between; margin-bottom:0.7rem; padding-bottom:0.4rem; border-bottom:1px solid var(--wire-border); }
+    .wf-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:0.35rem; }
+    .wf-grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:0.35rem; margin-bottom:0.7rem; }
+    .wf-grid-5 { display:grid; grid-template-columns:repeat(5,1fr); gap:0.35rem; }
+    .wf-table { width:100%; border-collapse:collapse; font-size:0.58rem; }
+    .wf-table th { background:var(--ucc); color:white; border:1px solid var(--wire-border); padding:0.25rem; }
+    .wf-table td { border:1px solid var(--wire-border); padding:0.25rem; }
+    .wf-input { background:white; border:1px solid var(--wire-border); border-radius:2px; height:22px; margin-bottom:0.25rem; }
+    .wf-btn { background:var(--wire-bg); border:1px solid var(--wire-border); border-radius:2px; padding:0.25rem 0.6rem; font-size:0.58rem; display:inline-block; }
+    .wf-btn.primary { background:#e2f0d0; border-color:var(--verde); }
+    .meta { font-size:0.72rem; color:var(--wire-text); margin-top:0.6rem; font-style:italic; }
+    .back { display:inline-block; padding:1rem 1.5rem; color:var(--ucc); font-size:0.85rem; font-weight:600; text-decoration:none; }
+  </style>
+</head>
+<body>
+<a href="documentacion-arquitectura.html" class="back">← Documentación de arquitectura</a>
+<div class="header">
+  <h1>Wireframes — Plataforma CITI</h1>
+  <p>Baja fidelidad · 5 portales · Identidad UCC · Versión 2026</p>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab active" data-panel="landing">WF-01 Landing</button>
+  <button class="tab" data-panel="login">WF-02 Login</button>
+  <button class="tab" data-panel="director">WF-03 Director</button>
+  <button class="tab" data-panel="coord">WF-04 Coordinador</button>
+  <button class="tab" data-panel="docente">WF-05 Docente</button>
+  <button class="tab" data-panel="estudiante">WF-06 Estudiante</button>
+  <button class="tab" data-panel="cliente">WF-07 Cliente</button>
+  <button class="tab" data-panel="flujo">WF-08 Flujo CU-01</button>
+</div>
+
+<!-- WF-01 LANDING -->
+<div class="panel active" id="landing">
+  <div class="wf-label">WF-01 · Página de inicio pública</div>
+  <div class="wf-desc">Punto de entrada sin autenticación. Presenta el CITI y los 5 portales de acceso. Identidad visual UCC (logo, colores institucionales).</div>
+  <div class="wf">
+    <div class="wf-bar"><div class="wf-dot"></div><div class="wf-dot"></div><div class="wf-dot"></div> citi.ucc.edu.co</div>
+    <div class="wf-body">
+      <div class="wf-row">
+        <div class="wf-block dark" style="flex:1">[LOGO UCC] CITI — Universidad Cooperativa de Colombia</div>
+        <div class="wf-block accent" style="width:90px">Iniciar sesión</div>
+      </div>
+      <div class="wf-block xtall accent" style="margin:0.8rem 0">
+        Campus Ibagué–Espinal · Facultad de Ingeniería<br>
+        <strong>Consultorio de Ingeniería, Tecnología e Innovación</strong><br>
+        [ Ingresar ]
+      </div>
+      <div class="wf-block" style="margin-bottom:0.4rem">Portales de acceso</div>
+      <div class="wf-grid-5">
+        <div class="wf-block tall">Director CITI</div>
+        <div class="wf-block tall">Coordinador<br><small>Sistemas / Civil</small></div>
+        <div class="wf-block tall">Docente asesor</div>
+        <div class="wf-block tall">Estudiante<br><small>Recepción / Tutoría</small></div>
+        <div class="wf-block tall accent">Cliente<br><small>Empresa</small></div>
+      </div>
+      <div class="wf-block" style="margin-top:0.6rem">¿Cómo funciona? Cliente → Consultor → Coordinador → Tutor → Docente → Informe</div>
+    </div>
+  </div>
+</div>
+
+<!-- WF-02 LOGIN -->
+<div class="panel" id="login">
+  <div class="wf-label">WF-02 · Inicio de sesión por rol</div>
+  <div class="wf-desc">Panel izquierdo: selección de rol. Panel derecho: selector de cuenta (si hay varias), correo, contraseña y botón ingresar. Validación RBAC: un usuario solo entra a su portal.</div>
+  <div class="wf">
+    <div class="wf-bar">citi.ucc.edu.co/login</div>
+    <div class="wf-body" style="display:flex;padding:0;min-height:340px">
+      <div style="flex:1;background:#132740;padding:1.2rem;color:white">
+        <div class="wf-block" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:white;margin-bottom:0.8rem">UCC · CITI</div>
+        <div class="wf-block accent" style="text-align:left;margin-bottom:0.25rem">Director CITI</div>
+        <div class="wf-block" style="text-align:left;margin-bottom:0.25rem;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.8)">Coordinador de área</div>
+        <div class="wf-block" style="text-align:left;margin-bottom:0.25rem;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.8)">Docente asesor</div>
+        <div class="wf-block" style="text-align:left;margin-bottom:0.25rem;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.8)">Estudiante</div>
+        <div class="wf-block" style="text-align:left;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.8)">Cliente / Empresa</div>
+      </div>
+      <div style="width:270px;padding:1.2rem;border-left:1px solid var(--wire-border)">
+        <div class="wf-block dark">Acceso — Director CITI</div>
+        <div class="wf-block" style="text-align:left;font-size:0.55rem;margin:0.5rem 0">Cuenta (si hay varias)</div>
+        <div class="wf-input"></div>
+        <div class="wf-block" style="text-align:left;font-size:0.55rem">Correo electrónico</div>
+        <div class="wf-input"></div>
+        <div class="wf-block" style="text-align:left;font-size:0.55rem">Contraseña</div>
+        <div class="wf-input"></div>
+        <div class="wf-btn primary" style="width:100%;text-align:center;margin-top:0.4rem">Ingresar</div>
+        <div class="wf-block" style="margin-top:0.8rem;font-size:0.52rem;text-align:left">Credenciales:<br>director@citi.ucc.edu.co<br>director2026</div>
+      </div>
+    </div>
+  </div>
+  <p class="meta">Estado error: credenciales válidas pero rol incorrecto → mensaje + enlace al portal correcto</p>
+</div>
+
+<!-- WF-03 DIRECTOR -->
+<div class="panel" id="director">
+  <div class="wf-label">WF-03 · Dashboard Director CITI</div>
+  <div class="wf-desc">Actor: Director CITI · Ve todas las áreas · CU-16 a CU-19 · Ruta: /dashboards/director.html</div>
+  <div class="wf">
+    <div class="wf-body" style="display:flex;padding:0;min-height:360px">
+      <div class="wf-sidebar">
+        <div class="wf-block dark">CITI · UCC</div>
+        <div class="wf-block active">Panel general</div>
+        <div class="wf-block">Solicitudes</div>
+        <div class="wf-block">Usuarios</div>
+        <div class="wf-block">Informes UCC</div>
+        <div class="wf-block">Banco empresas</div>
+        <div class="wf-block">Configuración</div>
+        <div class="wf-block" style="margin-top:1.5rem">Cerrar sesión</div>
+      </div>
+      <div class="wf-main">
+        <div class="wf-topbar"><div class="wf-block dark" style="width:140px">Panel general</div><div class="wf-block" style="width:130px">Dr. Carlos Méndez</div></div>
+        <div class="wf-grid-4">
+          <div class="wf-block tall accent">24 Activas</div>
+          <div class="wf-block tall">8 Pendientes</div>
+          <div class="wf-block tall">56 Empresas</div>
+          <div class="wf-block tall">32 Estudiantes</div>
+        </div>
+        <table class="wf-table">
+          <tr><th>Empresa</th><th>Área</th><th>Estado</th><th>Tutor</th></tr>
+          <tr><td>Constructora Tolima</td><td>Civil</td><td>En proceso</td><td>J. Castro</td></tr>
+          <tr><td>TechPyME</td><td>Sistemas</td><td>Pendiente</td><td>—</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WF-04 COORDINADOR -->
+<div class="panel" id="coord">
+  <div class="wf-label">WF-04 · Dashboard Coordinador de área</div>
+  <div class="wf-desc">Actor: Coordinador Sistemas o Civil · Solo gestiona su área · CU-07 a CU-10</div>
+  <div class="wf">
+    <div class="wf-body" style="display:flex;padding:0;min-height:330px">
+      <div class="wf-sidebar">
+        <div class="wf-block active">Mi área</div>
+        <div class="wf-block">Aprobar</div>
+        <div class="wf-block">Asignar equipo</div>
+        <div class="wf-block">Estudiantes</div>
+        <div class="wf-block">Visitas</div>
+        <div class="wf-block">Informe mensual</div>
+      </div>
+      <div class="wf-main">
+        <div class="wf-block accent" style="font-size:0.55rem;margin-bottom:0.4rem">Área: Ingeniería de Sistemas</div>
+        <div class="wf-grid-3"><div class="wf-block tall">2 Pendientes</div><div class="wf-block tall accent">3 Activos</div><div class="wf-block tall">6 Tutores</div></div>
+        <table class="wf-table">
+          <tr><th>Empresa</th><th>Tipo</th><th>Estado</th><th>Acción</th></tr>
+          <tr><td>TechPyME</td><td>Asesoría</td><td>Pendiente</td><td>[Aprobar] [Rechazar]</td></tr>
+        </table>
+        <div class="wf-block" style="margin-top:0.6rem;text-align:left;font-size:0.55rem">
+          Asignar: Tutor [María Fernanda ▾] · Docente [Mg. Patricia ▾] · [Confirmar]
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WF-05 DOCENTE -->
+<div class="panel" id="docente">
+  <div class="wf-label">WF-05 · Dashboard Docente asesor</div>
+  <div class="wf-desc">Actor: Docente UCC · Supervisa tutorías asignadas · CU-13 a CU-15 · No aprueba solicitudes nuevas</div>
+  <div class="wf">
+    <div class="wf-body" style="display:flex;padding:0;min-height:280px">
+      <div class="wf-sidebar">
+        <div class="wf-block active">Mis tutorías</div>
+        <div class="wf-block">Casos</div>
+        <div class="wf-block">Revisar informes</div>
+        <div class="wf-block">Talleres</div>
+        <div class="wf-block">Prácticas</div>
+      </div>
+      <div class="wf-main">
+        <table class="wf-table">
+          <tr><th>Empresa</th><th>Tutor</th><th>Informe</th><th>Acción</th></tr>
+          <tr><td>TechPyME</td><td>M. López</td><td>Parcial mar</td><td>[Aprobar] [Devolver]</td></tr>
+          <tr><td>Constructora</td><td>J. Castro</td><td>Pendiente</td><td>—</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WF-06 ESTUDIANTE -->
+<div class="panel" id="estudiante">
+  <div class="wf-label">WF-06 · Dashboard Estudiante (consultor o tutor)</div>
+  <div class="wf-desc">Un portal · Menú dinámico según tipo_estudiante: consultor (recepción) o tutor (casos). CU-04 a CU-06 y CU-11, CU-12.</div>
+  <div class="wf-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+    <div>
+      <div class="wf-block dark" style="margin-bottom:0.5rem">Vista A — tipo_estudiante = consultor</div>
+      <div class="wf">
+        <div class="wf-body" style="display:flex;padding:0;min-height:260px">
+          <div class="wf-sidebar">
+            <div class="wf-block active">Recepción</div>
+            <div class="wf-block">Consultas</div>
+            <div class="wf-block">Correspondencia</div>
+            <div class="wf-block">Bolsa empleo</div>
+            <div class="wf-block">Programa radial</div>
+          </div>
+          <div class="wf-main">
+            <div class="wf-grid-3"><div class="wf-block tall accent">5 Hoy</div><div class="wf-block tall">2 Cartas</div><div class="wf-block tall">1 Radial</div></div>
+            <div class="wf-block dark">Registro rápido de consulta</div>
+            <div class="wf-input"></div>
+            <div class="wf-btn primary">Registrar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="wf-block dark" style="margin-bottom:0.5rem">Vista B — tipo_estudiante = tutor</div>
+      <div class="wf">
+        <div class="wf-body" style="display:flex;padding:0;min-height:260px">
+          <div class="wf-sidebar">
+            <div class="wf-block active">Mis casos</div>
+            <div class="wf-block">Informes</div>
+            <div class="wf-block">Mensajes</div>
+            <div class="wf-block">Programa radial</div>
+          </div>
+          <div class="wf-main">
+            <table class="wf-table">
+              <tr><th>Empresa</th><th>Estado</th></tr>
+              <tr><td>TechPyME</td><td>En proceso</td></tr>
+            </table>
+            <div class="wf-block" style="margin-top:0.5rem;text-align:left;font-size:0.55rem">Subir informe parcial → [Enviar]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WF-07 CLIENTE -->
+<div class="panel" id="cliente">
+  <div class="wf-label">WF-07 · Dashboard Cliente / Empresa</div>
+  <div class="wf-desc">Actor: PyME externa · Solo ve datos de su empresa · CU-01 a CU-03</div>
+  <div class="wf">
+    <div class="wf-body" style="display:flex;padding:0;min-height:300px">
+      <div class="wf-sidebar">
+        <div class="wf-block active">Inicio</div>
+        <div class="wf-block">Nueva solicitud</div>
+        <div class="wf-block">Mis casos</div>
+        <div class="wf-block">Informes</div>
+        <div class="wf-block">Historial</div>
+      </div>
+      <div class="wf-main">
+        <div class="wf-grid-3"><div class="wf-block tall accent">1 Activo</div><div class="wf-block tall">0 Pendiente</div><div class="wf-block tall">1 Completado</div></div>
+        <table class="wf-table">
+          <tr><th>Fecha</th><th>Tipo</th><th>Estado</th><th>Tutor</th></tr>
+          <tr><td>10/02</td><td>Asesoría Civil</td><td>En proceso</td><td>J. Castro</td></tr>
+        </table>
+        <div class="wf-btn primary" style="margin-top:0.4rem">+ Nueva solicitud</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WF-08 FLUJO -->
+<div class="panel" id="flujo">
+  <div class="wf-label">WF-08 · Flujo integrado CU-01 (Solicitar asesoría)</div>
+  <div class="wf-desc">Secuencia de pantallas y actores desde la solicitud hasta el cierre del caso</div>
+  <div class="wf-body" style="padding:1.2rem">
+    <div style="display:flex;align-items:center;gap:0.25rem;flex-wrap:wrap;justify-content:center">
+      <div class="wf-block accent tall" style="width:100px">1. Cliente<br>Nueva solicitud</div><span style="color:var(--verde)">→</span>
+      <div class="wf-block tall" style="width:100px">2. Sistema<br>Pendiente</div><span style="color:var(--verde)">→</span>
+      <div class="wf-block tall" style="width:100px">3. Consultor<br>Registro (opc.)</div><span style="color:var(--verde)">→</span>
+      <div class="wf-block tall" style="width:100px">4. Coordinador<br>Aprueba</div><span style="color:var(--verde)">→</span>
+      <div class="wf-block tall" style="width:100px">5. Coordinador<br>Asigna equipo</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.25rem;flex-wrap:wrap;justify-content:center;margin-top:0.8rem">
+      <div class="wf-block tall" style="width:100px">6. Tutor<br>Informes</div><span style="color:var(--verde)">→</span>
+      <div class="wf-block tall" style="width:100px">7. Docente<br>Revisa</div><span style="color:var(--verde)">→</span>
+      <div class="wf-block tall" style="width:100px">8. Cliente<br>Firma final</div><span style="color:var(--verde)">→</span>
+      <div class="wf-block accent tall" style="width:100px">9. Director<br>Informe UCC</div>
+    </div>
+    <div class="wf-block" style="margin-top:1rem;text-align:left;font-size:0.6rem">
+      <strong>Validaciones RBAC en cada paso:</strong><br>
+      Paso 4: solo coordinador del área de la solicitud · Paso 6: solo tutor asignado · Paso 7: solo docente supervisor · Paso 8: solo cliente de la empresa · Paso 9: solo Director CITI
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

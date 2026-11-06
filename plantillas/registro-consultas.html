@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>CITI — Registro de Consultas</title>
+  <style>
+    @page { size: letter; margin: 1.5cm; }
+  body { font-family: 'Times New Roman', serif; max-width: 800px; margin: 2rem auto; padding: 1rem; color: #000; }
+    .header { text-align: center; border-bottom: 2px solid #003366; padding-bottom: 1rem; margin-bottom: 2rem; }
+    .header strong { display: block; font-size: 0.9rem; }
+    .header .citi { color: #e85d04; font-size: 1rem; margin: 0.3rem 0; }
+    .header span { font-size: 0.8rem; }
+    h2 { text-align: center; font-size: 1.1rem; margin-bottom: 1.5rem; text-decoration: underline; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #000; padding: 0.5rem; font-size: 0.85rem; text-align: left; }
+    th { background: #f0f0f0; font-weight: bold; }
+    .field { margin-bottom: 1rem; }
+    .field label { font-weight: bold; font-size: 0.85rem; }
+    .field input, .field textarea { width: 100%; border: none; border-bottom: 1px solid #000; padding: 0.3rem; font-family: inherit; font-size: 0.9rem; }
+    .field textarea { min-height: 60px; border: 1px solid #000; margin-top: 0.3rem; }
+    .print-btn { display: block; margin: 2rem auto; padding: 0.8rem 2rem; background: #003366; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+    @media print { .print-btn, .nav { display: none; } }
+    .nav { text-align: center; margin-bottom: 1rem; }
+    .nav a { color: #003366; }
+  </style>
+</head>
+<body>
+<p class="nav"><a href="../index.html">← Volver al sitio CITI</a></p>
+
+<div class="header">
+  <strong>FACULTAD DE INGENIERÍA</strong>
+  <span>PROGRAMA DE INGENIERÍA DE SISTEMAS · PROGRAMA DE INGENIERÍA CIVIL</span>
+  <div class="citi"><strong>CONSULTORIO DE INGENIERÍA, TECNOLOGÍA E INNOVACIÓN — CITI</strong></div>
+  <span>IBAGUÉ · 2026</span>
+</div>
+
+<h2>REGISTRO DE CONSULTAS</h2>
+
+<form>
+  <div class="field"><label>FECHA:</label><input type="date"></div>
+  <div class="field"><label>RAZÓN SOCIAL:</label><input type="text"></div>
+  <div class="field"><label>DIRECCIÓN / TELÉFONO:</label><input type="text"></div>
+  <div class="field"><label>SECTOR ECONÓMICO:</label><input type="text"></div>
+  <div class="field"><label>ÁREA DE CONSULTA:</label>
+    <select style="width:100%;padding:0.3rem;border:1px solid #000;">
+      <option>Ingeniería de Sistemas</option>
+      <option>Ingeniería Civil</option>
+      <option>Ambas áreas</option>
+      <option>Capacitación</option>
+      <option>Otro</option>
+    </select>
+  </div>
+  <div class="field"><label>CONSULTA:</label><textarea></textarea></div>
+  <div class="field"><label>ATENDIDO POR:</label><input type="text"></div>
+  <div class="field"><label>OBSERVACIONES:</label><textarea></textarea></div>
+</form>
+
+<h2 style="margin-top:3rem;font-size:0.95rem;">HISTORIAL DE CONSULTAS (uso interno)</h2>
+<table>
+  <tr>
+    <th>FECHA</th>
+    <th>RAZÓN SOCIAL</th>
+    <th>CONSULTA</th>
+    <th>ATENDIDO POR</th>
+    <th>ESTADO</th>
+  </tr>
+  <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+<button class="print-btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>CITI — Informe Final de Asesoría</title>
+  <style>
+    @page { size: letter; margin: 1.5cm; }
+    body { font-family: 'Times New Roman', serif; max-width: 800px; margin: 2rem auto; padding: 1rem; color: #000; }
+    .header { text-align: center; border-bottom: 2px solid #003366; padding-bottom: 1rem; margin-bottom: 2rem; }
+    .header strong { display: block; font-size: 0.9rem; }
+    .header .citi { color: #e85d04; font-size: 1rem; margin: 0.3rem 0; }
+    h2 { text-align: center; font-size: 1.1rem; margin: 1.5rem 0; text-decoration: underline; }
+    .field { margin-bottom: 1.2rem; }
+    .field label { font-weight: bold; font-size: 0.85rem; display: block; margin-bottom: 0.2rem; }
+    .field input { width: 100%; border: none; border-bottom: 1px solid #000; padding: 0.3rem; font-family: inherit; }
+    .field textarea { width: 100%; min-height: 80px; border: 1px solid #000; padding: 0.5rem; font-family: inherit; font-size: 0.9rem; margin-top: 0.3rem; }
+    .section-title { font-weight: bold; margin: 1.5rem 0 0.5rem; font-size: 0.95rem; text-transform: uppercase; }
+    .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 3rem; }
+    .sig-line { border-top: 1px solid #000; padding-top: 0.5rem; text-align: center; font-size: 0.85rem; }
+    .print-btn { display: block; margin: 2rem auto; padding: 0.8rem 2rem; background: #003366; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    @media print { .print-btn, .nav { display: none; } }
+    .nav { text-align: center; margin-bottom: 1rem; }
+    .nav a { color: #003366; }
+  </style>
+</head>
+<body>
+<p class="nav"><a href="../index.html">← Volver al sitio CITI</a></p>
+
+<div class="header">
+  <strong>FACULTAD DE INGENIERÍA</strong>
+  <span>PROGRAMA DE INGENIERÍA DE SISTEMAS · PROGRAMA DE INGENIERÍA CIVIL</span>
+  <div class="citi"><strong>CONSULTORIO DE INGENIERÍA, TECNOLOGÍA E INNOVACIÓN — CITI</strong></div>
+  <span>IBAGUÉ · 2026</span>
+</div>
+
+<h2>INFORME FINAL ASESORÍA A EMPRESAS</h2>
+
+<div class="field"><label>FECHA:</label><input type="date"></div>
+<div class="field"><label>ESTUDIANTE - CONSULTOR:</label><input type="text"></div>
+<div class="field"><label>EMPRESA:</label><input type="text"></div>
+<div class="field"><label>ÁREA:</label><input type="text" placeholder="Sistemas / Civil / Integrado"></div>
+
+<div class="section-title">Aspectos generales</div>
+<div class="field"><label>DESCRIPCIÓN DE ACTIVIDADES DESARROLLADAS:</label><textarea></textarea></div>
+<div class="field"><label>OBJETIVO GENERAL DE LA ASESORÍA:</label><textarea></textarea></div>
+<div class="field"><label>OBJETIVO ESPECÍFICO:</label><textarea></textarea></div>
+<div class="field"><label>PLAN DE TRABAJO DESARROLLADO:</label><textarea></textarea></div>
+<div class="field"><label>RELACIÓN DE SU TRABAJO CON LAS DEMÁS ÁREAS DE LA EMPRESA:</label><textarea></textarea></div>
+<div class="field"><label>CONCLUSIONES Y RECOMENDACIONES:</label><textarea></textarea></div>
+
+<div class="section-title">Aspectos relacionados con la práctica</div>
+<div class="field"><label>¿Cómo encuentra el aspecto tecnológico/infraestructural en la empresa? ¿Se facilitó realizar una buena labor?</label><textarea></textarea></div>
+<div class="field"><label>¿Qué consideraciones positivas o desfavorables como estudiante encuentra en la asesoría?</label><textarea></textarea></div>
+<div class="field"><label>Sugerencias para la empresa:</label><textarea></textarea></div>
+<div class="field"><label>Sugerencias para el consultorio:</label><textarea></textarea></div>
+
+<div class="signatures">
+  <div><div class="sig-line">FIRMA REPRESENTANTE LEGAL DE LA EMPRESA</div></div>
+  <div><div class="sig-line">FIRMA ESTUDIANTE ASESOR</div></div>
+</div>
+
+<button class="print-btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+</body>
+</html>

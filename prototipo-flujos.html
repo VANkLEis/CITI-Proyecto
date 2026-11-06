@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Prototipo Flujos (Hi-Fi)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app/css/styles.css">
+  <link rel="stylesheet" href="app/css/hifi.css">
+  <style>
+    .hub { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
+    .hub h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .hub > p { color: var(--muted); margin-bottom: 2rem; }
+    .flow-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between;
+      align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .flow-card h3 { font-size: 1rem; margin-bottom: 0.3rem; }
+    .flow-card p { font-size: 0.82rem; color: var(--muted); }
+    .screens-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.8rem; margin-top: 2rem; }
+    .screen-link {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1rem; text-align: center; font-size: 0.78rem; transition: all 0.15s;
+    }
+    .screen-link:hover { border-color: var(--accent); color: var(--accent); }
+    .screen-link span { display: block; font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .figma-note {
+      background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3);
+      border-radius: var(--radius); padding: 1.2rem; margin-top: 2rem; font-size: 0.85rem; color: var(--muted);
+    }
+    .figma-note strong { color: #a78bfa; }
+  </style>
+</head>
+<body class="no-sidebar">
+
+<nav class="landing-nav" style="position:relative">
+  <div style="display:flex;align-items:center;gap:10px">
+    <img src="assets/citi-logo.png" alt="" width="32" height="32" style="border-radius:6px">
+    <strong style="color:white">CITI Prototipo Hi-Fi</strong>
+  </div>
+  <div style="display:flex;gap:1rem">
+    <a href="design-system.html" style="color:var(--muted);font-size:0.85rem">Design System</a>
+    <a href="index.html" style="color:var(--muted);font-size:0.85rem">Landing</a>
+  </div>
+</nav>
+
+<div class="hub">
+  <h1>Prototipo interactivo — Flujos</h1>
+  <p>Equivalente a la página <strong style="color:var(--text)">"Flujos"</strong> en Figma. Cada flujo activa una barra de progreso y conecta pantallas con hotspots.</p>
+
+  <div class="flow-card">
+    <div><h3>Flujo 1 — Login correcto por rol</h3><p>Landing → Login → seleccionar rol → credenciales → Dashboard</p></div>
+    <button class="btn btn-primary" onclick="startFlow1()">Iniciar flujo</button>
+  </div>
+  <div class="flow-card">
+    <div><h3>Flujo 2 — Login incorrecto (aislamiento)</h3><p>Portal Admin + credenciales Cliente → Error → redirect portal Cliente</p></div>
+    <button class="btn btn-primary" onclick="startFlow2()">Iniciar flujo</button>
+  </div>
+  <div class="flow-card">
+    <div><h3>Flujo 3 — Solicitud asesoría (CU-01)</h3><p>Cliente solicita → Coord. aprueba/asigna → Tutor informe → Docente revisa → Cliente firma</p></div>
+    <button class="btn btn-primary" onclick="startFlow3()">Iniciar flujo</button>
+  </div>
+  <div class="flow-card">
+    <div><h3>Flujo 4 — Registro recepción</h3><p>Consultor → registro consulta → tabla actualizada</p></div>
+    <button class="btn btn-primary" onclick="startFlow4()">Iniciar flujo</button>
+  </div>
+  <div class="flow-card">
+    <div><h3>Flujo 5 — Cerrar sesión</h3><p>Dashboard → Logout → Login</p></div>
+    <button class="btn btn-secondary" onclick="startFlow5()">Iniciar flujo</button>
+  </div>
+
+  <h2 style="font-size:1.1rem;margin:2rem 0 1rem;color:var(--text)">Todas las pantallas (frames Figma)</h2>
+  <div class="screens-grid">
+    <a href="index.html" class="screen-link"><span>🏠</span>WF-01 Landing</a>
+    <a href="login.html" class="screen-link"><span>🔐</span>WF-02 Login</a>
+    <a href="login.html?demo=error" class="screen-link"><span>⚠️</span>WF-02b Error rol</a>
+    <a href="dashboards/admin.html" class="screen-link"><span>⚙️</span>WF-03 Admin</a>
+    <a href="dashboards/coordinador.html" class="screen-link"><span>📋</span>WF-04 Coord.</a>
+    <a href="dashboards/docente.html" class="screen-link"><span>👨‍🏫</span>WF-05 Docente</a>
+    <a href="dashboards/consultor.html" class="screen-link"><span>🎧</span>WF-06 Consultor</a>
+    <a href="dashboards/tutor.html" class="screen-link"><span>📚</span>WF-07 Tutor</a>
+    <a href="dashboards/cliente.html" class="screen-link"><span>🏢</span>WF-08 Cliente</a>
+    <a href="design-system.html" class="screen-link"><span>🎨</span>Design System</a>
+  </div>
+
+  <div class="figma-note">
+    <strong>Importar a Figma:</strong> Usa estos HTML como referencia visual. Frame desktop 1440×900.
+    Páginas Figma: (1) Design System, (2) Flujos, (3) Pantallas sueltas.
+    Conecta hotspots según flujos 1–5. Anotaciones de capa: Presentación / Lógica / Datos en cada frame.
+    <br><br>
+    <strong>Credenciales demo:</strong> admin2026 · coord2026 · docente2026 · consultor2026 · tutor2026 · cliente2026
+  </div>
+</div>
+
+<script src="app/js/ui.js"></script>
+<script>
+  function startFlow1() {
+    CITI_FLOW.start(1);
+    window.location.href = 'index.html?flow=1';
+  }
+  function startFlow2() {
+    CITI_FLOW.start(2);
+    window.location.href = 'login.html?role=admin&flow=2&demo=mismatch';
+  }
+  function startFlow3() {
+    CITI_FLOW.start(3);
+    sessionStorage.setItem('citi_flow3_step', '0');
+    window.location.href = 'dashboards/cliente.html?flow=3';
+  }
+  function startFlow4() {
+    CITI_FLOW.start(4);
+    window.location.href = 'dashboards/consultor.html?flow=4';
+  }
+  function startFlow5() {
+    CITI_FLOW.start(5);
+    window.location.href = 'dashboards/admin.html?flow=5';
+  }
+</script>
+</body>
+</html>

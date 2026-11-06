@@ -1,0 +1,310 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Portal Cliente{% endblock %}
+{% block page_title %}Agenda de citas{% endblock %}
+{% block page_subtitle %}Portal de empresas{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+<style>
+  #calendar { background: white; border-radius: var(--radius); padding: 1rem; border: 1px solid var(--border); }
+  .fc .fc-button-primary { background: var(--ucc-verde-solidario); border-color: #6da020; }
+  .consultorio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .consultorio-card { border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--border); background: white; box-shadow: var(--shadow); }
+  .consultorio-sistemas { border-top: 4px solid #2563eb; }
+  .consultorio-civil { border-top: 4px solid #d97706; }
+  @media (max-width: 900px) { .consultorio-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="consultorio-grid">
+  <div class="consultorio-card consultorio-sistemas">
+    <h3>Ingeniería de Sistemas</h3>
+    <p>Software, bases de datos, redes y ciberseguridad para PyMEs.</p>
+  </div>
+  <div class="consultorio-card consultorio-civil">
+    <h3>Ingeniería Civil</h3>
+    <p>Estructuras, interventoría, vías y planos de obra.</p>
+  </div>
+</div>
+
+{% if citas_feedback or citas_evaluadas %}
+<div class="card" style="margin-bottom:1.5rem;border-left:4px solid var(--ucc-verde-solidario);">
+  <div class="card-header"><h2>Comentarios de aprobación y feedback</h2></div>
+  <div class="card-body">
+    {% if citas_feedback %}
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.75rem;">Asesorías finalizadas pendientes de calificación:</p>
+      <ul style="margin:0 0 1rem;padding-left:1.2rem;">
+        {% for cita in citas_feedback %}
+          <li style="margin-bottom:0.5rem;">
+            {{ cita.franja.inicio|date:"d/m/Y" }} — {{ cita.get_subespecialidad_display }}
+            <a href="{% url 'portal:cliente_feedback' cita.pk %}" class="btn btn-sm btn-primary" style="margin-left:0.5rem;">Calificar</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if citas_evaluadas %}
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;">Últimos comentarios registrados:</p>
+      {% for cita in citas_evaluadas %}
+        <div class="bitacora-entry">
+          <strong>{{ cita.franja.inicio|date:"d/m/Y" }} — {{ cita.get_subespecialidad_display }}</strong>
+          <span class="cita-muted"> · Calificación: {{ cita.calificacion }}/5</span>
+          <p>{{ cita.comentario_cliente|default:"Sin comentario adicional."|linebreaksbr }}</p>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div class="grid-2" style="margin-bottom:1.5rem;">
+  <div class="card">
+    <div class="card-header"><h2>Calendario de disponibilidad</h2></div>
+    <div class="card-body">
+      <div class="form-group" style="max-width:320px;margin-bottom:1rem;">
+        <label for="filtroArea">Área de consultoría</label>
+        <select id="filtroArea">
+          {% for value, label in areas_consultorio %}
+            <option value="{{ value }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div id="calendar"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h2>Solicitar asesoría</h2></div>
+    <div class="card-body">
+      <div id="reservaAlert"></div>
+      <p id="areaReservaLabel" style="font-size:0.85rem;color:var(--ucc-verde-solidario);font-weight:600;margin-bottom:0.75rem;"></p>
+      
+      <div class="form-group">
+        <label>Tipo de servicio</label>
+        <div class="service-type-grid">
+          <label class="service-type-card">
+            <input type="radio" name="tipoServicio" value="orientacion" checked>
+            <span class="service-type-icon">01</span>
+            <strong>Orientación Técnica / Especificaciones</strong>
+            <span>Atendido por Estudiante Consultor (8° semestre o superior).</span>
+          </label>
+          <label class="service-type-card">
+            <input type="radio" name="tipoServicio" value="especializada">
+            <span class="service-type-icon">02</span>
+            <strong>Consultoría Especializada / Proyecto</strong>
+            <span>Liderado por Docente Asesor del área.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subespecialidad">Subespecialidad</label>
+        <select id="subespecialidad" required></select>
+      </div>
+      <div class="form-group">
+        <label for="asunto">Descripción del problema / asunto de la asesoría</label>
+        <textarea id="asunto" rows="4" placeholder="Describa con detalle la necesidad de su empresa"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="archivoAdjunto">Documentación / Términos de referencia (Opcional)</label>
+        <input type="file" id="archivoAdjunto" accept=".pdf,.doc,.docx,.zip,.rar,.png,.jpg">
+      </div>
+
+      <p id="franjaSeleccionada" style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Seleccione una franja en el calendario.</p>
+      <button type="button" class="btn btn-primary" id="btnReservar" disabled>Confirmar solicitud</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Mis citas recientes</h2></div>
+  <div class="card-body" style="padding:0;">
+    <table class="data-table" id="tablaCitas">
+      <thead>
+        <tr><th>Fecha</th><th>Área</th><th>Tipo</th><th>Subespecialidad</th><th>Estado</th><th>Docente</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% for cita in citas %}
+          <tr data-area="{{ cita.franja.area }}">
+            <td>{{ cita.franja.inicio|date:"d/m/Y H:i" }}</td>
+            <td>
+              {% if cita.franja.area == 'sistemas' %}
+                <span class="badge badge-area-sistemas">{{ cita.franja.get_area_display }}</span>
+              {% else %}
+                <span class="badge badge-area-civil">{{ cita.franja.get_area_display }}</span>
+              {% endif %}
+            </td>
+            <td><small>{{ cita.get_tipo_servicio_display }}</small></td>
+            <td>{{ cita.get_subespecialidad_display }}</td>
+            <td><span class="badge badge-estado-{{ cita.estado }}">{{ cita.get_estado_display }}</span></td>
+            <td>{{ cita.docente_asignado.nombre_completo|default:"Pendiente" }}</td>
+            <td class="cita-row-actions">
+              <button type="button" class="btn btn-sm btn-secondary" data-cita-detalle="{{ cita.pk }}">Ver detalle</button>
+              {% if cita.estado == 'finalizada' and not cita.calificacion %}
+                <a href="{% url 'portal:cliente_feedback' cita.pk %}" class="btn btn-sm btn-primary">Calificar</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" style="color:var(--muted);padding:1rem;">No tiene citas registradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ subespecialidades_json|json_script:"subespecialidades-data" }}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script>
+(function () {
+  const subsPorArea = JSON.parse(document.getElementById('subespecialidades-data').textContent);
+  const calendarEl = document.getElementById('calendar');
+  const btnReservar = document.getElementById('btnReservar');
+  const asuntoInput = document.getElementById('asunto');
+  const subSelect = document.getElementById('subespecialidad');
+  const franjaInfo = document.getElementById('franjaSeleccionada');
+  const alertBox = document.getElementById('reservaAlert');
+  const filtroArea = document.getElementById('filtroArea');
+  const areaReservaLabel = document.getElementById('areaReservaLabel');
+  const areaLabels = { sistemas: 'Ingeniería de Sistemas', civil: 'Ingeniería Civil' };
+  let franjaSeleccionada = null;
+  let franjaAreaReserva = null;
+  const csrfToken = '{{ csrf_token }}';
+  const eventosUrl = '{% url "scheduling:api_eventos" %}';
+
+  function showAlert(msg, type) {
+    alertBox.innerHTML = msg ? '<div class="alert alert-' + (type === 'error' ? 'error' : 'info') + '">' + msg + '</div>' : '';
+  }
+
+  function areaActual() { return filtroArea ? filtroArea.value : 'sistemas'; }
+
+  function cargarSubespecialidades(area) {
+    area = area || franjaAreaReserva || areaActual();
+    subSelect.innerHTML = '';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = '— Seleccione subespecialidad —';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    subSelect.appendChild(placeholder);
+    const lista = subsPorArea[area] || subsPorArea[areaActual()] || [];
+    lista.forEach(function (pair) {
+      const opt = document.createElement('option');
+      opt.value = pair[0];
+      opt.textContent = pair[1];
+      subSelect.appendChild(opt);
+    });
+    btnReservar.disabled = !franjaSeleccionada || !subSelect.value;
+  }
+
+  function syncReservaConFranja(props) {
+    if (props.area && filtroArea && filtroArea.value !== props.area) {
+      filtroArea.value = props.area;
+      calendar.refetchEvents();
+    }
+    franjaAreaReserva = props.area || areaActual();
+    areaReservaLabel.textContent = 'Consultoría: ' + (areaLabels[franjaAreaReserva] || franjaAreaReserva);
+    cargarSubespecialidades(franjaAreaReserva);
+  }
+
+  function actualizarUiArea() {
+    const area = areaActual();
+    areaReservaLabel.textContent = 'Consultoría: ' + (areaLabels[area] || area);
+    cargarSubespecialidades();
+    document.querySelectorAll('#tablaCitas tbody tr[data-area]').forEach(function (row) {
+      row.style.display = row.dataset.area === area ? '' : 'none';
+    });
+    franjaSeleccionada = null;
+    franjaAreaReserva = null;
+    btnReservar.disabled = true;
+    franjaInfo.textContent = 'Seleccione una franja en el calendario.';
+    showAlert('', '');
+  }
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'timeGridWeek',
+    locale: 'es',
+    headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
+    slotMinTime: '07:00:00',
+    slotMaxTime: '20:00:00',
+    height: 'auto',
+    events: function (info, success, failure) {
+      const url = new URL(eventosUrl, window.location.origin);
+      url.searchParams.set('start', info.startStr);
+      url.searchParams.set('end', info.endStr);
+      url.searchParams.set('area', areaActual());
+      fetch(url, { credentials: 'same-origin' }).then(r => r.json()).then(success).catch(failure);
+    },
+    eventClick(info) {
+      const props = info.event.extendedProps || {};
+      if (props.disponible && props.franja_id) {
+        franjaSeleccionada = props.franja_id;
+        syncReservaConFranja(props);
+        franjaInfo.textContent = info.event.title + ' — ' + info.event.start.toLocaleString('es-CO');
+        btnReservar.disabled = !subSelect.value;
+        showAlert('', '');
+      } else if (props.propia) {
+        showAlert('Su solicitud/cita (' + (props.area_label || '') + ').', 'info');
+      } else {
+        showAlert('Franja no disponible.', 'error');
+      }
+    }
+  });
+  calendar.render();
+
+  filtroArea.addEventListener('change', function () {
+    actualizarUiArea();
+    calendar.refetchEvents();
+  });
+  actualizarUiArea();
+
+  subSelect.addEventListener('change', function () {
+    btnReservar.disabled = !franjaSeleccionada || !subSelect.value;
+  });
+
+  btnReservar.addEventListener('click', async () => {
+    const subCode = subSelect.value;
+    const tipoServicioInput = document.querySelector('input[name="tipoServicio"]:checked');
+    const archivoInput = document.getElementById('archivoAdjunto');
+
+    if (!franjaSeleccionada || !subCode) {
+      showAlert('Seleccione una subespecialidad válida para el área de la franja.', 'error');
+      return;
+    }
+    btnReservar.disabled = true;
+
+    const formData = new FormData();
+    formData.append('franja_id', franjaSeleccionada);
+    formData.append('asunto', asuntoInput.value);
+    formData.append('subespecialidad', subCode);
+    formData.append('tipo_servicio', tipoServicioInput.value);
+
+    if (archivoInput.files.length > 0) {
+      formData.append('archivo_adjunto', archivoInput.files[0]);
+    }
+
+    try {
+      const res = await fetch('{% url "scheduling:api_reservar" %}', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken },
+        body: formData
+      });
+      const data = await res.json();
+      if (data.ok) {
+        showAlert(data.message, 'info');
+        setTimeout(() => window.location.reload(), 1200);
+      } else {
+        showAlert(data.error || 'No se pudo registrar.', 'error');
+        btnReservar.disabled = false;
+      }
+    } catch (e) {
+      showAlert('Error de conexión.', 'error');
+      btnReservar.disabled = false;
+    }
+  });
+})();
+</script>
+{% endblock %}

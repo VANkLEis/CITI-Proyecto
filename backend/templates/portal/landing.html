@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}CITI — Consultorio de Ingeniería, Tecnología e Innovación{% endblock %}
+
+{% block content %}
+<nav class="landing-nav">
+  <a class="landing-nav-brand" href="{% url 'portal:landing' %}" style="text-decoration:none;color:inherit;">
+    <img src="{% static 'images/logo_ucc.png' %}" alt="Universidad Cooperativa de Colombia">
+    <div>
+      <strong>CITI UCC</strong>
+      <span>Campus Ibagué–El Espinal</span>
+    </div>
+  </a>
+  <div class="landing-nav-links">
+    <a href="#quienes-somos">Quiénes somos</a>
+    <a href="#lineas-accion">Líneas de acción</a>
+    <a href="#ventajas">Ventajas</a>
+    <a href="#recursos">Recursos</a>
+    <a href="{% url 'accounts:register' %}" class="btn btn-secondary btn-sm">Registrar empresa</a>
+    <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-sm">Iniciar sesión</a>
+  </div>
+</nav>
+
+<section class="landing-hero">
+  <p class="ucc-tag">Universidad Cooperativa de Colombia · Campus Ibagué–El Espinal</p>
+  <h1>Consultorio de Ingeniería, Tecnología e Innovación</h1>
+  <p>
+    Extensión y proyección social de la UCC para PyMEs, instituciones y estudiantes:
+    asesorías, prácticas empresariales y consultoría especializada en Ingeniería de
+    Sistemas e Ingeniería Civil.
+  </p>
+  <div class="hero-actions">
+    <a href="{% url 'accounts:register' %}" class="btn btn-primary">Solicitar asesoría</a>
+    <a href="#lineas-accion" class="btn btn-secondary">Conocer líneas de acción</a>
+  </div>
+  <div class="hero-programs">
+    <div>
+      <strong>Ingeniería de Sistemas</strong>
+      <span>Software, bases de datos, redes y ciberseguridad.</span>
+    </div>
+    <div>
+      <strong>Ingeniería Civil</strong>
+      <span>Estructuras, interventoría, vías y planos de obra.</span>
+    </div>
+  </div>
+</section>
+
+<section id="quienes-somos" class="landing-section landing-about">
+  <div class="about-grid">
+    <div class="about-copy">
+      <p class="section-eyebrow">¿Quiénes somos?</p>
+      <h2>Extensión universitaria con impacto social y sin ánimo de lucro</h2>
+      <p>
+        El CITI es el Consultorio de Ingeniería, Tecnología e Innovación de la Universidad
+        Cooperativa de Colombia. Articula la docencia, la investigación y la proyección
+        social para acompañar a las PyMEs de la región en sus retos tecnológicos y de
+        infraestructura.
+      </p>
+      <p>
+        Las asesorías son brindadas por estudiantes de octavo semestre en adelante con
+        promedio acumulado mínimo de 4.0 y 130 créditos aprobados, siempre dirigidos y
+        supervisados por docentes expertos de cada área.
+      </p>
+      <p>
+        El servicio es gratuito para las empresas beneficiarias y se documenta con
+        trazabilidad digital desde la solicitud hasta el cierre del caso.
+      </p>
+    </div>
+    <aside class="about-requirements">
+      <h3>Requisitos del Estudiante Consultor</h3>
+      <ul>
+        <li><span>Semestre académico</span> <strong>8° o superior</strong></li>
+        <li><span>Promedio acumulado</span> <strong>≥ 4.0</strong></li>
+        <li><span>Créditos aprobados</span> <strong>≥ 130</strong></li>
+      </ul>
+      <p>
+        El sistema valida los tres requisitos simultáneamente antes de permitir la
+        asignación de un estudiante como tutor de casos.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<section id="lineas-accion" class="landing-section landing-section-alt">
+  <p class="section-eyebrow">Líneas de acción</p>
+  <h2>Servicios del CITI</h2>
+  <div class="action-grid">
+    <article class="action-card">
+      <span class="action-icon">01</span>
+      <h3>Asesorías a PyMEs</h3>
+      <p>Diagnóstico y acompañamiento técnico en Sistemas y Civil para fortalecer la competitividad empresarial.</p>
+    </article>
+    <article class="action-card">
+      <span class="action-icon">02</span>
+      <h3>Prácticas Empresariales</h3>
+      <p>Vinculación de estudiantes a retos reales de las empresas con seguimiento docente y evaluación.</p>
+    </article>
+    <article class="action-card">
+      <span class="action-icon">03</span>
+      <h3>Educación No Formal</h3>
+      <p>Talleres, seminarios y capacitaciones diseñadas según las necesidades del sector productivo.</p>
+    </article>
+    <article class="action-card">
+      <span class="action-icon">04</span>
+      <h3>Exploración Profesional</h3>
+      <p>Articulación con colegios para orientar vocacionalmente a futuros ingenieros de la región.</p>
+    </article>
+    <article class="action-card">
+      <span class="action-icon">05</span>
+      <h3>Convenios Tecnológicos</h3>
+      <p>Alianzas con empresas e instituciones para proyectos de innovación y transferencia de conocimiento.</p>
+    </article>
+    <article class="action-card">
+      <span class="action-icon">06</span>
+      <h3>Programa Radial</h3>
+      <p>Divulgación de ciencia, tecnología e ingeniería con participación de estudiantes y docentes.</p>
+    </article>
+  </div>
+</section>
+
+<section id="ventajas" class="landing-section">
+  <p class="section-eyebrow">Ventajas comparativas</p>
+  <h2>Un modelo de excelencia académica</h2>
+  <div class="advantages-grid">
+    <article class="advantage-card">
+      <span class="advantage-icon">✓</span>
+      <h3>Servicio 100% gratuito</h3>
+      <p>Proyección social sin costo para las empresas beneficiarias.</p>
+    </article>
+    <article class="advantage-card">
+      <span class="advantage-icon">✓</span>
+      <h3>Filtros de excelencia académica</h3>
+      <p>Solo estudiantes de 8° semestre o superior, promedio ≥ 4.0 y 130+ créditos.</p>
+    </article>
+    <article class="advantage-card">
+      <span class="advantage-icon">✓</span>
+      <h3>Supervisión docente especializada</h3>
+      <p>Cada caso cuenta con acompañamiento y validación de un docente asesor.</p>
+    </article>
+    <article class="advantage-card">
+      <span class="advantage-icon">✓</span>
+      <h3>Trazabilidad digital</h3>
+      <p>Estados, bitácora, documentos y feedback del cliente en un solo historial.</p>
+    </article>
+  </div>
+</section>
+
+<section id="recursos" class="landing-section landing-section-alt">
+  <p class="section-eyebrow">Portafolio y banco de recursos</p>
+  <h2>Formatos institucionales</h2>
+  <div class="resources-grid">
+    <a class="resource-card" href="{% static 'documentos/solicitud-asesoria.pdf' %}" download="Solicitud-de-Asesoria-CITI.pdf">
+      <span class="badge badge-area-sistemas">PDF</span>
+      <h3>Solicitud de Asesoría</h3>
+      <p>Formato para registrar la necesidad de la empresa y los términos de referencia.</p>
+      <span class="resource-link">Descargar →</span>
+    </a>
+    <a class="resource-card" href="{% static 'documentos/catalogo-capacitacion.pdf' %}" download="Catalogo-de-Capacitacion-CITI.pdf">
+      <span class="badge badge-area-civil">PDF</span>
+      <h3>Catálogo de Capacitación</h3>
+      <p>Oferta de talleres, seminarios y educación no formal del CITI.</p>
+      <span class="resource-link">Descargar →</span>
+    </a>
+    <a class="resource-card" href="{% static 'documentos/minuta-convenio.pdf' %}" download="Minuta-de-Convenio-CITI.pdf">
+      <span class="badge badge-area-mixto">PDF</span>
+      <h3>Minuta de Convenio</h3>
+      <p>Modelo de acuerdo de cooperación entre la UCC y las empresas aliadas.</p>
+      <span class="resource-link">Descargar →</span>
+    </a>
+    <a class="resource-card" href="{% static 'documentos/manual-citi.pdf' %}" download="Manual-CITI.pdf">
+      <span class="badge badge-estado-asignada">PDF</span>
+      <h3>Manual CITI</h3>
+      <p>Guía de funcionamiento, roles, requisitos y flujo de atención del consultorio.</p>
+      <span class="resource-link">Descargar →</span>
+    </a>
+  </div>
+</section>
+
+<section id="acceso" class="landing-section">
+  <p class="section-eyebrow">Portal de acceso por roles</p>
+  <h2>Ingrese según su perfil</h2>
+  <div class="portals-grid" style="padding:0;">
+    {% for value, label in roles %}
+    {% if value != 'director' %}
+      <a href="{% url 'accounts:login' %}?rol={{ value }}" class="portal-card" style="text-decoration:none;color:inherit;">
+        <div class="p-icon">
+          {% if value == 'coordinador' %}CO
+          {% elif value == 'docente' %}DO
+          {% elif value == 'estudiante' %}ES
+          {% else %}CL{% endif %}
+        </div>
+        <h3>{% if value == 'estudiante' %}Estudiante Consultor / Tutor{% else %}{{ label }}{% endif %}</h3>
+        <p>
+          {% if value == 'coordinador' %}Gestión de solicitudes y asignación por área.
+          {% elif value == 'docente' %}Seguimiento de casos y asesorías asignadas.
+          {% elif value == 'estudiante' %}Consultor de recepción o tutor de casos.
+          {% else %}Empresas e instituciones: solicitudes y agenda de citas.{% endif %}
+        </p>
+        <span style="font-size:0.78rem;color:var(--ucc-verde-solidario);font-weight:600;">Ingresar →</span>
+      </a>
+    {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+<footer class="landing-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <img src="{% static 'images/logo_ucc.png' %}" alt="UCC">
+        <div>
+          <strong>CITI — UCC</strong>
+          <span>Campus Ibagué–El Espinal</span>
+        </div>
+      </div>
+      <p>
+        Consultorio de Ingeniería, Tecnología e Innovación.<br>
+        Extensión y proyección social de la Universidad Cooperativa de Colombia.
+      </p>
+    </div>
+    <div class="footer-links">
+      <a href="#quienes-somos">Quiénes somos</a>
+      <a href="#lineas-accion">Líneas de acción</a>
+      <a href="#recursos">Banco de recursos</a>
+      <a href="{% url 'accounts:register' %}">Registrar empresa</a>
+      <a href="{% url 'accounts:login' %}">Iniciar sesión</a>
+    </div>
+  </div>
+  <div class="footer-credits">
+    Universidad Cooperativa de Colombia · CITI 2026<br>
+    Desarrollo: <strong>Santiago Cubillos Arana</strong> y <strong>Juan José Tique</strong>
+  </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Plano de Oficina</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ucc: #003366; --accent: #e85d04; --sis: #3b82f6; --civ: #f59e0b; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; min-height: 100vh; }
+    .nav { padding: 1rem 2rem; }
+    .nav a { color: #94a3b8; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .subtitle { color: #94a3b8; margin-bottom: 3rem; }
+    .floor-plan {
+      background: #1e293b; border-radius: 16px; padding: 2rem;
+      border: 2px solid #334155; position: relative;
+    }
+    .zone {
+      border: 2px solid; border-radius: 8px; padding: 1.2rem;
+      margin-bottom: 0.5rem; position: relative; transition: transform 0.2s;
+    }
+    .zone:hover { transform: scale(1.01); }
+    .zone h3 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .zone p { font-size: 0.75rem; color: #94a3b8; }
+    .zone .items { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .item {
+      background: rgba(255,255,255,0.1); padding: 0.3rem 0.6rem;
+      border-radius: 4px; font-size: 0.7rem;
+    }
+    .reception { border-color: var(--ucc); background: rgba(0,51,102,0.3); }
+    .systems { border-color: var(--sis); background: rgba(59,130,246,0.15); }
+    .civil { border-color: var(--civ); background: rgba(245,158,11,0.15); }
+    .training { border-color: #10b981; background: rgba(16,185,129,0.15); }
+    .archive { border-color: #64748b; background: rgba(100,116,139,0.15); }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .legend { display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+    .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+    .dims { text-align: center; font-size: 0.7rem; color: #64748b; margin-top: 1rem; }
+    .equipment { margin-top: 3rem; }
+    .equipment h2 { font-size: 1.3rem; margin-bottom: 1rem; color: #e2e8f0; }
+    .equip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .equip-card { background: #1e293b; padding: 1rem; border-radius: 8px; border: 1px solid #334155; }
+    .equip-card strong { color: var(--accent); font-size: 0.85rem; }
+    .equip-card p { font-size: 0.8rem; color: #94a3b8; margin-top: 0.3rem; }
+  </style>
+</head>
+<body>
+<a href="index.html" class="nav">← Volver al sitio CITI</a>
+<div class="container">
+  <h1>Plano de la Oficina CITI</h1>
+  <p class="subtitle">Distribución física · Universidad Cooperativa de Colombia · Campus Ibagué–Espinal</p>
+
+  <div class="floor-plan">
+    <div class="zone reception">
+      <h3>RECEPCIÓN / ATENCIÓN AL USUARIO</h3>
+      <p>Punto de entrada y primera impresión del consultorio</p>
+      <div class="items">
+        <span class="item">Mostrador</span>
+        <span class="item">Logo CITI</span>
+        <span class="item">Pantalla servicios</span>
+        <span class="item">PC-1</span>
+        <span class="item">PC-2</span>
+        <span class="item">PC-3</span>
+        <span class="item">Registro consultas</span>
+        <span class="item">Sillas espera</span>
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="zone systems">
+        <h3>COORD. SISTEMAS</h3>
+        <p>Ing. de Sistemas / Ing. Electrónico</p>
+        <div class="items">
+          <span class="item">Escritorio</span>
+          <span class="item">Archivador</span>
+          <span class="item">Pizarra digital</span>
+          <span class="item">Teléfono</span>
+        </div>
+      </div>
+      <div class="zone civil">
+        <h3>COORD. CIVIL</h3>
+        <p>Ing. Civil</p>
+        <div class="items">
+          <span class="item">Escritorio</span>
+          <span class="item">Planos</span>
+          <span class="item">NSR-10</span>
+          <span class="item">Muestras materiales</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="zone training">
+      <h3>SALA DE REUNIONES / CAPACITACIÓN</h3>
+      <p>Capacidad: 8–12 personas · Seminarios, talleres y reuniones de coordinación</p>
+      <div class="items">
+        <span class="item">Proyector</span>
+        <span class="item">Pizarra</span>
+        <span class="item">Mesas modulares</span>
+        <span class="item">Sillas</span>
+        <span class="item">Video beam</span>
+      </div>
+    </div>
+
+    <div class="zone archive">
+      <h3>ARCHIVO DOCUMENTAL</h3>
+      <p>7 carpetas de registro + banco de empresas</p>
+      <div class="items">
+        <span class="item">Correspondencia</span>
+        <span class="item">Consultas</span>
+        <span class="item">Seminarios</span>
+        <span class="item">Exploración prof.</span>
+        <span class="item">Banco empresas</span>
+        <span class="item">Archivadores</span>
+      </div>
+    </div>
+
+    <p class="dims">Área estimada: ~45–60 m² · Apoyo logístico UCC</p>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:var(--ucc)"></div> Recepción</div>
+    <div class="legend-item"><div class="legend-color" style="background:var(--sis)"></div> Sistemas</div>
+    <div class="legend-item"><div class="legend-color" style="background:var(--civ)"></div> Civil</div>
+    <div class="legend-item"><div class="legend-color" style="background:#10b981"></div> Capacitación</div>
+    <div class="legend-item"><div class="legend-color" style="background:#64748b"></div> Archivo</div>
+  </div>
+
+  <div class="equipment">
+    <h2>Dotación (según documento CITI)</h2>
+    <div class="equip-grid">
+      <div class="equip-card"><strong>Computadoras</strong><p>Mínimo 3 en recepción + 2 en coordinaciones</p></div>
+      <div class="equip-card"><strong>Mobiliario</strong><p>Escritorios, sillas, archivadores, mostrador</p></div>
+      <div class="equip-card"><strong>Comunicación</strong><p>Teléfonos, internet, correspondencia</p></div>
+      <div class="equip-card"><strong>Capacitación</strong><p>Proyector, video beam, retroproyector, TV</p></div>
+      <div class="equip-card"><strong>Señalética</strong><p>Logo CITI, identificación de zonas</p></div>
+      <div class="equip-card"><strong>Papelería</strong><p>Formatos oficiales, carpetas, registro diario</p></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

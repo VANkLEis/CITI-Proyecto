@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Roles y credenciales</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../app/css/styles.css">
+  <style>
+    body { background: var(--bg); }
+    .doc-header { background: var(--ucc); color: white; padding: 2rem; text-align: center; border-bottom: 4px solid var(--verde); }
+    .doc-container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .cred-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+    .cred-table th { background: var(--ucc); color: white; padding: 0.7rem 1rem; text-align: left; }
+    .cred-table td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); }
+    .cred-table code { color: var(--ucc-verde-solidario); font-size: 0.8rem; }
+    h2 { font-size: 1.15rem; color: var(--ucc); margin: 2rem 0 1rem; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="display:inline-block;padding:1rem 1.5rem;color:var(--muted);font-weight:600">← Documentación</a>
+<div class="doc-header">
+  <h1 style="font-size:1.6rem;margin-bottom:0.4rem">Roles, permisos y credenciales</h1>
+  <p style="opacity:0.85;font-size:0.9rem">5 portales · Autenticación aislada por rol · CITI UCC 2026</p>
+</div>
+<div class="doc-container">
+  <h2>Credenciales de demostración (todas las cuentas)</h2>
+  <table class="cred-table">
+    <thead><tr><th>Rol</th><th>Cuenta</th><th>Correo</th><th>Contraseña</th></tr></thead>
+    <tbody>
+      <tr><td>Director CITI</td><td>Dr. Carlos Méndez</td><td><code>director@citi.ucc.edu.co</code></td><td><code>director2026</code></td></tr>
+      <tr><td>Coordinador</td><td>Ing. Laura Vargas · Sistemas</td><td><code>coord.sistemas@citi.ucc.edu.co</code></td><td><code>coord2026</code></td></tr>
+      <tr><td>Coordinador</td><td>Ing. Andrés Ríos · Civil</td><td><code>coord.civil@citi.ucc.edu.co</code></td><td><code>coord2026</code></td></tr>
+      <tr><td>Docente</td><td>Mg. Patricia Gómez · Sistemas</td><td><code>docente@citi.ucc.edu.co</code></td><td><code>docente2026</code></td></tr>
+      <tr><td>Docente</td><td>Mg. Roberto Sánchez · Civil</td><td><code>docente.civil@citi.ucc.edu.co</code></td><td><code>docente2026</code></td></tr>
+      <tr><td>Estudiante consultor</td><td>Santiago Pérez · Recepción</td><td><code>consultor@citi.ucc.edu.co</code></td><td><code>estud2026</code></td></tr>
+      <tr><td>Estudiante tutor</td><td>María Fernanda López · Sistemas</td><td><code>tutor@citi.ucc.edu.co</code></td><td><code>estud2026</code></td></tr>
+      <tr><td>Estudiante tutor</td><td>Juan David Castro · Civil</td><td><code>tutor.civil@citi.ucc.edu.co</code></td><td><code>estud2026</code></td></tr>
+      <tr><td>Cliente</td><td>Constructora del Tolima</td><td><code>gerente@constructoratolima.com</code></td><td><code>cliente2026</code></td></tr>
+      <tr><td>Cliente</td><td>TechPyME Soluciones</td><td><code>admin@techpyme.com</code></td><td><code>cliente2026</code></td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:1rem;font-size:0.85rem;color:var(--muted)">Resumen de contraseñas: Director <code>director2026</code> · Coordinador <code>coord2026</code> · Docente <code>docente2026</code> · Estudiante <code>estud2026</code> · Cliente <code>cliente2026</code></p>
+  <div id="rolesDetail"></div>
+</div>
+<script src="../app/js/data.js"></script>
+<script>
+  document.getElementById('rolesDetail').innerHTML = '<h2>Detalle por rol</h2>' + Object.values(CITI_DATA.roles).map(r => {
+    const p = CITI_DATA.permissions[r.id];
+    return `<div class="card" style="margin-bottom:1rem"><div class="card-header"><h2>${r.icon} ${r.label}</h2></div><div class="card-body"><p style="color:var(--muted);margin-bottom:0.8rem">${r.portal}</p><strong>Puede:</strong><ul style="margin:0.5rem 0 0.8rem 1.2rem;font-size:0.85rem;color:var(--muted)">${p.can.map(c=>`<li>${c}</li>`).join('')}</ul><strong>No puede:</strong><ul style="margin:0.5rem 0 0 1.2rem;font-size:0.85rem;color:var(--muted)">${p.cannot.map(c=>`<li>${c}</li>`).join('')}</ul></div></div>`;
+  }).join('');
+</script>
+</body>
+</html>

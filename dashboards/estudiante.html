@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITI — Estudiante</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../app/css/styles.css">
+  <link rel="stylesheet" href="../app/css/hifi.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><img src="../assets/ucc-logo.svg" alt="UCC"><div><strong>CITI</strong><span>UCC · Ibagué–Espinal</span></div></div>
+    <div class="sidebar-role-badge" id="roleBadge"></div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer"><button class="btn-logout" id="btnLogout">Cerrar sesión</button></div>
+  </aside>
+  <main class="main-content">
+    <header class="topbar-dash">
+      <div><h1 id="pageTitle">Inicio</h1><p id="pageSubtitle">Estudiante CITI</p></div>
+      <div id="userHeader"></div>
+    </header>
+    <div class="page-content">
+      <!-- Consultor: recepción -->
+      <div class="page-section" id="page-recepcion">
+        <div class="stats-row">
+          <div class="stat-card accent"><strong>5</strong><span>Consultas hoy</span></div>
+          <div class="stat-card"><strong>2</strong><span>Cartas pendientes</span></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-header"><h2>Registro de consulta</h2></div>
+            <div class="card-body">
+              <div class="form-group"><label>Razón social</label><input type="text"></div>
+              <div class="form-group"><label>Consulta</label><textarea rows="3"></textarea></div>
+              <div class="form-group"><label>Área</label><select><option>Sistemas</option><option>Civil</option></select></div>
+              <button class="btn btn-primary" id="btnRegConsulta">Registrar</button>
+            </div>
+          </div>
+          <div class="card"><div class="card-header"><h2>Últimas consultas</h2></div>
+            <div class="card-body" style="padding:0"><table class="data-table"><thead><tr><th>Fecha</th><th>Empresa</th><th>Área</th></tr></thead><tbody id="tblConsultas"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-consultas">
+        <div class="card"><div class="card-header"><h2>Registro de consultas</h2></div>
+          <div class="card-body" style="padding:0"><table class="data-table"><thead><tr><th>Fecha</th><th>Empresa</th><th>Consulta</th><th>Atendido</th></tr></thead><tbody id="tblConsultasFull"></tbody></table></div>
+        </div>
+      </div>
+      <div class="page-section" id="page-correspondencia"><div class="card"><div class="card-body"><button class="btn btn-primary">+ Recibida</button> <button class="btn btn-secondary">+ Despachar</button></div></div></div>
+      <div class="page-section" id="page-empleo"><div class="card"><div class="card-body"><button class="btn btn-primary">+ Oferta</button> <button class="btn btn-secondary">+ Demanda</button></div></div></div>
+      <!-- Tutor: casos -->
+      <div class="page-section" id="page-casos">
+        <div class="stats-row">
+          <div class="stat-card accent"><strong id="statCasos">0</strong><span>Casos asignados</span></div>
+          <div class="stat-card"><strong>1</strong><span>Informe pendiente</span></div>
+        </div>
+        <div class="card"><div class="card-header"><h2>Mis casos</h2></div>
+          <div class="card-body" style="padding:0"><table class="data-table"><thead><tr><th>Empresa</th><th>Tipo</th><th>Docente</th><th>Estado</th></tr></thead><tbody id="tblCasos"></tbody></table></div>
+        </div>
+      </div>
+      <div class="page-section" id="page-informes">
+        <div class="card"><div class="card-header"><h2>Informe parcial</h2></div>
+          <div class="card-body">
+            <div class="form-group"><label>Caso</label><select id="selCaso"></select></div>
+            <div class="form-group"><label>Actividades del mes</label><textarea rows="4"></textarea></div>
+            <button class="btn btn-primary">Enviar informe</button>
+          </div>
+        </div>
+      </div>
+      <div class="page-section" id="page-mensajes"><div class="card"><div class="card-body"><p><strong>Docente supervisor:</strong> Mg. Patricia Gómez</p><button class="btn btn-primary" style="margin-top:1rem">Enviar mensaje</button></div></div></div>
+      <div class="page-section" id="page-radial"><div class="card"><div class="card-body"><p><strong>Próximo segmento:</strong> Momento ingenieril — 12 marzo 2026</p></div></div></div>
+    </div>
+  </main>
+</div>
+<script src="../app/js/data.js"></script>
+<script src="../app/js/auth.js"></script>
+<script src="../app/js/ui.js"></script>
+<script src="../app/js/hifi-boot.js"></script>
+<script src="../app/js/dashboard.js"></script>
+<script>
+  const defaultPage = 'recepcion';
+  const session = initDashboard('estudiante', defaultPage, 'Recepción', 'Estudiante CITI');
+  if (session) {
+    const isConsultor = CITI_AUTH.isConsultor(session);
+    const isTutor = CITI_AUTH.isTutor(session);
+    const startPage = isConsultor ? 'recepcion' : 'casos';
+    if (isTutor && !isConsultor) {
+      document.getElementById('pageTitle').textContent = 'Mis casos';
+      document.getElementById('pageSubtitle').textContent = 'Casos asignados';
+      document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('page-casos')?.classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === 'casos'));
+    }
+
+    if (isConsultor) {
+      const rows = CITI_DATA.consultas.map(c => `<tr><td>${c.fecha}</td><td>${c.empresa}</td><td>${c.area}</td></tr>`).join('');
+      document.getElementById('tblConsultas').innerHTML = rows;
+      document.getElementById('tblConsultasFull').innerHTML = CITI_DATA.consultas.map(c =>
+        `<tr><td>${c.fecha}</td><td>${c.empresa}</td><td>${c.consulta}</td><td>${c.atendido}</td></tr>`).join('');
+      document.getElementById('btnRegConsulta')?.addEventListener('click', () => {
+        CITI_UI.toast('Consulta registrada', 'success');
+        if (location.search.includes('flow=4')) CITI_FLOW.advance();
+      });
+    }
+    if (isTutor) {
+      const misCasos = CITI_DATA.solicitudes.filter(s => s.tutor && s.tutor.includes(session.name.split(' ')[0]));
+      const casos = misCasos.length ? misCasos : CITI_DATA.solicitudes.filter(s => s.estado === 'en_proceso').slice(0, 1);
+      document.getElementById('statCasos').textContent = casos.length;
+      document.getElementById('tblCasos').innerHTML = casos.map(s =>
+        `<tr><td>${s.empresa}</td><td>${s.tipo}</td><td>${s.docente || '—'}</td><td>${estadoBadge(s.estado)}</td></tr>`).join('') ||
+        '<tr><td colspan="4" style="text-align:center;color:var(--muted)">Sin casos asignados</td></tr>';
+      document.getElementById('selCaso').innerHTML = casos.map(s => `<option>${s.empresa} — ${s.tipo}</option>`).join('');
+    }
+    ['recepcion','consultas','correspondencia','empleo','casos','informes','mensajes','radial'].forEach(id => {
+      const el = document.getElementById('page-' + id);
+      if (!el) return;
+      if (isConsultor && ['casos','informes','mensajes'].includes(id)) el.remove();
+      if (isTutor && ['recepcion','consultas','correspondencia','empleo'].includes(id)) el.remove();
+    });
+  }
+</script>
+</body>
+</html>
