@@ -1,0 +1,49 @@
+{# Fase 04 · Módulo 5: interacciones cliente ↔ profesional (visibilidad ya filtrada en servidor) #}
+<div class="inter-bloque">
+  <h4>Comentarios y entregables</h4>
+  {% if interacciones %}
+    <ol class="inter-list">
+      {% for it in interacciones %}
+        <li class="inter-item inter-item--{{ it.tipo }}{% if not it.para_cliente %} inter-item--interna{% endif %}">
+          <div class="inter-meta">
+            <strong>{{ it.autor.nombre_completo|default:'Sistema' }}</strong>
+            <span class="inter-rol">{{ it.get_rol_autor_display|default:it.rol_autor }}</span>
+            <span class="inter-fecha">{{ it.fecha|date:"d/m/Y H:i" }}</span>
+          </div>
+          <span class="inter-tipo">{{ it.get_tipo_display }}</span>
+          {% if not it.para_cliente %}<span class="inter-flag">interna — no visible para el cliente</span>{% endif %}
+          <p class="inter-texto">{{ it.texto|linebreaksbr }}</p>
+          {% if it.datos_extra %}
+            <dl class="inter-ficha">
+              {% if it.datos_extra.titulo %}<dt>Título</dt><dd>{{ it.datos_extra.titulo }}</dd>{% endif %}
+              {% if it.datos_extra.diagnostico %}<dt>Diagnóstico</dt><dd>{{ it.datos_extra.diagnostico|linebreaksbr }}</dd>{% endif %}
+              {% if it.datos_extra.alcance %}<dt>Alcance y objetivos</dt><dd>{{ it.datos_extra.alcance|linebreaksbr }}</dd>{% endif %}
+              {% if it.datos_extra.metodologia %}<dt>Metodología</dt><dd>{{ it.datos_extra.metodologia|linebreaksbr }}</dd>{% endif %}
+              {% if it.datos_extra.entregables %}<dt>Entregables</dt><dd>{{ it.datos_extra.entregables|linebreaksbr }}</dd>{% endif %}
+            </dl>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p class="inter-vacio">Aún no hay comentarios en esta solicitud. El profesional y la empresa pueden interactuar desde aquí sin alterar el estado administrativo del caso.</p>
+  {% endif %}
+
+  {% if form_interaccion %}
+    <form method="post" class="inter-form" action="{{ form_action }}">
+      {% csrf_token %}
+      <input type="hidden" name="accion" value="{{ form_accion }}">
+      {% if form_embed %}<input type="hidden" name="embed" value="1">{% endif %}
+      <div class="form-group">
+        <label for="{{ form_interaccion.tipo.id_for_label }}">{{ form_interaccion.tipo.label }}</label>
+        {{ form_interaccion.tipo }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form_interaccion.texto.id_for_label }}">{{ form_interaccion.texto.label }}</label>
+        {{ form_interaccion.texto }}
+        {% if form_interaccion.texto.errors %}<small class="field-error">{{ form_interaccion.texto.errors }}</small>{% endif %}
+      </div>
+      <button type="submit" class="btn btn-sm btn-primary">Enviar mensaje</button>
+    </form>
+  {% endif %}
+</div>

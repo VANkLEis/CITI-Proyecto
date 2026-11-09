@@ -7,6 +7,8 @@ app_name = 'portal'
 urlpatterns = [
     path('', views.landing, name='landing'),
     path('panel/director/', views.director_dashboard, name='director_dashboard'),
+    path('panel/trazabilidad/', views.trazabilidad, name='trazabilidad'),
+    path('panel/trazabilidad/exportar.csv', views.trazabilidad_csv, name='trazabilidad_csv'),
     path('panel/coordinador/', views.coordinador_dashboard, name='coordinador_dashboard'),
     path(
         'panel/coordinador/asignar/<int:cita_id>/',
@@ -32,9 +34,35 @@ urlpatterns = [
     ),
     path('panel/cliente/', views.cliente_dashboard, name='cliente_dashboard'),
     path(
+        'panel/cliente/mis-solicitudes/',
+        views.cliente_mis_solicitudes,
+        name='cliente_mis_solicitudes',
+    ),
+    path(
+        'panel/cliente/solicitud/<int:cita_id>/seguimiento/',
+        views.cliente_seguimiento,
+        name='cliente_seguimiento',
+    ),
+    path(
+        'panel/cliente/notificaciones/',
+        views.cliente_notificaciones,
+        name='cliente_notificaciones',
+    ),
+    path(
         'panel/cliente/feedback/<int:cita_id>/',
         views.cliente_feedback,
         name='cliente_feedback',
+    ),
+    path('panel/perfil/', views.perfil_propio, name='perfil'),
+    path(
+        'panel/seguimiento/',
+        views.staff_seguimiento,
+        name='staff_seguimiento',
+    ),
+    path(
+        'panel/cita/<int:cita_id>/adjunto/',
+        views.cita_adjunto,
+        name='cita_adjunto',
     ),
     path(
         'panel/cita/<int:cita_id>/detalle/',

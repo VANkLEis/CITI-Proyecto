@@ -1,0 +1,168 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Trazabilidad{% endblock %}
+{% block page_title %}Trazabilidad e indicadores de gestión{% endblock %}
+{% block page_subtitle %}{% if area_lectura %}Alcance: {{ area_lectura|title }}{% else %}Alcance institucional completo{% endif %}{% endblock %}
+
+{% block sidebar_nav %}
+  {% if request.user.role == 'director' %}
+    <a class="nav-item" href="{% url 'portal:director_dashboard' %}">Resumen ejecutivo</a>
+    <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento global</a>
+    <a class="nav-item is-active" href="{% url 'portal:trazabilidad' %}">Trazabilidad e indicadores</a>
+    <a class="nav-item" href="{% url 'portal:trazabilidad_csv' %}">Reportes (CSV)</a>
+    <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+    <a class="nav-item" href="/admin/" target="_blank" rel="noopener">Administración de registros</a>
+  {% else %}
+    <a class="nav-item" href="{% url 'portal:coordinador_dashboard' %}">Bandeja de asignación</a>
+    <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento de mi área</a>
+    <a class="nav-item is-active" href="{% url 'portal:trazabilidad' %}">Trazabilidad de mi área</a>
+    <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  {% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+
+<form method="get" class="card filter-bar">
+  <div class="card-body filter-bar-body">
+    <input type="hidden" name="periodo" value="{{ filtros.periodo }}">
+    <label>Área
+      <select name="area" {% if filtros.area_forzada %}disabled{% endif %}>
+        <option value="">Todas</option>
+        {% for valor, label in areas_choices %}<option value="{{ valor }}" {% if filtros.area == valor %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Estado
+      <select name="estado">
+        <option value="">Todos</option>
+        {% for valor, label in estados_choices %}<option value="{{ valor }}" {% if filtros.estado == valor %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Tipo de servicio
+      <select name="tipo">
+        <option value="">Todos</option>
+        <option value="orientacion" {% if filtros.tipo == 'orientacion' %}selected{% endif %}>Orientación técnica</option>
+        <option value="especializada" {% if filtros.tipo == 'especializada' %}selected{% endif %}>Consultoría especializada</option>
+      </select>
+    </label>
+    <label>Responsable
+      <select name="responsable">
+        <option value="">Todos</option>
+        {% for r in responsables %}<option value="{{ r.pk }}" {% if filtros.responsable == r.pk|stringformat:'s' %}selected{% endif %}>{{ r.nombre_completo }}</option>{% endfor %}
+      </select>
+    </label>
+    <button type="submit" class="btn btn-sm btn-primary">Aplicar filtros</button>
+    <a class="btn btn-sm btn-secondary" href="?periodo={{ filtros.periodo }}{% if filtros.area %}&area={{ filtros.area }}{% endif %}">Limpiar</a>
+    <a class="btn btn-sm btn-export" href="{% url 'portal:trazabilidad_csv' %}?{{ request.GET.urlencode }}">Exportar CSV ↓</a>
+  </div>
+</form>
+
+<div class="stats-row">
+  <div class="stat-card accent"><strong>{{ kpis.recibidas }}</strong><span>Recibidas</span></div>
+  <div class="stat-card"><strong>{{ kpis.pendientes }}</strong><span>Pendientes</span></div>
+  <div class="stat-card"><strong>{{ kpis.asignadas }}</strong><span>Asignadas</span></div>
+  <div class="stat-card"><strong>{{ kpis.en_proceso }}</strong><span>En proceso</span></div>
+  <div class="stat-card"><strong>{{ kpis.finalizadas }}</strong><span>Finalizadas</span></div>
+  <div class="stat-card"><strong>{{ kpis.canceladas }}</strong><span>Canceladas</span></div>
+</div>
+
+<div class="exec-grid">
+  <section class="card">
+    <div class="card-header"><h2>Indicadores de resultado</h2></div>
+    <div class="card-body metric-list">
+      <div class="metric"><span>Atendidas (asesorías realizadas)</span>
+        <strong>{{ kpis.finalizadas }}</strong></div>
+      <div class="metric"><span>Tasa de finalización <small>finalizadas ÷ recibidas</small></span>
+        <strong>{% if kpis.tasa_finalizacion is not None %}{{ kpis.tasa_finalizacion }}% <em>({{ kpis.finalizadas }}/{{ kpis.recibidas }})</em>{% else %}No disponible{% endif %}</strong></div>
+      <div class="metric"><span>Tiempo medio hasta asignación</span>
+        <strong>{% if tiempos.asignacion_horas is not None %}{{ tiempos.asignacion_horas }} h <em>(n={{ tiempos.asignacion_n }})</em>{% else %}No disponible{% endif %}</strong></div>
+      <div class="metric"><span>Tiempo medio de resolución <small>cierre − creación</small></span>
+        <strong>{% if tiempos.resolucion_horas is not None %}{{ tiempos.resolucion_horas }} h <em>(n={{ tiempos.resolucion_n }})</em>{% else %}No disponible{% endif %}</strong></div>
+      <p class="section-kicker" style="margin-top:0.9rem;">Seguimiento con el cliente (Fase 04)</p>
+      <div class="metric"><span>Entregables publicados <small>interacciones de entrega</small></span>
+        <strong>{{ interaccion.entregas_publicadas }}</strong></div>
+      <div class="metric"><span>Pendientes de aprobación <small>última entrega sin decisión del cliente</small></span>
+        <strong>{{ interaccion.pendientes_aprobacion }} <em>({{ interaccion.casos_con_entrega }} casos con entregas)</em></strong></div>
+      <div class="metric"><span>Ajustes solicitados <small>decisiones de corrección</small></span>
+        <strong>{{ interaccion.ajustes_solicitados }}</strong></div>
+      <div class="metric"><span>Aprobaciones registradas</span>
+        <strong>{{ interaccion.aprobaciones }}</strong></div>
+      <div class="metric"><span>Valoración media de clientes <small>AVG calificación · finalizadas calificadas</small></span>
+        <strong>{% if interaccion.valoracion_media is not None %}{{ interaccion.valoracion_media }}/5 <em>(n={{ interaccion.valoracion_n }})</em>{% else %}No disponible{% endif %}</strong></div>
+      <p class="chart-note">Las canceladas se cuentan como recibidas pero nunca como atendidas. Métricas “No disponible” = muestra insuficiente (no se estiman valores). Aprobar un entregable NO finaliza la solicitud: aprobación es estado de la entrega; el cierre administrativo lo hace el docente.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Solicitudes por estado</h2></div>
+    <div class="card-body">
+      {% for f in estados %}
+        <div class="chart-row">
+          <span class="chart-label">{{ f.label }}</span>
+          <div class="chart-track"><div class="chart-bar chart-bar--{{ forloop.counter }}" style="width: {{ f.pct }}%;"></div></div>
+          <span class="chart-num">{{ f.n }}</span>
+        </div>
+      {% empty %}<p class="exec-empty">Sin datos en el período.</p>{% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Evolución (6 meses)</h2></div>
+    <div class="card-body">
+      <div class="evo-chart">
+        {% for s in serie %}
+          <div class="evo-month">
+            <div class="evo-bars">
+              <div class="evo-bar evo-bar--rec" style="height: {% widthratio s.recibidas serie_max 100 %}%;" title="{{ s.recibidas }} recibidas"></div>
+              <div class="evo-bar evo-bar--fin" style="height: {% widthratio s.cerradas serie_max 100 %}%;" title="{{ s.cerradas }} finalizadas"></div>
+            </div>
+            <span class="evo-label">{{ s.mes }}</span>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="evo-legend"><span class="dot dot--rec"></span>Recibidas&nbsp;&nbsp;<span class="dot dot--fin"></span>Finalizadas</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Servicios más solicitados</h2></div>
+    <div class="card-body">
+      {% for f in servicios %}
+        <div class="chart-row">
+          <span class="chart-label">{{ f.label }}</span>
+          <div class="chart-track"><div class="chart-bar" style="width: {{ f.pct }}%;"></div></div>
+          <span class="chart-num">{{ f.n }}</span>
+        </div>
+      {% empty %}<p class="exec-empty">Sin solicitudes con servicio registrado.</p>{% endfor %}
+    </div>
+  </section>
+</div>
+
+<section class="card">
+  <div class="card-header"><h2>Resultados por solicitud</h2><small class="exec-empty">Hasta 100 registros según los filtros</small></div>
+  <div class="card-body" style="padding:0;">
+    <table class="data-table">
+      <thead><tr>
+        <th>Código</th><th>Área</th><th>Empresa</th><th>Servicio</th><th>Responsable</th>
+        <th>Solicitada</th><th>Cerrada</th><th>Resolución</th><th>Estado</th>
+      </tr></thead>
+      <tbody>
+      {% for c in tabla %}
+        <tr class="cita-row-clickable" data-cita-row="{{ c.pk }}">
+          <td>CITI-{{ c.pk|stringformat:"05d" }}</td>
+          <td>{{ c.franja.get_area_display }}</td>
+          <td>{{ c.cliente.empresa.razon_social|default:c.cliente.email }}</td>
+          <td>{{ c.get_subespecialidad_display }}</td>
+          <td>{% if c.docente_asignado %}{{ c.docente_asignado.nombre_completo }}{% elif c.estudiante_apoyo %}{{ c.estudiante_apoyo.nombre_completo }}{% else %}—{% endif %}</td>
+          <td>{{ c.creada_en|date:"d/m/Y" }}</td>
+          <td>{{ c.cerrada_en|date:"d/m/Y"|default:"—" }}</td>
+          <td>{% if c.resolucion_txt %}{{ c.resolucion_txt }}{% else %}—{% endif %}</td>
+          <td><span class="badge badge-estado-{{ c.estado }}">{{ c.get_estado_display }}</span></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="9" style="padding:1rem;color:var(--muted);">Sin resultados para el filtro actual.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

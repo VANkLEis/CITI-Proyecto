@@ -4,6 +4,12 @@
 {% block page_title %}Mis asesorías{% endblock %}
 {% block page_subtitle %}Docente asesor{% endblock %}
 
+{% block sidebar_nav %}
+  <a class="nav-item is-active" href="{% url 'portal:docente_dashboard' %}">Mis casos</a>
+  <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento y entregables</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
 {% block dashboard_content %}
 <div class="stats-row">
   <div class="stat-card accent"><strong>{{ kpis.asignados }}</strong><span>Mis casos asignados</span></div>

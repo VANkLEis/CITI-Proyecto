@@ -1,17 +1,43 @@
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_ROOT = BASE_DIR.parent
 
-SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY',
-    'django-insecure-dev-citi-ucc-cambiar-en-produccion',
-)
+try:  # Carga .env local si existe (B-3); NO sustituye variables del shell.
+    from dotenv import load_dotenv
 
-DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
+    load_dotenv(BASE_DIR / '.env')
+except ImportError:
+    pass
+
+# —— Entornos explícitos (B-3 / auditoría SEG-03) ——
+# desarrollo (default, demostración local) | produccion (exige secretos y HTTPS)
+DJANGO_ENV = os.environ.get('DJANGO_ENV', 'desarrollo').strip().lower()
+IS_PRODUCTION = DJANGO_ENV in ('produccion', 'production', 'prod')
+
+DEBUG = os.environ.get('DJANGO_DEBUG', '0' if IS_PRODUCTION else '1') == '1'
+
+_DEV_SECRET_FALLBACK = 'django-insecure-dev-citi-ucc-solo-desarrollo'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '' if IS_PRODUCTION else _DEV_SECRET_FALLBACK)
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+
+if IS_PRODUCTION:
+    if DEBUG:
+        raise ImproperlyConfigured(
+            'DJANGO_DEBUG=1 no esta permitido con DJANGO_ENV=produccion.'
+        )
+    if not SECRET_KEY:
+        raise ImproperlyConfigured(
+            'DJANGO_SECRET_KEY es obligatorio en produccion (vea .env.example).'
+        )
+    if not os.environ.get('DJANGO_ALLOWED_HOSTS'):
+        raise ImproperlyConfigured(
+            'DJANGO_ALLOWED_HOSTS es obligatorio en produccion.'
+        )
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -113,3 +139,16 @@ CITI_MIN_PROMEDIO_TUTOR = os.environ.get('CITI_MIN_PROMEDIO_TUTOR', '4.0')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# —— Endurecimiento solo en producción (no rompe la demo local en HTTP) ——
+if IS_PRODUCTION:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_HSTS_SECONDS', '31536000'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
+    X_FRAME_OPTIONS = 'DENY'
+    # detrás de proxy/reverse-proxy (nginx): descomentar
+    # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

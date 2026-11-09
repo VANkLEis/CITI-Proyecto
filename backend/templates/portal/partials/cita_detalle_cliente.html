@@ -5,6 +5,22 @@
   </div>
   {% include "portal/partials/cita_info_block.html" %}
 
+  {% if entrega_pendiente %}
+  <div class="cita-modal-actions">
+    <h4>Entregable pendiente de tu aprobación</h4>
+    <p class="inter-pending-note"><strong>{{ entrega_pendiente.datos_extra.titulo|default:'Entrega de resultados' }}</strong> — {{ entrega_pendiente.fecha|date:"d/m/Y H:i" }}</p>
+    <p class="cita-muted">Aprueba o solicita ajustes; la aprobación no cierra administrativamente la solicitud.</p>
+    <form method="post" action="{% url 'portal:cliente_seguimiento' cita.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="accion" value="aprobar">
+      <textarea name="dc-observacion" rows="2" placeholder="Observación (opcional)"></textarea>
+      <div class="btn-row-estado" style="margin-top:0.5rem;">
+        <button type="submit" class="btn btn-primary btn-sm">Aprobar entregable</button>
+      </div>
+    </form>
+  </div>
+  {% endif %}
+
   {% if cita.estado == 'finalizada' and not cita.calificacion %}
   <div class="cita-modal-actions">
     <h4>Comentario de aprobación</h4>
@@ -20,4 +36,10 @@
     <p class="cita-muted">{{ cita.comentario_cliente|default:"Sin comentario adicional."|linebreaksbr }}</p>
   </div>
   {% endif %}
+
+  {% include "portal/partials/interaccion_list.html" with form_action='/panel/cita/'|add:cita.pk|add:'/detalle/' form_accion='interaccion' form_embed=1 %}
+
+  <div class="cita-bitacora-preview">
+    <a href="{% url 'portal:cliente_seguimiento' cita.pk %}" class="btn btn-sm btn-secondary">Ver seguimiento completo →</a>
+  </div>
 </div>

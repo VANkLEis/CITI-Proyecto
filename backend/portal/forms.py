@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 
 from accounts.models import CustomUser, Role
-from scheduling.models import CitaAsesoria, NotaBitacora
+from scheduling.models import CitaAsesoria, NotaBitacora, CitaInteraccion
 from scheduling.subespecialidades import Subespecialidad
 
 
@@ -97,3 +97,80 @@ class FeedbackClienteForm(forms.Form):
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False,
     )
+
+
+# ---------------------------------------------------------------------------
+# Fase 04 — interacción, entregables y decisiones. Los tipos por rol se
+# ofrecen SOLO donde el backend los permite; la validación cruzada autor-rol-
+# tipo ocurre además en CitaInteraccion.clean (defensa en profundidad).
+
+class InteraccionClienteForm(forms.Form):
+    TIPOS = (
+        (CitaInteraccion.Tipo.GENERAL, 'Comentario general'),
+        (CitaInteraccion.Tipo.RESPUESTA, 'Respuesta al profesional'),
+        (CitaInteraccion.Tipo.AJUSTE, 'Solicitar ajuste al avance'),
+    )
+    tipo = forms.ChoiceField(label='Tipo de mensaje', choices=TIPOS)
+    texto = forms.CharField(
+        label='Mensaje', widget=forms.Textarea(attrs={'rows': 3, 'maxlength': 4000}))
+
+    def clean_tipo(self):
+        valor = self.cleaned_data['tipo']
+        if valor not in dict(self.TIPOS):
+            raise forms.ValidationError('Tipo no permitido para el cliente.')
+        return valor
+
+
+class InteraccionEquipoForm(forms.Form):
+    TIPOS = (
+        (CitaInteraccion.Tipo.OBSERVACION, 'Observación para el cliente'),
+        (CitaInteraccion.Tipo.NOTA_INTERNA, 'Nota técnica interna (no visible al cliente)'),
+        (CitaInteraccion.Tipo.AJUSTE, 'Solicitud de ajuste (interna)'),
+    )
+    tipo = forms.ChoiceField(label='Tipo de mensaje', choices=TIPOS)
+    texto = forms.CharField(
+        label='Mensaje', widget=forms.Textarea(attrs={'rows': 3, 'maxlength': 4000}))
+
+    def clean_tipo(self):
+        valor = self.cleaned_data['tipo']
+        if valor not in dict(self.TIPOS):
+            raise forms.ValidationError('Tipo no permitido para el equipo.')
+        return valor
+
+
+class EntregableForm(forms.Form):
+    """Publicación de entregable para revisión del cliente.
+
+    Los campos estructurados (diagnóstico, alcance, metodología, entregables)
+    son la ficha de CONSULTORÍA; en ASESORÍA basta título + contenido, según
+    la diferenciación de modalidades de la Fase 04."""
+    titulo = forms.CharField(
+        label='Título del entregable', max_length=180,
+        widget=forms.TextInput(attrs={'maxlength': 180}))
+    contenido = forms.CharField(
+        label='Resumen de resultados',
+        widget=forms.Textarea(attrs={'rows': 4, 'maxlength': 4000}))
+    diagnostico = forms.CharField(label='Diagnóstico técnico', required=False,
+                                  widget=forms.Textarea(attrs={'rows': 2}))
+    alcance = forms.CharField(label='Alcance y objetivos', required=False,
+                              widget=forms.Textarea(attrs={'rows': 2}))
+    metodologia = forms.CharField(label='Metodología de trabajo', required=False,
+                                  widget=forms.Textarea(attrs={'rows': 2}))
+    entregables = forms.CharField(label='Entregables concretos', required=False,
+                                  widget=forms.Textarea(attrs={'rows': 2}))
+
+    def ficha(self):
+        """Solo los campos con valor; se almacenan en datos_extra."""
+        data = {}
+        for key in ('diagnostico', 'alcance', 'metodologia', 'entregables'):
+            val = (self.cleaned_data.get(key) or '').strip()
+            if val:
+                data[key] = val
+        return data or None
+
+
+class DecisionClienteForm(forms.Form):
+    observacion = forms.CharField(
+        label='Observación (justifica tu decisión)',
+        widget=forms.Textarea(attrs={'rows': 2, 'maxlength': 2000}),
+        required=False)

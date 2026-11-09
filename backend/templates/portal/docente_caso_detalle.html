@@ -1,111 +1,110 @@
 {% extends "dashboard_base.html" %}
 
-
-
 {% block title %}CITI — Caso #{{ cita.pk }}{% endblock %}
 
 {% block page_title %}Detalle del caso #{{ cita.pk }}{% endblock %}
 
 {% block page_subtitle %}{{ cita.franja.get_area_display }}{% endblock %}
 
-
-
 {% block dashboard_content %}
 
 <div class="card" style="margin-bottom:1.5rem;">
-
   <div class="card-header"><h2>Información del caso</h2></div>
-
   <div class="card-body">
-
     {% include "portal/partials/cita_info_block.html" %}
-
   </div>
-
 </div>
-
-
 
 <div class="grid-2">
-
   <div class="card">
-
     <div class="card-header"><h2>Acciones rápidas</h2></div>
-
     <div class="card-body">
-
       <form method="post">
-
         {% csrf_token %}
-
         <input type="hidden" name="accion" value="estado_rapido">
-
         <div class="btn-row-estado">
-
-          <button type="submit" name="nuevo_estado" value="en_proceso" class="btn btn-secondary" {% if cita.estado == 'en_proceso' %}disabled{% endif %}>Marcar en proceso</button>
-
-          <button type="submit" name="nuevo_estado" value="finalizada" class="btn btn-primary" {% if cita.estado == 'finalizada' %}disabled{% endif %}>Marcar finalizada</button>
-
+          {% if cita.estado == 'asignada' or cita.estado == 'finalizada' %}
+            <button type="submit" name="nuevo_estado" value="en_proceso" class="btn btn-secondary">Marcar en proceso</button>
+          {% endif %}
+          {% if cita.estado == 'asignada' or cita.estado == 'en_proceso' %}
+            <button type="submit" name="nuevo_estado" value="finalizada" class="btn btn-primary">Marcar finalizada</button>
+          {% endif %}
+          {% if cita.estado == 'solicitada' or cita.estado == 'cancelada' %}
+            <p class="cita-muted">Sin transiciones disponibles desde «{{ cita.get_estado_display }}» (flujo formal del caso).</p>
+          {% endif %}
         </div>
-
       </form>
-
       {% if cita.estado == 'finalizada' %}
-
         <a href="{% url 'portal:docente_generar_acta' cita.pk %}" class="btn btn-secondary" target="_blank" rel="noopener" style="margin-top:1rem;">Descargar acta (PDF / imprimir)</a>
-
       {% else %}
-
         <p class="cita-muted" style="margin-top:1rem;font-size:0.85rem;">El acta estará disponible al finalizar el caso.</p>
-
       {% endif %}
-
     </div>
-
   </div>
-
-
 
   <div class="card">
-
     <div class="card-header"><h2>Gestión del caso</h2></div>
-
     <div class="card-body">
-
       <form method="post">
-
         {% csrf_token %}
-
         <input type="hidden" name="accion" value="gestionar">
-
         {% for field in form %}
-
           <div class="form-group">
-
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-
             {{ field }}
-
             {% if field.errors %}<small class="field-error">{{ field.errors }}</small>{% endif %}
-
           </div>
-
         {% endfor %}
-
         <button type="submit" class="btn btn-primary">Guardar cambios</button>
-
         <a href="{% url 'portal:docente_dashboard' %}" class="btn btn-secondary" style="margin-left:0.5rem;">Volver</a>
-
       </form>
-
     </div>
-
   </div>
-
 </div>
 
+{% if cita.estado != 'cancelada' %}
+<div class="card" style="margin-top:1.5rem;">
+  <div class="card-header"><h2>Publicar entregable para revisión del cliente</h2></div>
+  <div class="card-body">
+    {% if cita.tipo_servicio == 'especializada' %}
+      <p class="modalidad-note modalidad-note--consultoria">
+        <strong>Consultoría especializada:</strong> use la ficha estructurada (diagnóstico,
+        alcance, metodología, entregables). Los campos opcionales enriquecen el seguimiento
+        del cliente sin bloquear la publicación.
+      </p>
+    {% else %}
+      <p class="modalidad-note modalidad-note--asesoria">
+        <strong>Asesoría / orientación técnica:</strong> el flujo es proporcional — título
+        y resumen de resultados bastan para que el cliente apruebe.
+      </p>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="accion" value="entrega">
+      <div class="entrega-grid">
+        {% for field in form_entrega %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}{% if not field.field.required %} <small class="cita-muted">(opcional)</small>{% endif %}</label>
+            {{ field }}
+            {% if field.errors %}<small class="field-error">{{ field.errors }}</small>{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-primary">Publicar entregable</button>
+      <span class="cita-muted" style="font-size:0.8rem;margin-left:0.6rem;">La aprobación del cliente no cierra el caso: el cierre administrativo lo hace el docente con acta.</span>
+    </form>
+    {% if entrega_pendiente %}
+      <p class="inter-pending-note" style="margin-top:0.9rem;">Hay un entregable pendiente de decisión del cliente: <strong>{{ entrega_pendiente.datos_extra.titulo|default:entrega_pendiente.texto|slice:":70" }}</strong></p>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
 
-
+<div class="card" style="margin-top:1.5rem;">
+  <div class="card-header"><h2>Comunicación con la empresa</h2></div>
+  <div class="card-body">
+    {% include "portal/partials/interaccion_list.html" with form_action='' form_accion='interaccion' %}
+  </div>
+</div>
 
 {% endblock %}
-

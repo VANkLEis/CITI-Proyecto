@@ -4,6 +4,13 @@
 {% block page_title %}Agenda de citas{% endblock %}
 {% block page_subtitle %}Portal de empresas{% endblock %}
 
+{% block sidebar_nav %}
+  <a class="nav-item is-active" href="{% url 'portal:cliente_dashboard' %}">Agenda y solicitud</a>
+  <a class="nav-item" href="{% url 'portal:cliente_mis_solicitudes' %}">Mis solicitudes</a>
+  <a class="nav-item" href="{% url 'portal:cliente_notificaciones' %}">Notificaciones</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
 <style>
@@ -11,8 +18,12 @@
   .fc .fc-button-primary { background: var(--ucc-verde-solidario); border-color: #6da020; }
   .consultorio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
   .consultorio-card { border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--border); background: white; box-shadow: var(--shadow); }
-  .consultorio-sistemas { border-top: 4px solid #2563eb; }
-  .consultorio-civil { border-top: 4px solid #d97706; }
+  .consultorio-sistemas h3::before, .consultorio-civil h3::before {
+    content: ''; display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: 8px; vertical-align: 2px;
+  }
+  .consultorio-sistemas h3::before { background: #2563eb; }
+  .consultorio-civil h3::before { background: #d97706; }
   @media (max-width: 900px) { .consultorio-grid { grid-template-columns: 1fr; } }
 </style>
 {% endblock %}
@@ -29,8 +40,24 @@
   </div>
 </div>
 
+{% if citas_pendientes_aprobacion %}
+<div class="card" style="margin-bottom:1.5rem;">
+  <div class="card-header"><h2>Requieren su decisión</h2></div>
+  <div class="card-body" style="padding-top:0.5rem;">
+    {% for c in citas_pendientes_aprobacion %}
+      <div class="notif-line">
+        <strong>CITI-{{ c.pk|stringformat:"05d" }}</strong>
+        — {{ c.entrega_pendiente.datos_extra.titulo|default:'Entregable publicado' }}
+        · {{ c.entrega_pendiente.fecha|date:"d/m/Y" }}
+        <a class="btn btn-sm btn-primary" href="{% url 'portal:cliente_seguimiento' c.pk %}">Revisar y aprobar o solicitar ajustes</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 {% if citas_feedback or citas_evaluadas %}
-<div class="card" style="margin-bottom:1.5rem;border-left:4px solid var(--ucc-verde-solidario);">
+<div class="card" style="margin-bottom:1.5rem;">
   <div class="card-header"><h2>Comentarios de aprobación y feedback</h2></div>
   <div class="card-body">
     {% if citas_feedback %}
@@ -85,16 +112,24 @@
           <label class="service-type-card">
             <input type="radio" name="tipoServicio" value="orientacion" checked>
             <span class="service-type-icon">01</span>
-            <strong>Orientación Técnica / Especificaciones</strong>
-            <span>Atendido por Estudiante Consultor (8° semestre o superior).</span>
+            <strong>Asesoría · Orientación técnica</strong>
+            <span>Acompañamiento puntual con recomendaciones. La ejecuta el estudiante tutor del área (8° semestre o superior) bajo dirección docente.</span>
           </label>
           <label class="service-type-card">
             <input type="radio" name="tipoServicio" value="especializada">
             <span class="service-type-icon">02</span>
-            <strong>Consultoría Especializada / Proyecto</strong>
-            <span>Liderado por Docente Asesor del área.</span>
+            <strong>Consultoría · Intervención estructurada</strong>
+            <span>Docente responsable, ficha de diagnóstico/alcance/metodología, entregables y aprobación de resultados por usted.</span>
           </label>
         </div>
+      </div>
+
+      <div class="form-group" id="contextoConsultoria" hidden>
+        <label for="ctxObjetivos">Objetivos y alcance esperados (consultoría)</label>
+        <textarea id="ctxObjetivos" rows="2" placeholder="Qué espera lograr y hasta dónde debe llegar la intervención"></textarea>
+        <label for="ctxEntregables" style="margin-top:0.6rem;">Entregables que espera recibir</label>
+        <textarea id="ctxEntregables" rows="2" placeholder="Ej.: informe técnico, planos revisados, plan de migración"></textarea>
+        <small class="cita-muted">Estos datos alimentan la ficha de seguimiento de la consultoría; el docente los amplía con su diagnóstico al publicar entregables.</small>
       </div>
 
       <div class="form-group">
@@ -140,6 +175,7 @@
             <td><span class="badge badge-estado-{{ cita.estado }}">{{ cita.get_estado_display }}</span></td>
             <td>{{ cita.docente_asignado.nombre_completo|default:"Pendiente" }}</td>
             <td class="cita-row-actions">
+              <a href="{% url 'portal:cliente_seguimiento' cita.pk %}" class="btn btn-sm btn-primary">Seguimiento</a>
               <button type="button" class="btn btn-sm btn-secondary" data-cita-detalle="{{ cita.pk }}">Ver detalle</button>
               {% if cita.estado == 'finalizada' and not cita.calificacion %}
                 <a href="{% url 'portal:cliente_feedback' cita.pk %}" class="btn btn-sm btn-primary">Calificar</a>
@@ -155,7 +191,7 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block dashboard_extra_js %}
 {{ subespecialidades_json|json_script:"subespecialidades-data" }}
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 <script>
@@ -170,6 +206,12 @@
   const filtroArea = document.getElementById('filtroArea');
   const areaReservaLabel = document.getElementById('areaReservaLabel');
   const areaLabels = { sistemas: 'Ingeniería de Sistemas', civil: 'Ingeniería Civil' };
+  const ctxBox = document.getElementById('contextoConsultoria');
+  document.querySelectorAll('input[name="tipoServicio"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      ctxBox.hidden = r.value !== 'especializada';
+    });
+  });
   let franjaSeleccionada = null;
   let franjaAreaReserva = null;
   const csrfToken = '{{ csrf_token }}';
@@ -281,6 +323,13 @@
     formData.append('asunto', asuntoInput.value);
     formData.append('subespecialidad', subCode);
     formData.append('tipo_servicio', tipoServicioInput.value);
+
+    if (tipoServicioInput.value === 'especializada') {
+      const obj = document.getElementById('ctxObjetivos').value.trim();
+      const ent = document.getElementById('ctxEntregables').value.trim();
+      if (obj) formData.append('ctx_objetivos', obj);
+      if (ent) formData.append('ctx_entregables', ent);
+    }
 
     if (archivoInput.files.length > 0) {
       formData.append('archivo_adjunto', archivoInput.files[0]);

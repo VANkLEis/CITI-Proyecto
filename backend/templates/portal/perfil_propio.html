@@ -1,0 +1,85 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Mi perfil{% endblock %}
+{% block page_title %}Mi perfil{% endblock %}
+{% block page_subtitle %}Cuenta y datos institucionales{% endblock %}
+
+{% block sidebar_nav %}
+  {% if request.user.role == 'cliente' %}
+    <a class="nav-item" href="{% url 'portal:cliente_dashboard' %}">Agenda y solicitudes</a>
+    <a class="nav-item" href="{% url 'portal:cliente_mis_solicitudes' %}">Mis solicitudes</a>
+    <a class="nav-item" href="{% url 'portal:cliente_notificaciones' %}">Notificaciones</a>
+    <a class="nav-item is-active" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  {% elif request.user.role == 'docente' %}
+    <a class="nav-item" href="{% url 'portal:docente_dashboard' %}">Mis casos</a>
+    <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento de casos</a>
+    <a class="nav-item is-active" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  {% elif request.user.role == 'estudiante' %}
+    <a class="nav-item" href="{% url 'portal:estudiante_dashboard' %}">Mis casos de apoyo</a>
+    <a class="nav-item is-active" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  {% elif request.user.role == 'coordinador' %}
+    <a class="nav-item" href="{% url 'portal:coordinador_dashboard' %}">Bandeja de asignación</a>
+    <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento de mi área</a>
+    <a class="nav-item" href="{% url 'portal:trazabilidad' %}">Trazabilidad de mi área</a>
+    <a class="nav-item is-active" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  {% elif request.user.role == 'director' %}
+    <a class="nav-item" href="{% url 'portal:director_dashboard' %}">Resumen ejecutivo</a>
+    <a class="nav-item" href="{% url 'portal:trazabilidad' %}">Trazabilidad e indicadores</a>
+    <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento global</a>
+    <a class="nav-item is-active" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  {% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="exec-grid" style="margin-top:0;">
+  <section class="card">
+    <div class="card-header"><h2>Cuenta</h2></div>
+    <div class="card-body metric-list">
+      <div class="metric"><span>Nombre</span><strong>{{ request.user.nombre_completo }}</strong></div>
+      <div class="metric"><span>Correo</span><strong>{{ request.user.email }}</strong></div>
+      <div class="metric"><span>Rol en el CITI</span><strong>{{ request.user.get_role_display }}</strong></div>
+      {% if request.user.area %}
+        <div class="metric"><span>Área</span><strong>{{ request.user.get_area_display }}</strong></div>
+      {% endif %}
+      <div class="metric"><span>Registrado desde</span><strong>{{ request.user.date_joined|date:"d/m/Y" }}</strong></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Datos institucionales</h2></div>
+    <div class="card-body">
+      {% if request.user.role == 'cliente' %}
+        <div class="metric-list metric-list">
+          <div class="metric"><span>Empresa</span><strong>{{ request.user.empresa.razon_social|default:"—" }}</strong></div>
+          <div class="metric"><span>NIT</span><strong>{{ request.user.empresa.nit|default:"—" }}</strong></div>
+          <div class="metric"><span>Sector</span><strong>{{ request.user.empresa.sector|default:"No registrado" }}</strong></div>
+        </div>
+        <p class="chart-note">Para cambiar los datos de su empresa contacte a la coordinación del CITI: la edición de cuentas se realiza desde la administración institucional.</p>
+      {% elif request.user.role == 'estudiante' and perfil %}
+        <div class="metric"><span>Tipo</span><strong>{{ request.user.get_student_type_display }}</strong></div>
+        <div class="metric"><span>Semestre</span><strong>{{ perfil.semestre }}</strong></div>
+        <div class="metric"><span>Créditos aprobados</span><strong>{{ perfil.creditos_aprobados }}</strong></div>
+        <div class="metric"><span>Promedio general</span><strong>{{ perfil.promedio_general }}</strong></div>
+        <div class="metric"><span>Habilitación como tutor</span>
+          <strong>{% if perfil.autorizado_como_tutor %}Activa{% else %}No cumple umbrales (8° semestre · 130 créditos · 4.0){% endif %}</strong></div>
+        <p class="chart-note">La habilitación se recalcula automáticamente con el perfil académico; no es editable manualmente.</p>
+      {% else %}
+        <p class="exec-empty">Sin datos adicionales registrados para su rol.</p>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<section class="card" style="margin-top:1.4rem;">
+  <div class="card-header"><h2>Seguridad</h2></div>
+  <div class="card-body">
+    {% if request.user.is_staff %}
+      <a class="btn btn-sm btn-secondary" href="/admin/password_change/">Cambiar contraseña (panel administrativo)</a>
+    {% else %}
+      <p class="exec-empty">La contraseña de su cuenta se gestiona desde la administración del CITI. Si necesita cambiarla, escriba a su coordinador de área.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

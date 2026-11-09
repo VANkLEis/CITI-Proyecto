@@ -1,0 +1,51 @@
+/* CITI — marca institucional para el Django Admin nativo (Módulo B).
+   Solo capas visuales: no altera comportamiento ni permisos. */
+:root {
+  --citi-azul: #0a2540;
+  --citi-verde: #6da020;
+  --citi-teal: #00a896;
+  --header-bg: var(--citi-azul);
+  --header-link-color: #dbe6f2;
+  --header-link-active-color: #ffffff;
+}
+
+#header {
+  background: var(--header-bg);
+  border-bottom: 3px solid var(--citi-verde);
+  color: #fff;
+  padding: 8px 16px;
+}
+#branding h1, #header h1 { color: #fff; }
+#header a:link, #header a:visited { color: var(--header-link-color); }
+#header a:hover { color: var(--header-link-active-color); }
+#user-tools a { color: var(--citi-teal); }
+
+.admin-logo {
+  height: 30px; width: 30px; background: #fff; border-radius: 7px;
+  padding: 2px; margin-right: 9px; vertical-align: middle; display: inline-block;
+}
+#site-name a { display: flex; align-items: center; gap: 6px; font-size: 16px; }
+#site-name span strong { color: var(--citi-verde); }
+
+#nav-sidebar { background: #f2f5f8; border-right: 1px solid #d7dfe8; }
+#nav-sidebar .current-app .section:link,
+#nav-sidebar .current-app .section:visited { background: var(--citi-azul); color: #fff; }
+#nav-sidebar a.section:hover { background: #e2e9f1; }
+.module h2, .module caption { background: var(--citi-azul); color: #fff; }
+button, input[type=submit], input[type=button], .selector-add, .selector-remove {
+  background-color: var(--citi-verde); color: #fff;
+}
+.selector-add { background-color: var(--citi-teal); }
+div.breadcrumbs { background: #e8eef5; color: var(--muted, #5f6b7a); }
+#content .object-tools a:link, #content .object-tools a:visited {
+  background-color: var(--citi-azul);
+}
+.admin-logout {
+  border: none; background: none; color: var(--citi-teal); cursor: pointer;
+  font: inherit; padding: 0; display: inline;
+}
+#logout-form { display: inline; }
+body.dashboard #header::after {
+  content: 'Entorno académico del CITI — los cambios aquí se reflejan en los portales.';
+  display: block; font-size: 11px; color: #9fb3ca; padding-top: 4px;
+}

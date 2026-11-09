@@ -1,0 +1,111 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Seguimiento{% endblock %}
+{% block page_title %}Seguimiento e interacción con clientes{% endblock %}
+{% block page_subtitle %}{{ role_label }}{% endblock %}
+
+{% block sidebar_nav %}
+  {% if request.user.role == 'director' %}
+    <a class="nav-item" href="{% url 'portal:director_dashboard' %}">Resumen ejecutivo</a>
+    <a class="nav-item is-active" href="{% url 'portal:staff_seguimiento' %}">Seguimiento global</a>
+    <a class="nav-item" href="{% url 'portal:trazabilidad' %}">Trazabilidad e indicadores</a>
+    <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+    <a class="nav-item" href="/admin/" target="_blank" rel="noopener">Administración de registros</a>
+  {% elif request.user.role == 'coordinador' %}
+    <a class="nav-item" href="{% url 'portal:coordinador_dashboard' %}">Bandeja de asignación</a>
+    <a class="nav-item is-active" href="{% url 'portal:staff_seguimiento' %}">Seguimiento de mi área</a>
+    <a class="nav-item" href="{% url 'portal:trazabilidad' %}">Trazabilidad de mi área</a>
+    <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  {% else %}
+    <a class="nav-item" href="{% url 'portal:docente_dashboard' %}">Mis casos</a>
+    <a class="nav-item is-active" href="{% url 'portal:staff_seguimiento' %}">Seguimiento de casos</a>
+    <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  {% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="stats-row">
+  <div class="stat-card accent"><strong>{{ resumen.pendientes_aprobacion }}</strong><span>Entregables pendientes de aprobación</span></div>
+  <div class="stat-card"><strong>{{ resumen.con_ajustes }}</strong><span>Casos con ajustes solicitados</span></div>
+  <div class="stat-card"><strong>{{ resumen.con_entregas }}</strong><span>Casos con entregables publicados</span></div>
+</div>
+
+<form method="get" class="card filter-bar">
+  <div class="card-body filter-bar-body">
+    <label>Enfoque
+      <select name="enfoque">
+        <option value="">Todos los casos del alcance</option>
+        <option value="aprobacion" {% if f_enfoque == 'aprobacion' %}selected{% endif %}>Pendientes de aprobación</option>
+        <option value="ajustes" {% if f_enfoque == 'ajustes' %}selected{% endif %}>Con ajustes solicitados</option>
+        <option value="interaccion" {% if f_enfoque == 'interaccion' %}selected{% endif %}>Con interacciones</option>
+      </select>
+    </label>
+    <label>Estado
+      <select name="estado">
+        <option value="">Todos</option>
+        {% for valor, label in estados %}
+          <option value="{{ valor }}" {% if f_estado == valor %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Tipo de servicio
+      <select name="tipo">
+        <option value="">Todos</option>
+        {% for valor, label in tipos %}
+          <option value="{{ valor }}" {% if f_tipo == valor %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Búsqueda
+      <input type="text" name="q" value="{{ f_q }}" placeholder="Código, empresa o asunto">
+    </label>
+    <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>
+    <a class="btn btn-sm btn-secondary" href="{% url 'portal:staff_seguimiento' %}">Limpiar</a>
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-header"><h2>Casos</h2><small class="exec-empty">Hasta 200 registros · alcance {{ request.user.role }}</small></div>
+  <div class="card-body" style="padding:0;">
+    <table class="data-table">
+      <thead><tr>
+        <th>Código</th><th>Empresa</th><th>Área</th><th>Servicio</th><th>Tipo</th>
+        <th>Estado</th><th>Entregables</th><th>Última actividad</th><th></th>
+      </tr></thead>
+      <tbody>
+      {% for c in citas %}
+        <tr>
+          <td>CITI-{{ c.pk|stringformat:"05d" }}</td>
+          <td>{{ c.cliente.empresa.razon_social|default:c.cliente.email }}</td>
+          <td>{{ c.franja.get_area_display }}</td>
+          <td>{{ c.get_subespecialidad_display }}</td>
+          <td>
+            {% for tv, tl in tipos %}
+              {% if tv == c.tipo_servicio %}<small>{{ tl }}</small>{% endif %}
+            {% endfor %}
+          </td>
+          <td><span class="badge badge-estado-{{ c.estado }}">{{ c.get_estado_display }}</span></td>
+          <td>
+            {% if c.entrega_pendiente %}
+              <span class="badge badge-estado-asignada">pendiente de aprobación</span>
+            {% elif c.ajustes_solicitados_total %}
+              <span class="badge badge-estado-cancelada">{{ c.ajustes_solicitados_total }} ajuste(s)</span>
+            {% else %}
+              {{ c.interacciones.count }}
+            {% endif %}
+          </td>
+          <td>{{ c.actualizada_en|date:"d/m/Y H:i" }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-secondary" data-cita-detalle="{{ c.pk }}">Ver</button>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="9" style="padding:1rem;color:var(--muted);">Sin casos para el filtro actual.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

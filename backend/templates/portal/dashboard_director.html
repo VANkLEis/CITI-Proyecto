@@ -1,20 +1,142 @@
 {% extends "dashboard_base.html" %}
 
-{% block title %}CITI — Director{% endblock %}
-{% block page_title %}Panel general{% endblock %}
-{% block page_subtitle %}Director CITI{% endblock %}
+{% block title %}CITI — Dirección{% endblock %}
+{% block page_title %}Panel ejecutivo{% endblock %}
+{% block page_subtitle %}Indicadores generales del consultorio{% endblock %}
+
+{% block sidebar_nav %}
+  <a class="nav-item is-active" href="{% url 'portal:director_dashboard' %}">Resumen ejecutivo</a>
+  <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento global</a>
+  <a class="nav-item" href="{% url 'portal:trazabilidad' %}">Trazabilidad e indicadores</a>
+  <a class="nav-item" href="{% url 'portal:trazabilidad_csv' %}">Reportes (CSV)</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+  <a class="nav-item" href="/admin/" target="_blank" rel="noopener">Administración de registros</a>
+{% endblock %}
 
 {% block dashboard_content %}
-<div class="stats-row">
-  <div class="stat-card accent"><strong>{{ total_usuarios }}</strong><span>Usuarios registrados</span></div>
-  <div class="stat-card"><strong>{{ franjas_activas }}</strong><span>Franjas activas</span></div>
-  <div class="stat-card"><strong>{{ citas_reservadas }}</strong><span>Citas reservadas</span></div>
-</div>
-<div class="card">
-  <div class="card-header"><h2>Administración</h2></div>
-  <div class="card-body">
-    <p style="color:var(--muted);margin-bottom:1rem;">Gestione usuarios, franjas horarias y citas desde el panel de administración.</p>
-    <a href="/admin/" class="btn btn-primary">Ir al administrador Django</a>
+
+<div class="exec-header card">
+  <div class="card-body exec-header-body">
+    <div>
+      <h2>Bienvenido, {{ request.user.nombre_completo }}</h2>
+      <p class="exec-date">{{ hoy|date:"l, d F Y"|capfirst }} · Vista ejecutiva del CITI:
+        solicitudes, responsables y resultados en un solo lugar.</p>
+    </div>
+    <form method="get" class="period-chips" role="search">
+      {% for code, label in periodos.items %}
+        <button type="submit" name="periodo" value="{{ code }}"
+                class="chip {% if filtros.periodo == code %}is-active{% endif %}">{{ label }}</button>
+      {% endfor %}
+    </form>
   </div>
+</div>
+
+{% if filtros.periodo == 'custom' %}
+<div class="card" style="margin-bottom:1.25rem;">
+  <div class="card-body" style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+    <form method="get" style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+      <input type="hidden" name="periodo" value="custom">
+      <label>Desde <input type="date" name="desde" value="{{ request.GET.desde }}"></label>
+      <label>Hasta <input type="date" name="hasta" value="{{ request.GET.hasta }}"></label>
+      <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+<div class="stats-row">
+  <div class="stat-card accent"><strong>{{ kpis.recibidas }}</strong><span>Solicitudes recibidas</span></div>
+  <div class="stat-card"><strong>{{ kpis.pendientes }}</strong><span>Pendientes</span></div>
+  <div class="stat-card"><strong>{{ kpis.asignadas }}</strong><span>Asignadas</span></div>
+  <div class="stat-card"><strong>{{ kpis.en_proceso }}</strong><span>En proceso</span></div>
+  <div class="stat-card"><strong>{{ kpis.finalizadas }}</strong><span>Finalizadas</span></div>
+  <div class="stat-card"><strong>{{ kpis.canceladas }}</strong><span>Canceladas</span></div>
+</div>
+
+<div class="stats-row stats-row--extra">
+  <div class="stat-card"><strong>{{ franjas_activas }}</strong><span>Franjas activas futuras</span></div>
+  <div class="stat-card"><strong>{{ total_usuarios }}</strong><span>Usuarios registrados</span></div>
+  <div class="stat-card">
+    <strong>{% if kpis.tasa_finalizacion is not None %}{{ kpis.tasa_finalizacion }}%{% else %}—{% endif %}</strong>
+    <span>Tasa de finalización ({{ kpis.finalizadas }}/{{ kpis.recibidas }})</span>
+  </div>
+</div>
+
+<div class="exec-grid">
+  <section class="card">
+    <div class="card-header"><h2>Solicitudes por estado</h2></div>
+    <div class="card-body">
+      {% for f in estados %}
+        <div class="chart-row">
+          <span class="chart-label">{{ f.label }}</span>
+          <div class="chart-track"><div class="chart-bar chart-bar--{{ forloop.counter }}" style="width: {{ f.pct }}%;"></div></div>
+          <span class="chart-num">{{ f.n }}</span>
+        </div>
+      {% empty %}
+        <p class="exec-empty">Sin solicitudes en el período seleccionado.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Demanda por área</h2></div>
+    <div class="card-body">
+      {% for f in areas %}
+        <div class="chart-row">
+          <span class="chart-label">{{ f.label }}</span>
+          <div class="chart-track"><div class="chart-bar chart-bar--area{{ forloop.counter }}" style="width: {{ f.pct }}%;"></div></div>
+          <span class="chart-num">{{ f.n }}</span>
+        </div>
+      {% empty %}
+        <p class="exec-empty">Sin datos para mostrar.</p>
+      {% endfor %}
+      <p class="chart-note">Áreas con flujo operativo: Sistemas y Civil. (MIXTO sin servicio activo — ver docs/audit.)</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Evolución mensual <small>recibidas vs finalizadas</small></h2></div>
+    <div class="card-body">
+      <div class="evo-chart" role="img" aria-label="Evolución de solicitudes recibidas y finalizadas por mes">
+        {% for s in serie %}
+          <div class="evo-month">
+            <div class="evo-bars">
+              <div class="evo-bar evo-bar--rec" style="height: {% widthratio s.recibidas serie_max 100 %}%;" title="{{ s.recibidas }} recibidas"></div>
+              <div class="evo-bar evo-bar--fin" style="height: {% widthratio s.cerradas serie_max 100 %}%;" title="{{ s.cerradas }} finalizadas"></div>
+            </div>
+            <span class="evo-label">{{ s.mes }}</span>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="evo-legend"><span class="dot dot--rec"></span>Recibidas&nbsp;&nbsp;<span class="dot dot--fin"></span>Finalizadas</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Actividad reciente</h2>
+      <a class="btn btn-sm btn-secondary" href="{% url 'portal:trazabilidad' %}">Ver trazabilidad completo</a>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table class="data-table">
+        <thead><tr><th>Código</th><th>Empresa</th><th>Área</th><th>Servicio</th><th>Solicitada</th><th>Responsable</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+        {% for c in recientes %}
+          <tr class="cita-row-clickable" data-cita-row="{{ c.pk }}">
+            <td>CITI-{{ c.pk|stringformat:"05d" }}</td>
+            <td>{{ c.cliente.empresa.razon_social|default:c.cliente.email }}</td>
+            <td>{{ c.franja.get_area_display }}</td>
+            <td>{{ c.get_subespecialidad_display }}</td>
+            <td>{{ c.creada_en|date:"d/m/Y" }}</td>
+            <td>{% if c.docente_asignado %}{{ c.docente_asignado.nombre_completo }}{% elif c.estudiante_apoyo %}{{ c.estudiante_apoyo.nombre_completo }}{% else %}—{% endif %}</td>
+            <td><span class="badge badge-estado-{{ c.estado }}">{{ c.get_estado_display }}</span></td>
+            <td><button type="button" class="btn btn-sm btn-secondary" data-cita-detalle="{{ c.pk }}">Ver</button></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="8" style="padding:1rem;color:var(--muted);">Sin movimientos en el período.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
 </div>
 {% endblock %}

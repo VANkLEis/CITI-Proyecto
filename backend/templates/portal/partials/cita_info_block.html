@@ -44,7 +44,8 @@
 {% if cita.archivo_adjunto %}
 <div class="attachment-box">
   <strong>Documento adjunto:</strong>
-  <a href="{{ cita.archivo_adjunto.url }}" target="_blank" rel="noopener">{{ cita.archivo_adjunto.name }}</a>
+  <a href="{% url 'portal:cita_adjunto' cita.pk %}">{{ cita.archivo_adjunto.name|slice:"-40:" }}</a>
+  <span class="cita-muted" style="font-size:0.75rem;">(descarga autorizada: solo partes del caso)</span>
 </div>
 {% endif %}
 
@@ -60,3 +61,5 @@
   {% endfor %}
 </div>
 {% endif %}
+
+{% include "portal/partials/cita_eventos.html" %}

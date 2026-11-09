@@ -1,206 +1,424 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}CITI — Consultorio de Ingeniería, Tecnología e Innovación{% endblock %}
+{% block title %}CITI — Consultorio de Ingeniería, Tecnología e Innovación · UCC{% endblock %}
 
 {% block content %}
 <nav class="landing-nav">
-  <a class="landing-nav-brand" href="{% url 'portal:landing' %}" style="text-decoration:none;color:inherit;">
-    <img src="{% static 'images/logo_ucc.png' %}" alt="Universidad Cooperativa de Colombia">
-    <div>
-      <strong>CITI UCC</strong>
-      <span>Campus Ibagué–El Espinal</span>
+  <div class="landing-nav-inner landing-wrap">
+    <a class="landing-nav-brand" href="{% url 'portal:landing' %}">
+      <img src="{% static 'images/Logo_ucc.png' %}" alt="Universidad Cooperativa de Colombia">
+      <div>
+        <strong>CITI UCC</strong>
+        <span>Campus Ibagué–El Espinal</span>
+      </div>
+    </a>
+    <button type="button" class="landing-nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir navegación">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="landing-nav-links" id="navLinks">
+      <a href="#servicios">Servicios</a>
+      <a href="#modalidades">Modalidades</a>
+      <a href="#proceso">Cómo funciona</a>
+      <a href="#quienes-somos">Quiénes somos</a>
+      <a href="#recursos">Recursos</a>
+      <a href="{% url 'accounts:register' %}" class="btn btn-secondary btn-sm">Registrar empresa</a>
+      <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-sm">Iniciar sesión</a>
     </div>
-  </a>
-  <div class="landing-nav-links">
-    <a href="#quienes-somos">Quiénes somos</a>
-    <a href="#lineas-accion">Líneas de acción</a>
-    <a href="#ventajas">Ventajas</a>
-    <a href="#recursos">Recursos</a>
-    <a href="{% url 'accounts:register' %}" class="btn btn-secondary btn-sm">Registrar empresa</a>
-    <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-sm">Iniciar sesión</a>
   </div>
 </nav>
 
-<section class="landing-hero">
-  <p class="ucc-tag">Universidad Cooperativa de Colombia · Campus Ibagué–El Espinal</p>
-  <h1>Consultorio de Ingeniería, Tecnología e Innovación</h1>
-  <p>
-    Extensión y proyección social de la UCC para PyMEs, instituciones y estudiantes:
-    asesorías, prácticas empresariales y consultoría especializada en Ingeniería de
-    Sistemas e Ingeniería Civil.
-  </p>
-  <div class="hero-actions">
-    <a href="{% url 'accounts:register' %}" class="btn btn-primary">Solicitar asesoría</a>
-    <a href="#lineas-accion" class="btn btn-secondary">Conocer líneas de acción</a>
-  </div>
-  <div class="hero-programs">
-    <div>
-      <strong>Ingeniería de Sistemas</strong>
-      <span>Software, bases de datos, redes y ciberseguridad.</span>
+<header class="landing-hero">
+  <div class="hero-grid landing-wrap">
+    <div class="hero-copy">
+      <p class="hero-kicker">Universidad Cooperativa de Colombia · Facultad de Ingeniería</p>
+      <h1>Asesorías de ingeniería <em>y tecnología</em> para el Tolima</h1>
+      <p class="hero-lede">
+        El CITI resuelve problemas reales de PyMEs, instituciones y ciudadanía:
+        consultoría en <strong>Ingeniería de Sistemas</strong> e
+        <strong>Ingeniería Civil</strong>, sin costo, con docentes responsables
+        de cada caso y estudiantes tutores en la ejecución. Cada solicitud se
+        agenda, se asigna, se registra y queda trazable hasta su cierre.
+      </p>
+      <div class="hero-actions">
+        <a href="{% url 'accounts:register' %}" class="btn btn-primary">Solicitar una asesoría</a>
+        <a href="#proceso" class="btn btn-secondary">Ver cómo funciona</a>
+      </div>
+      <dl class="hero-facts">
+        <div><dt>2</dt><dd>áreas de consultoría</dd></div>
+        <div><dt>{{ total_especialidades }}</dt><dd>especialidades técnicas</dd></div>
+        <div><dt>0</dt><dd>costo para la empresa</dd></div>
+      </dl>
     </div>
-    <div>
-      <strong>Ingeniería Civil</strong>
-      <span>Estructuras, interventoría, vías y planos de obra.</span>
+    <figure class="hero-visual hero-visual--photo">
+      <img src="{% static 'images/landing/hero-equipo.jpg' %}" alt="Equipo de consultoría revisando planos y documentación en la mesa de trabajo" width="1200" height="800">
+      <figcaption class="hero-visual-tag">Mesa de caso · CITI</figcaption>
+    </figure>
+  </div>
+</header>
+
+<section id="servicios" class="landing-section">
+  <div class="landing-wrap">
+    <p class="section-kicker">Servicios</p>
+    <h2>Dos consultorios, un portafolio verifiable</h2>
+    <p class="section-intro">
+      Estas son las especialidades reales con las que el CITI atiende solicitudes,
+      tal como aparecen en la plataforma al momento de reservar una asesoría.
+    </p>
+    <div class="servicios-grid">
+      {% for area in catalogo %}
+      <article class="servicio-card servicio-card--{{ area.value }}">
+        <div class="servicio-media">
+          <img src="{% static area.foto %}" alt="{{ area.foto_alt }}" width="1200" height="800">
+        </div>
+        <div class="servicio-body">
+          <h3>{{ area.label }}</h3>
+          <p>{{ area.descripcion }}</p>
+          <ul class="servicio-subs" aria-label="Especialidades de {{ area.label }}">
+            {% for code, label in area.subespecialidades %}
+              <li>{{ label }}</li>
+            {% endfor %}
+          </ul>
+          <div class="servicio-tipos">
+            {% for tipo in area.tipos %}
+              <span class="tipo-pill"><strong>{{ tipo.nombre }}</strong><small>{{ tipo.quien }}</small></span>
+            {% endfor %}
+          </div>
+          <a class="servicio-cta" href="{% url 'accounts:login' %}?rol=cliente">Solicitar asesoría de {{ area.corto }} →</a>
+        </div>
+      </article>
+      {% endfor %}
     </div>
   </div>
 </section>
 
-<section id="quienes-somos" class="landing-section landing-about">
-  <div class="about-grid">
-    <div class="about-copy">
-      <p class="section-eyebrow">¿Quiénes somos?</p>
-      <h2>Extensión universitaria con impacto social y sin ánimo de lucro</h2>
-      <p>
-        El CITI es el Consultorio de Ingeniería, Tecnología e Innovación de la Universidad
-        Cooperativa de Colombia. Articula la docencia, la investigación y la proyección
-        social para acompañar a las PyMEs de la región en sus retos tecnológicos y de
-        infraestructura.
-      </p>
-      <p>
-        Las asesorías son brindadas por estudiantes de octavo semestre en adelante con
-        promedio acumulado mínimo de 4.0 y 130 créditos aprobados, siempre dirigidos y
-        supervisados por docentes expertos de cada área.
-      </p>
-      <p>
-        El servicio es gratuito para las empresas beneficiarias y se documenta con
-        trazabilidad digital desde la solicitud hasta el cierre del caso.
-      </p>
+<section id="modalidades" class="landing-section landing-section-alt">
+  <div class="landing-wrap">
+    <p class="section-kicker">Modalidades</p>
+    <h2>Asesoría y consultoría: dos formas de atender su problema</h2>
+    <p class="section-intro">
+      Al registrar una solicitud usted escoge una de estas modalidades. No son
+      etiquetas decorativas: determinan quién responde, cómo se documenta el
+      trabajo y cómo aprueba los resultados.
+    </p>
+    <div class="modalidades-grid">
+      <article class="modalidad-card modalidad-card--asesoria">
+        <h3>Asesoría · orientación técnica</h3>
+        <p class="modalidad-quien">La ejecuta el estudiante tutor del área, con dirección del docente.</p>
+        <ul class="modalidad-list">
+          <li>Resolución de inquietudes y consultas especializadas puntuales.</li>
+          <li>Orientación técnica y recomendaciones aplicables de inmediato.</li>
+          <li>Acompañamiento breve, proporcionado a la necesidad de la empresa.</li>
+          <li>Entrega de resultados simple: la empresa aprueba o pide ajustes.</li>
+        </ul>
+      </article>
+      <article class="modalidad-card modalidad-card--consultoria">
+        <h3>Consultoría · intervención estructurada</h3>
+        <p class="modalidad-quien">Responde un docente asesor responsable del caso.</p>
+        <ul class="modalidad-list">
+          <li>Diagnóstico técnico y análisis de necesidades documentados.</li>
+          <li>Objetivos, alcance y metodología de trabajo definidos con la empresa.</li>
+          <li>Seguimiento de avances, observaciones técnicas y entregables.</li>
+          <li>Revisión y aprobación del cliente sobre cada entregable publicado.</li>
+        </ul>
+      </article>
     </div>
-    <aside class="about-requirements">
-      <h3>Requisitos del Estudiante Consultor</h3>
-      <ul>
-        <li><span>Semestre académico</span> <strong>8° o superior</strong></li>
-        <li><span>Promedio acumulado</span> <strong>≥ 4.0</strong></li>
-        <li><span>Créditos aprobados</span> <strong>≥ 130</strong></li>
+    <p class="modalidad-nota">
+      Ambas modalidades comparten el mismo flujo institucional: solicitud, asignación,
+      ejecución, acta de cierre y trazabilidad completa del caso.
+    </p>
+  </div>
+</section>
+
+<section id="proceso" class="landing-section">
+  <div class="landing-wrap">
+    <p class="section-kicker">Cómo funciona</p>
+    <h2>De la solicitud al acta, con responsables visibles</h2>
+    <div class="proceso-grid">
+      <ol class="proceso-steps">
+        <li>
+          <span class="step-num">01</span>
+          <div>
+            <h3>La empresa registra una solicitud</h3>
+            <p>Crea su cuenta, escoge área, especialidad y franja horaria disponible, y adjunta los términos de referencia. La solicitud entra en estado <em>Solicitada</em>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">02</span>
+          <div>
+            <h3>El coordinador revisa y asigna</h3>
+            <p>El coordinador del área asigna el docente responsable y, cuando corresponde, el estudiante tutor que apoya el caso. Estado <em>Asignada</em>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">03</span>
+          <div>
+            <h3>Se desarrolla la asesoría</h3>
+            <p>El docente lidera la atención con el tutor; los avances se registran en la bitácora del caso. Estado <em>En proceso</em>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">04</span>
+          <div>
+            <h3>Se cierra con acta</h3>
+            <p>El docente documenta el resumen de cierre y el sistema genera el acta de la asesoría. Estado <em>Finalizada</em>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">05</span>
+          <div>
+            <h3>La empresa valora el servicio</h3>
+            <p>El cliente califica la asesoría y deja su comentario. Su retroalimentación alimenta los indicadores de gestión del CITI.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="proceso-media">
+        <img src="{% static 'images/landing/proceso-revision.jpg' %}" alt="Docente y estudiantes revisando planos y documentos de un caso" width="900" height="1200">
+        <div class="proceso-estados" aria-label="Estados reales de una solicitud">
+          <span>Solicitada</span><span>Asignada</span><span>En proceso</span><span>Finalizada</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-band">
+  <div class="landing-wrap band-grid">
+    <div class="band-media">
+      <img src="{% static 'images/landing/reportes-manos.jpg' %}" alt="Revisión de indicadores y reportes de gestión sobre la mesa" width="1200" height="800">
+    </div>
+    <div class="band-copy">
+      <p class="section-kicker section-kicker--light">Gestión con evidencia</p>
+      <h2>Cada caso deja trazabilidad real</h2>
+      <ul class="band-list">
+        <li>Solicitudes centralizadas, con agenda por franjas y capacidad.</li>
+        <li>Responsables asignados: docente líder y tutor de apoyo por área.</li>
+        <li>Historial de estados, bitácora y actas por solicitud.</li>
+        <li>Indicadores para dirección: demanda por área, tiempos y resultados.</li>
       </ul>
-      <p>
-        El sistema valida los tres requisitos simultáneamente antes de permitir la
-        asignación de un estudiante como tutor de casos.
-      </p>
-    </aside>
+      <a href="{% url 'accounts:register' %}" class="btn btn-primary">Registrar mi empresa</a>
+    </div>
+  </div>
+</section>
+
+<section id="quienes-somos" class="landing-section">
+  <div class="landing-wrap">
+    <div class="about-copy">
+      <p class="section-kicker">Quiénes somos</p>
+      <h2>El consultorio de la Facultad de Ingeniería</h2>
+        <p>
+          El CITI es el Consultorio de Ingeniería, Tecnología e Innovación de la
+          Universidad Cooperativa de Colombia, Campus Ibagué–El Espinal. Actúa como
+          entidad sin ánimo de lucro que articula la formación de los estudiantes de
+          Ingeniería de Sistemas e Ingeniería Civil con la extensión y la proyección
+          social, en conformidad con la Ley 30 de 1992.
+        </p>
+        <p>
+          Ofrece a la comunidad tolimense asesorías, capacitación, orientación
+          profesional, celebración de convenios y exploración profesional, fortaleciendo
+          los lazos entre la universidad y el sector público y privado para impulsar
+          empresas más innovadoras y competitivas.
+        </p>
+        <p>
+          La atención diaria está a cargo de un estudiante consultor permanente,
+          dirigido por los coordinadores de cada área y supervisado por docentes y
+          profesionales expertos.
+        </p>
+    </div>
   </div>
 </section>
 
 <section id="lineas-accion" class="landing-section landing-section-alt">
-  <p class="section-eyebrow">Líneas de acción</p>
-  <h2>Servicios del CITI</h2>
-  <div class="action-grid">
-    <article class="action-card">
-      <span class="action-icon">01</span>
-      <h3>Asesorías a PyMEs</h3>
-      <p>Diagnóstico y acompañamiento técnico en Sistemas y Civil para fortalecer la competitividad empresarial.</p>
-    </article>
-    <article class="action-card">
-      <span class="action-icon">02</span>
-      <h3>Prácticas Empresariales</h3>
-      <p>Vinculación de estudiantes a retos reales de las empresas con seguimiento docente y evaluación.</p>
-    </article>
-    <article class="action-card">
-      <span class="action-icon">03</span>
-      <h3>Educación No Formal</h3>
-      <p>Talleres, seminarios y capacitaciones diseñadas según las necesidades del sector productivo.</p>
-    </article>
-    <article class="action-card">
-      <span class="action-icon">04</span>
-      <h3>Exploración Profesional</h3>
-      <p>Articulación con colegios para orientar vocacionalmente a futuros ingenieros de la región.</p>
-    </article>
-    <article class="action-card">
-      <span class="action-icon">05</span>
-      <h3>Convenios Tecnológicos</h3>
-      <p>Alianzas con empresas e instituciones para proyectos de innovación y transferencia de conocimiento.</p>
-    </article>
-    <article class="action-card">
-      <span class="action-icon">06</span>
-      <h3>Programa Radial</h3>
-      <p>Divulgación de ciencia, tecnología e ingeniería con participación de estudiantes y docentes.</p>
-    </article>
+  <div class="landing-wrap">
+    <p class="section-kicker">Líneas de acción</p>
+    <h2>Seis frentes del CITI</h2>
+    <div class="action-grid">
+      <article class="action-card">
+        <h3>Asesorías a PyMEs</h3>
+        <p>Respuesta a problemas concretos con la tecnología disponible y estudio profundo de los casos complejos, dirigidos por especialistas.</p>
+      </article>
+      <article class="action-card">
+        <h3>Práctica Empresarial</h3>
+        <p>Aprendizaje en el trabajo: los estudiantes se confrontan con la realidad empresarial bajo un régimen evaluativo y de acompañamiento.</p>
+      </article>
+      <article class="action-card">
+        <h3>Educación No Formal</h3>
+        <p>Seminarios y talleres: ofimática, sistemas de información, programación, hardware, telecomunicaciones, comercio electrónico y auditoría.</p>
+      </article>
+      <article class="action-card">
+        <h3>Exploración Profesional</h3>
+        <p>Presencia en colegios de Ibagué y la región: orientación vocacional a estudiantes de grado once y respuesta a necesidades académicas.</p>
+      </article>
+      <article class="action-card">
+        <h3>Convenios</h3>
+        <p>Acuerdos con empresas e instituciones; el CITI actúa como auditor para garantizar el cumplimiento del objeto contractual.</p>
+      </article>
+      <article class="action-card">
+        <h3>Programa Radial</h3>
+        <p>Invitado especial, momento informático, reflexión, consulta informática, bolsa de empleo y cuñas universitarias para la comunidad.</p>
+      </article>
+    </div>
   </div>
 </section>
 
 <section id="ventajas" class="landing-section">
-  <p class="section-eyebrow">Ventajas comparativas</p>
-  <h2>Un modelo de excelencia académica</h2>
-  <div class="advantages-grid">
-    <article class="advantage-card">
-      <span class="advantage-icon">✓</span>
-      <h3>Servicio 100% gratuito</h3>
-      <p>Proyección social sin costo para las empresas beneficiarias.</p>
-    </article>
-    <article class="advantage-card">
-      <span class="advantage-icon">✓</span>
-      <h3>Filtros de excelencia académica</h3>
-      <p>Solo estudiantes de 8° semestre o superior, promedio ≥ 4.0 y 130+ créditos.</p>
-    </article>
-    <article class="advantage-card">
-      <span class="advantage-icon">✓</span>
-      <h3>Supervisión docente especializada</h3>
-      <p>Cada caso cuenta con acompañamiento y validación de un docente asesor.</p>
-    </article>
-    <article class="advantage-card">
-      <span class="advantage-icon">✓</span>
-      <h3>Trazabilidad digital</h3>
-      <p>Estados, bitácora, documentos y feedback del cliente en un solo historial.</p>
-    </article>
-  </div>
-</section>
-
-<section id="recursos" class="landing-section landing-section-alt">
-  <p class="section-eyebrow">Portafolio y banco de recursos</p>
-  <h2>Formatos institucionales</h2>
-  <div class="resources-grid">
-    <a class="resource-card" href="{% static 'documentos/solicitud-asesoria.pdf' %}" download="Solicitud-de-Asesoria-CITI.pdf">
-      <span class="badge badge-area-sistemas">PDF</span>
-      <h3>Solicitud de Asesoría</h3>
-      <p>Formato para registrar la necesidad de la empresa y los términos de referencia.</p>
-      <span class="resource-link">Descargar →</span>
-    </a>
-    <a class="resource-card" href="{% static 'documentos/catalogo-capacitacion.pdf' %}" download="Catalogo-de-Capacitacion-CITI.pdf">
-      <span class="badge badge-area-civil">PDF</span>
-      <h3>Catálogo de Capacitación</h3>
-      <p>Oferta de talleres, seminarios y educación no formal del CITI.</p>
-      <span class="resource-link">Descargar →</span>
-    </a>
-    <a class="resource-card" href="{% static 'documentos/minuta-convenio.pdf' %}" download="Minuta-de-Convenio-CITI.pdf">
-      <span class="badge badge-area-mixto">PDF</span>
-      <h3>Minuta de Convenio</h3>
-      <p>Modelo de acuerdo de cooperación entre la UCC y las empresas aliadas.</p>
-      <span class="resource-link">Descargar →</span>
-    </a>
-    <a class="resource-card" href="{% static 'documentos/manual-citi.pdf' %}" download="Manual-CITI.pdf">
-      <span class="badge badge-estado-asignada">PDF</span>
-      <h3>Manual CITI</h3>
-      <p>Guía de funcionamiento, roles, requisitos y flujo de atención del consultorio.</p>
-      <span class="resource-link">Descargar →</span>
-    </a>
-  </div>
-</section>
-
-<section id="acceso" class="landing-section">
-  <p class="section-eyebrow">Portal de acceso por roles</p>
-  <h2>Ingrese según su perfil</h2>
-  <div class="portals-grid" style="padding:0;">
-    {% for value, label in roles %}
-    {% if value != 'director' %}
-      <a href="{% url 'accounts:login' %}?rol={{ value }}" class="portal-card" style="text-decoration:none;color:inherit;">
-        <div class="p-icon">
-          {% if value == 'coordinador' %}CO
-          {% elif value == 'docente' %}DO
-          {% elif value == 'estudiante' %}ES
-          {% else %}CL{% endif %}
+  <div class="landing-wrap">
+    <p class="section-kicker">Ventajas</p>
+    <h2>¿Por qué acudir al CITI?</h2>
+    <div class="advantages-list">
+      <div class="check-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>
+        <div>
+          <h3>Pioneros en la región</h3>
+          <p>Los primeros en ofrecer un servicio consultorial de ingeniería y tecnología en el Tolima.</p>
         </div>
-        <h3>{% if value == 'estudiante' %}Estudiante Consultor / Tutor{% else %}{{ label }}{% endif %}</h3>
-        <p>
-          {% if value == 'coordinador' %}Gestión de solicitudes y asignación por área.
-          {% elif value == 'docente' %}Seguimiento de casos y asesorías asignadas.
-          {% elif value == 'estudiante' %}Consultor de recepción o tutor de casos.
-          {% else %}Empresas e instituciones: solicitudes y agenda de citas.{% endif %}
-        </p>
-        <span style="font-size:0.78rem;color:var(--ucc-verde-solidario);font-weight:600;">Ingresar →</span>
+      </div>
+      <div class="check-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>
+        <div>
+          <h3>Asesoría gratuita</h3>
+          <p>Servicio de asesoría sin costo para empresas, instituciones y ciudadanía.</p>
+        </div>
+      </div>
+      <div class="check-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>
+        <div>
+          <h3>Capacitación a mínimo costo</h3>
+          <p>Solo se cubre conferencista externo, papelería y logística cuando aplica.</p>
+        </div>
+      </div>
+      <div class="check-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>
+        <div>
+          <h3>Estudiantes dirigidos por profesionales</h3>
+          <p>Las asesorías las realizan estudiantes bajo la dirección de docentes del área.</p>
+        </div>
+      </div>
+      <div class="check-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>
+        <div>
+          <h3>Camino a trabajo de grado</h3>
+          <p>Los casos pueden devenir espacio inicial opcional de trabajo de grado ante el comité.</p>
+        </div>
+      </div>
+      <div class="check-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>
+        <div>
+          <h3>Profesionales con criterio social</h3>
+          <p>Formación con sentido de responsabilidad y ánimo de servicio permanente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="beneficios" class="landing-section landing-section-alt">
+  <div class="landing-wrap">
+    <p class="section-kicker">Beneficios mutuos</p>
+    <h2>Lo que gana cada parte</h2>
+    <div class="benefits-grid">
+      <div class="benefit-col benefit-col--est">
+        <h3>Para los estudiantes</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Confrontan los conocimientos teóricos con la práctica real.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Desarrollo integral mediante la práctica empresarial.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Escenario posible para su trabajo de grado.</span></li>
+        </ul>
+      </div>
+      <div class="benefit-col benefit-col--emp">
+        <h3>Para las empresas</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Orientación y apoyo tecnológico sin costo.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Mejor aprovechamiento de la información y mejores decisiones.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Más participación de mercado y crecimiento institucional.</span></li>
+        </ul>
+      </div>
+      <div class="benefit-col benefit-col--uni">
+        <h3>Para la universidad y la región</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Relación permanente con el sector público y privado.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Impulso a la creación de nuevas empresas del Tolima.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg><span>Mejoramiento de las condiciones de vida de la región.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-banners">
+  <div class="landing-wrap banners-grid">
+    <a class="banner banner--registro" href="{% url 'accounts:register' %}">
+      <img src="{% static 'images/landing/banner-asesoria.jpg' %}" alt="" aria-hidden="true" width="800" height="560">
+      <div class="banner-text">
+        <strong>Solicita una asesoría</strong>
+        <span>Registra tu empresa y agenda la primera sesión.</span>
+        <em>Crear cuenta →</em>
+      </div>
+    </a>
+    <a class="banner banner--areas" href="#servicios">
+      <img src="{% static 'images/landing/banner-campo.jpg' %}" alt="" aria-hidden="true" width="800" height="560">
+      <div class="banner-text">
+        <strong>Conoce nuestras áreas</strong>
+        <span>Sistemas y Civil: ocho especialidades disponibles.</span>
+        <em>Ver servicios →</em>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section id="recursos" class="landing-section">
+  <div class="landing-wrap">
+    <p class="section-kicker">Recursos</p>
+    <h2>Portafolio y banco de recursos</h2>
+    <div class="resource-list">
+      {% for doc in recursos %}
+      <a class="resource-item" href="{% static doc.archivo %}" download="{{ doc.nombre }}.pdf">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>
+        <span class="res-meta"><strong>{{ doc.nombre }}</strong><span>{{ doc.descripcion }}</span></span>
+        <span class="res-cta">Descargar PDF</span>
       </a>
-    {% endif %}
-    {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="acceso" class="landing-section landing-section-alt">
+  <div class="landing-wrap">
+    <p class="section-kicker">Acceso</p>
+    <h2>Portal por roles</h2>
+    <div class="portals-grid">
+      {% for value, label in roles %}
+      {% if value != 'director' %}
+        <a href="{% url 'accounts:login' %}?rol={{ value }}" class="portal-card">
+          {% if value == 'coordinador' %}
+          <span class="p-icon p-icon--co" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5.2" r="2.2"/><circle cx="5" cy="18.4" r="2.2"/><circle cx="19" cy="18.4" r="2.2"/><path d="M12 7.4v3.7M12 11.1 6.6 16.9M12 11.1l5.4 5.8"/></svg>
+          </span>
+          {% elif value == 'docente' %}
+          <span class="p-icon p-icon--do" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M6.5 12.5 9.3 9l2.5 2.6 3.7-4.6"/><path d="M9 20h6M12 16v4"/></svg>
+          </span>
+          {% elif value == 'estudiante' %}
+          <span class="p-icon p-icon--es" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 9.2 9.5-4.7 9.5 4.7-9.5 4.7z"/><path d="M6.5 11.4V16c0 1.5 2.5 2.9 5.5 2.9s5.5-1.4 5.5-2.9v-4.6"/><path d="M21.5 9.2v5.3"/></svg>
+          </span>
+          {% else %}
+          <span class="p-icon p-icon--cl" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3" width="15" height="18" rx="1.5"/><path d="M9 7.2h1.8M13.2 7.2H15M9 11h1.8M13.2 11H15M9 14.8h1.8M13.2 14.8H15"/><path d="M10.6 21v-3.4h2.8V21"/></svg>
+          </span>
+          {% endif %}
+          <h3>{% if value == 'estudiante' %}Estudiante Consultor / Tutor{% else %}{{ label }}{% endif %}</h3>
+          <p>
+            {% if value == 'coordinador' %}Gestión de solicitudes y asignación por área.
+            {% elif value == 'docente' %}Seguimiento de casos y asesorías asignadas.
+            {% elif value == 'estudiante' %}Consultor de recepción o tutor de casos.
+            {% else %}Empresas e instituciones: solicitudes y agenda de citas.{% endif %}
+          </p>
+          <span class="portal-go">Ingresar →</span>
+        </a>
+      {% endif %}
+      {% endfor %}
+    </div>
   </div>
 </section>
 
@@ -208,18 +426,22 @@
   <div class="footer-grid">
     <div>
       <div class="footer-brand">
-        <img src="{% static 'images/logo_ucc.png' %}" alt="UCC">
+        <img src="{% static 'images/Logo_ucc.png' %}" alt="Universidad Cooperativa de Colombia">
         <div>
           <strong>CITI — UCC</strong>
           <span>Campus Ibagué–El Espinal</span>
         </div>
       </div>
       <p>
-        Consultorio de Ingeniería, Tecnología e Innovación.<br>
-        Extensión y proyección social de la Universidad Cooperativa de Colombia.
+        Consultorio de Ingeniería, Tecnología e Innovación —CITI—.<br>
+        Facultad de Ingeniería · Programas de Ingeniería de Sistemas e Ingeniería Civil.<br>
+        Entidad sin ánimo de lucro · Asesoría gratuita para la comunidad.
       </p>
     </div>
     <div class="footer-links">
+      <a href="#servicios">Servicios</a>
+      <a href="#modalidades">Modalidades</a>
+      <a href="#proceso">Cómo funciona</a>
       <a href="#quienes-somos">Quiénes somos</a>
       <a href="#lineas-accion">Líneas de acción</a>
       <a href="#recursos">Banco de recursos</a>
@@ -228,8 +450,32 @@
     </div>
   </div>
   <div class="footer-credits">
-    Universidad Cooperativa de Colombia · CITI 2026<br>
-    Desarrollo: <strong>Santiago Cubillos Arana</strong> y <strong>Juan José Tique</strong>
+    Universidad Cooperativa de Colombia · CITI · Facultad de Ingeniería · Ibagué, 2026
+    <span class="footer-credits-sub">Fotografías: Pexels (licencia libre de uso, sin atribución requerida). Logo UCC: activo institucional del proyecto.</span>
   </div>
 </footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  // Menú móvil
+  var toggle = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  if (toggle && links) {
+    toggle.addEventListener('click', function () {
+      var open = links.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.classList.toggle('is-open', open);
+    });
+    links.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A') {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+})();
+</script>
 {% endblock %}

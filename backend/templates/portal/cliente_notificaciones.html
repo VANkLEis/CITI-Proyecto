@@ -1,0 +1,75 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Notificaciones{% endblock %}
+{% block page_title %}Notificaciones{% endblock %}
+{% block page_subtitle %}Actividad que requiere su atención{% endblock %}
+
+{% block sidebar_nav %}
+  <a class="nav-item" href="{% url 'portal:cliente_dashboard' %}">Agenda y solicitudes</a>
+  <a class="nav-item" href="{% url 'portal:cliente_mis_solicitudes' %}">Mis solicitudes</a>
+  <a class="nav-item is-active" href="{% url 'portal:cliente_notificaciones' %}">Notificaciones</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<section class="card" style="margin-bottom:1.4rem;">
+  <div class="card-header"><h2>Entregables pendientes de su aprobación</h2></div>
+  <div class="card-body">
+    {% if pendientes %}
+      <ul class="notif-list">
+        {% for c in pendientes %}
+          <li>
+            <strong>CITI-{{ c.pk|stringformat:"05d" }}</strong> — {{ c.get_subespecialidad_display }}
+            · entregable "{{ c.entrega_pendiente.datos_extra.titulo|default:'Entrega de resultados' }}" publicado
+            {{ c.entrega_pendiente.fecha|date:"d/m/Y" }}
+            <a class="btn btn-sm btn-primary" href="{% url 'portal:cliente_seguimiento' c.pk %}">Revisar y decidir</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="exec-empty">No tiene entregables esperando su decisión.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="card" style="margin-bottom:1.4rem;">
+  <div class="card-header"><h2>Servicios finalizados sin valorar</h2></div>
+  <div class="card-body">
+    {% if sin_valorar %}
+      <ul class="notif-list">
+        {% for c in sin_valorar %}
+          <li>
+            <strong>CITI-{{ c.pk|stringformat:"05d" }}</strong> — {{ c.get_subespecialidad_display }}
+            · cerrado {{ c.cerrada_en|date:"d/m/Y"|default:c.actualizada_en|date:"d/m/Y" }}
+            <a class="btn btn-sm btn-secondary" href="{% url 'portal:cliente_feedback' c.pk %}">Calificar</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="exec-empty">Todo lo finalizado ha sido valorado. Gracias.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-header"><h2>Mensajes recientes del equipo</h2></div>
+  <div class="card-body">
+    {% if actividad %}
+      <ul class="notif-list">
+        {% for it in actividad %}
+          <li>
+            <strong>{{ it.autor.nombre_completo|default:'CITI' }}</strong> ({{ it.get_rol_autor_display }})
+            · {{ it.get_tipo_display }} · CITI-{{ it.cita_id|stringformat:"05d" }}
+            · {{ it.fecha|date:"d/m/Y H:i" }}
+            <a class="btn btn-sm btn-secondary" href="{% url 'portal:cliente_seguimiento' it.cita_id %}">Abrir</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="exec-empty">Sin mensajes nuevos por ahora.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

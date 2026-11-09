@@ -1,6 +1,8 @@
 import json
+import os
 
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -10,8 +12,9 @@ from django.views.decorators.http import require_GET, require_POST
 from accounts.models import Area, Role
 from portal.decorators import role_required
 from scheduling.area_styles import colores_para_area
-from scheduling.models import CitaAsesoria, FranjaHoraria
+from scheduling.models import CitaAsesoria, CitaEvento, CitaInteraccion, FranjaHoraria
 from scheduling.subespecialidades import Subespecialidad
+from scheduling.trazabilidad import registrar_evento, registrar_interaccion
 
 
 def _parse_range(request):
@@ -127,6 +130,15 @@ def reservar_cita_api(request):
             'error': 'Seleccione una subespecialidad válida para el área.',
         }, status=400)
 
+    # Fase 04 (6.2): la ficha de consultoría es propia del tipo 'especializada'.
+    ctx_objetivos = (request.POST.get('ctx_objetivos') or '').strip()[:2000]
+    ctx_entregables = (request.POST.get('ctx_entregables') or '').strip()[:2000]
+    if (ctx_objetivos or ctx_entregables) and tipo_servicio != 'especializada':
+        return JsonResponse({
+            'ok': False,
+            'error': 'Los objetivos/entregables esperados aplican solo a consultorías.',
+        }, status=400)
+
     if not franja.esta_disponible:
         return JsonResponse({'ok': False, 'error': 'La franja ya no está disponible.'}, status=409)
 
@@ -137,18 +149,56 @@ def reservar_cita_api(request):
     ).exists():
         return JsonResponse({'ok': False, 'error': 'Ya tiene una solicitud activa en esta franja.'}, status=409)
 
-    cita = CitaAsesoria(
-        franja=franja,
-        cliente=request.user,
-        asunto=asunto,
-        subespecialidad=subespecialidad,
-        tipo_servicio=tipo_servicio,
-        archivo_adjunto=archivo_adjunto,
-        estado=CitaAsesoria.Estado.SOLICITADA,
-    )
+    # Fase 03 (Módulo C / I-1): la creación y su evento de trazabilidad corren
+    # en una transacción con bloqueo de la franja, para que el control de
+    # cupo no dependa de lecturas previas (evita sobre-reservas concurrentes).
     try:
-        cita.full_clean()
-        cita.save()
+        with transaction.atomic():
+            franja = FranjaHoraria.objects.select_for_update().get(pk=franja.pk, activa=True)
+            if not franja.esta_disponible:
+                return JsonResponse({'ok': False, 'error': 'La franja ya no está disponible.'}, status=409)
+            if CitaAsesoria.objects.filter(
+                franja=franja,
+                cliente=request.user,
+                estado__in=CitaAsesoria.Estado.ocupan_cupo(),
+            ).exists():
+                return JsonResponse({'ok': False, 'error': 'Ya tiene una solicitud activa en esta franja.'}, status=409)
+
+            cita = CitaAsesoria(
+                franja=franja,
+                cliente=request.user,
+                asunto=asunto,
+                subespecialidad=subespecialidad,
+                tipo_servicio=tipo_servicio,
+                archivo_adjunto=archivo_adjunto,
+                estado=CitaAsesoria.Estado.SOLICITADA,
+            )
+            cita.full_clean()
+            cita.save()
+            registrar_evento(
+                cita, request.user, CitaEvento.Tipo.CREADA,
+                descripcion=f'Reserva registrada desde el portal del cliente ({franja.get_area_display()}).',
+                anterior='', nuevo=cita.estado,
+            )
+            # Ficha inicial de consultoría (6.2): objetivo y entregables
+            # esperados, visibles para el equipo y para el cliente.
+            if tipo_servicio == 'especializada' and (ctx_objetivos or ctx_entregables):
+                ficha = {}
+                if ctx_objetivos:
+                    ficha['alcance'] = ctx_objetivos
+                if ctx_entregables:
+                    ficha['entregables'] = ctx_entregables
+                ficha['origen'] = 'solicitud_cliente'
+                registrar_interaccion(
+                    cita, request.user, CitaInteraccion.Tipo.GENERAL,
+                    'Ficha inicial de la consultoría registrada por la empresa.',
+                    datos_extra=ficha)
+            if cita.archivo_adjunto:
+                registrar_evento(
+                    cita, request.user, CitaEvento.Tipo.ARCHIVO_ADJUNTADO,
+                    descripcion=f'Documentación adjunta: {os.path.basename(cita.archivo_adjunto.name)}.',
+                    anterior=cita.estado, nuevo=cita.estado,
+                )
     except Exception as exc:
         return JsonResponse({'ok': False, 'error': str(exc)}, status=400)
 

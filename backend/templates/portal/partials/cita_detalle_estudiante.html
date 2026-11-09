@@ -23,6 +23,8 @@
     </form>
   </div>
 
+  {% include "portal/partials/interaccion_list.html" %}
+
   <div class="cita-bitacora-preview">
     <a href="{% url 'portal:estudiante_caso_nota' cita.pk %}" class="btn btn-sm btn-secondary">Abrir vista completa</a>
   </div>

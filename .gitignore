@@ -25,3 +25,6 @@ media/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Evidencias de validación E2E (Playwright MCP) — no forman parte del código
+.playwright-mcp/

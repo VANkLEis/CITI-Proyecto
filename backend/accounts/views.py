@@ -31,9 +31,8 @@ def register_cliente(request):
 
 @require_http_methods(['GET', 'POST'])
 def login_view(request):
-    from accounts.demo_seed import ensure_demo_users
-
-    ensure_demo_users()
+    # (B-4/Auditoría SEG-02) No se siembran usuarios demo desde vistas publicas;
+    # usar `manage.py seed_demo` de forma explicita.
     if request.user.is_authenticated:
         return redirect(dashboard_url_for_role(request.user.role))
 

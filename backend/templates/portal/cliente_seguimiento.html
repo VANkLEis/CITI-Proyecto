@@ -1,0 +1,134 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Seguimiento CITI-{{ cita.pk|stringformat:"05d" }}{% endblock %}
+{% block page_title %}Seguimiento de la solicitud{% endblock %}
+{% block page_subtitle %}Portal de empresas{% endblock %}
+
+{% block sidebar_nav %}
+  <a class="nav-item" href="{% url 'portal:cliente_dashboard' %}">Agenda y solicitudes</a>
+  <a class="nav-item is-active" href="{% url 'portal:cliente_mis_solicitudes' %}">Mis solicitudes</a>
+  <a class="nav-item" href="{% url 'portal:cliente_notificaciones' %}">Notificaciones</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="card segu-header">
+  <div class="card-body segu-header-body">
+    <div>
+      <p class="segu-code">Solicitud <strong>CITI-{{ cita.pk|stringformat:"05d" }}</strong></p>
+      <h2>{{ cita.asunto|default:cita.get_subespecialidad_display }}</h2>
+      <p class="segu-meta">
+        <span class="badge badge-estado-{{ cita.estado }}">{{ cita.get_estado_display }}</span>
+        <span class="badge badge-info">{{ cita.get_tipo_servicio_display }}</span>
+        {% if cita.franja.area == 'sistemas' %}
+          <span class="badge badge-area-sistemas">{{ cita.franja.get_area_display }}</span>
+        {% else %}
+          <span class="badge badge-area-civil">{{ cita.franja.get_area_display }}</span>
+        {% endif %}
+        · radicada {{ cita.creada_en|date:"d/m/Y H:i" }} · actualizada {{ cita.actualizada_en|date:"d/m/Y H:i" }}
+      </p>
+    </div>
+    <div class="segu-actions">
+      <a class="btn btn-sm btn-secondary" href="{% url 'portal:cliente_mis_solicitudes' %}">← Mis solicitudes</a>
+      {% if cita.estado == 'finalizada' and not cita.calificacion %}
+        <a class="btn btn-sm btn-primary" href="{% url 'portal:cliente_feedback' cita.pk %}">Calificar servicio</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="exec-grid" style="margin-top:0;">
+  <section class="card">
+    <div class="card-header"><h2>Progreso</h2></div>
+    <div class="card-body">
+      {% include "portal/partials/cita_timeline.html" %}
+      {% if cita.esta_cancelada %}
+        <p class="segu-cancel-note">Solicitud cancelada. El progreso no continúa; el historial conserva qué ocurrió y quién lo registró.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><h2>Responsables</h2></div>
+    <div class="card-body metric-list">
+      <div class="metric"><span>Área encargada</span><strong>{{ cita.franja.get_area_display }}</strong></div>
+      <div class="metric"><span>Coordinación del área</span>
+        <strong>{{ coordinador.nombre_completo|default:"No disponible" }}</strong></div>
+      <div class="metric"><span>Profesional asignado</span>
+        <strong>{% if cita.docente_asignado %}{{ cita.docente_asignado.nombre_completo }} · Docente asesor{% elif cita.estudiante_apoyo %}{{ cita.estudiante_apoyo.nombre_completo }} · Tutor{% else %}Pendiente de asignación{% endif %}</strong></div>
+      <div class="metric"><span>Apoyo técnico (tutor)</span>
+        <strong>{{ cita.estudiante_apoyo.nombre_completo|default:"—" }}</strong></div>
+      <div class="metric"><span>Especialidad</span><strong>{{ cita.get_subespecialidad_display }}</strong></div>
+    </div>
+  </section>
+</div>
+
+{% if entrega_pendiente %}
+<section class="card segu-entrega">
+  <div class="card-header"><h2>Entregable pendiente de tu aprobación</h2></div>
+  <div class="card-body">
+    <p class="inter-pending-note"><strong>{{ entrega_pendiente.datos_extra.titulo|default:'Entrega de resultados' }}</strong> — publicado {{ entrega_pendiente.fecha|date:"d/m/Y H:i" }}</p>
+    <p class="cita-muted">{{ entrega_pendiente.texto|linebreaksbr }}</p>
+    <form method="post" class="segu-decision-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form_decision.observacion.id_for_label }}">Observación que justifica tu decisión (opcional)</label>
+        {{ form_decision.observacion }}
+      </div>
+      <div class="btn-row-estado">
+        <button type="submit" name="accion" value="aprobar" class="btn btn-primary">Aprobar entregable</button>
+        <button type="submit" name="accion" value="ajustes" class="btn btn-secondary">Solicitar ajustes</button>
+      </div>
+      <p class="chart-note">Aprobar no finaliza administrativamente la solicitud: el cierre lo realiza el docente responsable con su acta.</p>
+    </form>
+  </div>
+</section>
+{% endif %}
+
+<section class="card" style="margin-top:1.4rem;">
+  <div class="card-header"><h2>Comunicación con el equipo</h2></div>
+  <div class="card-body">
+    {% include "portal/partials/interaccion_list.html" with form_action='' form_accion='interaccion' %}
+  </div>
+</section>
+
+<section class="card" style="margin-top:1.4rem;">
+  <div class="card-header"><h2>Información registrada</h2></div>
+  <div class="card-body">
+    {% include "portal/partials/cita_info_block.html" %}
+  </div>
+</section>
+
+{% if cita.puede_cancelar_cliente %}
+<section class="card" style="margin-top:1.4rem;">
+  <div class="card-header"><h2>Cancelar esta solicitud</h2></div>
+  <div class="card-body">
+    <p class="cita-muted">Puedes cancelar mientras el caso esté <em>solicitada</em> o <em>asignada</em>. La cancelación queda registrada en tu historial con fecha y responsable; una vez cancelada no puede reactivarse desde el portal.</p>
+    <form method="post" id="frmCancelar">
+      {% csrf_token %}
+      <input type="hidden" name="accion" value="cancelar">
+      <input type="hidden" name="confirmar" value="si">
+      <button type="submit" class="btn btn-danger" id="btnCancelar">Cancelar solicitud</button>
+    </form>
+  </div>
+</section>
+
+{% block dashboard_extra_js %}
+<script>
+(function () {
+  var btn = document.getElementById('btnCancelar');
+  if (btn) {
+    btn.addEventListener('click', function (e) {
+      if (!window.confirm('¿Confirmas cancelar la solicitud CITI-{{ cita.pk|stringformat:"05d" }}? Esta acción queda registrada y no se puede deshacer desde el portal.')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  }
+})();
+</script>
+{% endblock %}
+{% endif %}
+
+{% endblock %}

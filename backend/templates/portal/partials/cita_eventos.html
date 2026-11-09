@@ -1,0 +1,28 @@
+{# Fase 03 · Módulo C: historial auditable de la solicitud (eventos reales) #}
+<div class="evento-timeline {% if not cita.eventos.all %}evento-timeline--vacio{% endif %}">
+  <h4>Historial de la solicitud</h4>
+  {% if cita.eventos.all %}
+    <ol class="evento-list">
+      {% for ev in cita.eventos.all %}
+        {% if not ev.metadata.privada or request.user.role != 'cliente' %}
+        <li class="evento-item evento-item--{{ ev.tipo }}">
+          <span class="evento-hora">{{ ev.fecha|date:"d/m/Y H:i" }}</span>
+          <div class="evento-body">
+            <strong>{{ ev.get_tipo_display }}</strong>
+            <span class="evento-actor">{{ ev.actor_label|default:'sistema' }}</span>
+            {% if ev.descripcion %}<p>{{ ev.descripcion }}</p>{% endif %}
+            {% if ev.estado_nuevo and ev.estado_nuevo != ev.estado_anterior %}
+              <span class="badge badge-estado-{{ ev.estado_nuevo }}">{{ ev.estado_nuevo_label }}</span>
+            {% endif %}
+          </div>
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p class="evento-vacio-nota">
+      El seguimiento histórico no estaba habilitado cuando se creó esta
+      solicitud. Los cambios que se registren desde ahora aparecerán aquí.
+    </p>
+  {% endif %}
+</div>

@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/admin-citi.css' %}">
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">
+    <img src="{% static 'images/Logo_ucc.png' %}" alt="" class="admin-logo">
+    <span>Administración <strong>CITI</strong> · UCC</span>
+  </a>
+</h1>
+{% endblock %}
+
+{% block usertools %}
+<div id="user-tools">
+  {% if user.is_authenticated %}
+    Sesión: <strong>{{ user.get_username }}</strong> ·
+    <a href="{% url 'portal:landing' %}">Ver portal público</a> /
+    {% if user.is_active and user.is_staff %}
+      <a href="{% url 'admin:password_change' %}">Cambiar contraseña</a> /
+      <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="admin-logout">Cerrar sesión</button>
+      </form>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

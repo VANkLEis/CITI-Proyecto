@@ -1,0 +1,83 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}CITI — Mis solicitudes{% endblock %}
+{% block page_title %}Mis solicitudes{% endblock %}
+{% block page_subtitle %}Historial y estado de sus solicitudes CITI{% endblock %}
+
+{% block sidebar_nav %}
+  <a class="nav-item" href="{% url 'portal:cliente_dashboard' %}">Agenda y solicitudes</a>
+  <a class="nav-item is-active" href="{% url 'portal:cliente_mis_solicitudes' %}">Mis solicitudes</a>
+  <a class="nav-item" href="{% url 'portal:cliente_notificaciones' %}">Notificaciones</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<form method="get" class="card filter-bar">
+  <div class="card-body filter-bar-body">
+    <label>Estado
+      <select name="estado">
+        <option value="">Todos</option>
+        {% for valor, label in estados %}
+          <option value="{{ valor }}" {% if f_estado == valor %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Tipo de servicio
+      <select name="tipo">
+        <option value="">Todos</option>
+        {% for valor, label in tipos %}
+          <option value="{{ valor }}" {% if f_tipo == valor %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
+    {% if f_estado or f_tipo %}<a class="btn btn-sm btn-secondary" href="{% url 'portal:cliente_mis_solicitudes' %}">Limpiar</a>{% endif %}
+  </div>
+</form>
+
+{% if citas %}
+<div class="soli-grid">
+  {% for c in citas %}
+    <article class="soli-card soli-card--{{ c.tipo_servicio }}">
+      <header class="soli-head">
+        <span class="soli-code">CITI-{{ c.pk|stringformat:"05d" }}</span>
+        <span class="badge badge-estado-{{ c.estado }}">{{ c.get_estado_display }}</span>
+      </header>
+      <h3>{{ c.asunto|default:c.get_subespecialidad_display|slice:":70" }}</h3>
+      <ul class="soli-meta">
+        <li><span>Tipo</span><strong>{{ c.get_tipo_servicio_display }}</strong></li>
+        <li><span>Área</span><strong>{{ c.franja.get_area_display }}</strong></li>
+        <li><span>Especialidad</span><strong>{{ c.get_subespecialidad_display }}</strong></li>
+        <li><span>Creada</span><strong>{{ c.creada_en|date:"d/m/Y" }}</strong></li>
+        <li><span>Profesional</span>
+          <strong>{% if c.docente_asignado %}{{ c.docente_asignado.nombre_completo }}{% elif c.estudiante_apoyo %}{{ c.estudiante_apoyo.nombre_completo }}{% else %}Pendiente{% endif %}</strong></li>
+        <li><span>Última actualización</span><strong>{{ c.actualizada_en|date:"d/m/Y H:i" }}</strong></li>
+      </ul>
+      <div class="soli-foot">
+        <a class="btn btn-sm btn-primary" href="{% url 'portal:cliente_seguimiento' c.pk %}">Ver seguimiento →</a>
+        {% if c.estado == 'finalizada' and not c.calificacion %}
+          <a class="btn btn-sm btn-secondary" href="{% url 'portal:cliente_feedback' c.pk %}">Calificar</a>
+        {% endif %}
+      </div>
+    </article>
+  {% endfor %}
+</div>
+{% else %}
+  <div class="card">
+    <div class="card-body soli-vacio">
+      {% if f_estado or f_tipo %}
+        <h3>Sin resultados para el filtro</h3>
+        <p>Ninguna de sus solicitudes coincide con el estado o tipo seleccionado.
+          <a href="{% url 'portal:cliente_mis_solicitudes' %}">Ver todas</a>.</p>
+      {% else %}
+        <h3>Todavía no tiene solicitudes</h3>
+        <p>Cuando reserve una franja en la agenda, su solicitud aparecerá aquí con código
+          CITI, responsables e historial completo.</p>
+        <a class="btn btn-primary" href="{% url 'portal:cliente_dashboard' %}">Solicitar una asesoría</a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

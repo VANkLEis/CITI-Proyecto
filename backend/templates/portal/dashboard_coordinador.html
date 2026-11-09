@@ -4,6 +4,13 @@
 {% block page_title %}Coordinación de área{% endblock %}
 {% block page_subtitle %}{{ area_label }}{% endblock %}
 
+{% block sidebar_nav %}
+  <a class="nav-item is-active" href="{% url 'portal:coordinador_dashboard' %}">Bandeja de asignación</a>
+  <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento de mi área</a>
+  <a class="nav-item" href="{% url 'portal:trazabilidad' %}">Trazabilidad de mi área</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
 {% block dashboard_content %}
 <div class="stats-row">
   <div class="stat-card accent"><strong>{{ kpis.nuevas }}</strong><span>Solicitudes nuevas</span></div>

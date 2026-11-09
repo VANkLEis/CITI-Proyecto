@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 from accounts.models import CustomUser, Empresa, Role
 
@@ -25,6 +27,19 @@ class ClientRegistrationForm(forms.Form):
         data = super().clean()
         if data.get('password1') != data.get('password2'):
             raise forms.ValidationError('Las contraseñas no coinciden.')
+        if data.get('password1'):
+            # (B-5 / SEG-13) Aplica AUTH_PASSWORD_VALIDATORS del proyecto al
+            # registro público: longitud mínima, complejidad y similitud con
+            # los datos del usuario.
+            usuario_prov = CustomUser(
+                email=data.get('email', ''),
+                first_name=data.get('first_name', ''),
+                last_name=data.get('last_name', ''),
+            )
+            try:
+                validate_password(data['password1'], usuario_prov)
+            except DjangoValidationError as exc:
+                raise forms.ValidationError(exc.messages)
         return data
 
     def save(self):
