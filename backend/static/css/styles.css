@@ -620,7 +620,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 .proceso-steps h3 { font-size: 1.02rem; color: var(--ucc); margin-bottom: 0.2rem; }
 .proceso-steps p { font-size: 0.9rem; color: var(--muted); max-width: 58ch; }
 .proceso-steps em { font-style: italic; color: var(--text); }
-.proceso-media img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; }
+.proceso-media { align-self: center; }
+.proceso-media img {
+  width: 100%; height: auto; aspect-ratio: 4 / 3; max-height: 400px;
+  object-fit: cover; object-position: center 32%; border-radius: 12px;
+}
 .proceso-estados { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
 .proceso-estados span {
   font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em;
