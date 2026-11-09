@@ -10,7 +10,7 @@
 | Servicios (`#servicios`) | Tarjeta por área (Sistemas/Civil) con foto, descripción, chips de especialidades y los 2 tipos de servicio con su responsable | `portal/views.py::landing` construye `catalogo` desde el código real, no texto plano |
 | Cómo funciona (`#proceso`) | 5 pasos numerados + columna visual con los **4 estados reales** del flujo | Coinciden 1:1 con `CitaAsesoria.Estado` y las vistas portal/docente/acta/feedback |
 | Banda "Gestión con evidencia" | Beneficios reales del sistema (centralización, responsables, historial, indicadores) | Todos implementados (Módulo C) |
-| Quiénes somos / Líneas / Ventajas / Beneficios / Recursos / Portales | Contenido institucional del manual CITI, conservado | Enlaces solo a rutas existentes |
+| Quiénes somos / Líneas / Ventajas / Beneficios / Portales | Contenido institucional del manual CITI, conservado | Enlaces solo a rutas existentes |
 | Banners ×2 | *Solicita una asesoría* → `/cuenta/registro/`; *Conoce nuestras áreas* → `#servicios` | Sin enlaces inventados; sin teléfonos/redes falsos |
 | Footer | Identidad + navegación + línea de créditos de fotografía | — |
 
@@ -44,4 +44,4 @@ Verificado con navegador real (Playwright MCP) en 1440, 820 y 390: sin desbordam
 - `backend/templates/base.html` (cache-busting)
 - `backend/static/css/styles.css` (bloques nuevos; sin tocar reglas existentes)
 - `backend/static/images/landing/*` (7 archivos nuevos + descartes eliminados)
-- `backend/portal/views.py` (contexto `landing`: catálogo real, especialidades, recursos)
+- `backend/portal/views.py` (contexto `landing`: catálogo real y especialidades)

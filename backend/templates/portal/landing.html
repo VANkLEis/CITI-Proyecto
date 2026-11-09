@@ -21,7 +21,6 @@
       <a href="#modalidades">Modalidades</a>
       <a href="#proceso">Cómo funciona</a>
       <a href="#quienes-somos">Quiénes somos</a>
-      <a href="#recursos">Recursos</a>
       <a href="{% url 'accounts:register' %}" class="btn btn-secondary btn-sm">Registrar empresa</a>
       <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-sm">Iniciar sesión</a>
     </div>
@@ -366,22 +365,6 @@
   </div>
 </section>
 
-<section id="recursos" class="landing-section">
-  <div class="landing-wrap">
-    <p class="section-kicker">Recursos</p>
-    <h2>Portafolio y banco de recursos</h2>
-    <div class="resource-list">
-      {% for doc in recursos %}
-      <a class="resource-item" href="{% static doc.archivo %}" download="{{ doc.nombre }}.pdf">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>
-        <span class="res-meta"><strong>{{ doc.nombre }}</strong><span>{{ doc.descripcion }}</span></span>
-        <span class="res-cta">Descargar PDF</span>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
 <section id="acceso" class="landing-section landing-section-alt">
   <div class="landing-wrap">
     <p class="section-kicker">Acceso</p>
@@ -444,14 +427,12 @@
       <a href="#proceso">Cómo funciona</a>
       <a href="#quienes-somos">Quiénes somos</a>
       <a href="#lineas-accion">Líneas de acción</a>
-      <a href="#recursos">Banco de recursos</a>
       <a href="{% url 'accounts:register' %}">Registrar empresa</a>
       <a href="{% url 'accounts:login' %}">Iniciar sesión</a>
     </div>
   </div>
   <div class="footer-credits">
     Universidad Cooperativa de Colombia · CITI · Facultad de Ingeniería · Ibagué, 2026
-    <span class="footer-credits-sub">Fotografías: Pexels (licencia libre de uso, sin atribución requerida). Logo UCC: activo institucional del proyecto.</span>
   </div>
 </footer>
 {% endblock %}

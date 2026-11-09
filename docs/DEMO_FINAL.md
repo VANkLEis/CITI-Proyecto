@@ -25,7 +25,7 @@ Abrir `http://127.0.0.1:8000/`. Cuentas: `docs/demo/CUENTAS_DE_PRUEBA.md`
    servicios se leen del catálogo real de la plataforma.
 2. Navegar Servicios → Cómo funciona (los 4 estados reales del sistema) →
    banda "Cada caso deja trazabilidad real" → banners (los dos enlazan a
-   rutas verdaderas) → banco de recursos (PDFs reales).
+   rutas verdaderas).
 3. (Opcional) menú hamburguesa en ventana estrecha: responsive.
 
 ## Acto II — Cliente: solicita en vivo (3 min)

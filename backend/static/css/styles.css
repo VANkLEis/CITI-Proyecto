@@ -423,24 +423,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   .benefit-col:last-child { padding-right: 0; }
 }
 
-.resource-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 3.5rem; }
-@media (min-width: 981px) {
-  .resource-list > .resource-item:nth-last-child(-n+2) { border-bottom: none; }
-}
-.resource-item {
-  display: flex; align-items: center; gap: 1.1rem; padding: 1.05rem 0.75rem;
-  border-bottom: 1px solid var(--border); text-decoration: none; color: inherit;
-  border-radius: 8px; transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
-}
-.resource-item:last-child { border-bottom: none; }
-.resource-item:hover { background: white; box-shadow: var(--shadow); transform: translateY(-2px); }
-.resource-item svg { flex: none; width: 24px; height: 24px; color: var(--ucc); transition: color 0.15s; }
-.resource-item:hover svg { color: var(--ucc-azul-diversidad); }
-.res-meta { flex: 1; min-width: 0; }
-.res-meta strong { display: block; font-size: 1rem; color: var(--ucc); }
-.res-meta span { display: block; font-size: 0.85rem; color: var(--muted); }
-.res-cta { font-size: 0.86rem; font-weight: 700; color: #057e70; white-space: nowrap; }
-
 .landing-footer { background: var(--ucc-azul-fundadores); color: rgba(255,255,255,0.72); border-top: 4px solid var(--ucc-verde-solidario); padding: 3.5rem 0 1.75rem; }
 .footer-grid {
   max-width: var(--wrap); margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 3rem);
@@ -532,8 +514,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 @media (max-width: 980px) {
   .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .hero-visual { aspect-ratio: 16 / 10; }
-  .resource-list { grid-template-columns: 1fr; }
-  .resource-list > .resource-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
 }
 
 @media (max-width: 900px) {
@@ -568,7 +548,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero-visual img, .action-card, .action-card::before, .resource-item { transition: none; }
+  .hero-visual img, .action-card, .action-card::before { transition: none; }
   .hero-visual:hover img { transform: none; }
   .servicio-media img, .banner img, .proceso-media img { transition: none; }
 }
@@ -682,7 +662,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 .banner-text span { font-size: 0.88rem; color: #d7e2ee; }
 .banner-text em { font-style: normal; font-size: 0.85rem; font-weight: 700; color: var(--ucc-verde-libertad); margin-top: 0.35rem; }
 
-.footer-credits-sub { display: block; margin-top: 0.4rem; font-size: 0.72rem; opacity: 0.75; }
 
 /* ============================================================
    Fase 03 — paneles ejecutivos, gráficos CSS, timeline

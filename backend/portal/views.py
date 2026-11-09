@@ -208,28 +208,6 @@ def landing(request):
     total_especialidades = sum(
         len(Subespecialidad.POR_AREA[area]) for area in (Area.SISTEMAS, Area.CIVIL)
     )
-    recursos = [
-        {'archivo': 'documentos/solicitud-asesoria.pdf', 'nombre': 'Solicitud de Asesoría',
-         'descripcion': 'Registro de la necesidad de la empresa y sus términos de referencia.'},
-        {'archivo': 'documentos/catalogo-capacitacion.pdf', 'nombre': 'Catálogo de Capacitación',
-         'descripcion': 'Oferta de talleres, seminarios y educación no formal del CITI.'},
-        {'archivo': 'documentos/minuta-convenio.pdf', 'nombre': 'Minuta de Convenio',
-         'descripcion': 'Modelo de acuerdo de cooperación entre la UCC y empresas aliadas.'},
-        {'archivo': 'documentos/manual-citi.pdf', 'nombre': 'Manual CITI',
-         'descripcion': 'Funcionamiento, roles, requisitos y flujo de atención del consultorio.'},
-        {'archivo': 'documentos/asistencia-consultores.pdf', 'nombre': 'Asistencia de Consultores',
-         'descripcion': 'Registro diario de turnos, horarios y firmas de los estudiantes consultores.'},
-        {'archivo': 'documentos/registro-consultas.pdf', 'nombre': 'Registro de Consultas',
-         'descripcion': 'Atención por empresa: fecha, contacto, consulta y observaciones.'},
-        {'archivo': 'documentos/informe-parcial-asesoria.pdf', 'nombre': 'Informe Parcial de Asesoría',
-         'descripcion': 'Reporte del consultor sobre el caso, tratamiento y resultados.'},
-        {'archivo': 'documentos/informe-final-asesoria.pdf', 'nombre': 'Informe Final de Asesoría',
-         'descripcion': 'Cierre del caso con conclusiones y firma de la empresa.'},
-        {'archivo': 'documentos/informe-final-capacitacion.pdf', 'nombre': 'Informe Final de Capacitación',
-         'descripcion': 'Resultado de talleres: contenido, recursos, asistentes y testigos.'},
-        {'archivo': 'documentos/registro-participacion.pdf', 'nombre': 'Registro de Participación',
-         'descripcion': 'Control transversal por consultorio, clase, capacitación y programa radial.'},
-    ]
     if request.user.is_authenticated:
         from portal.role_routing import dashboard_url_for_role
 
@@ -238,7 +216,6 @@ def landing(request):
         'roles': Role.choices,
         'catalogo': catalogo,
         'total_especialidades': total_especialidades,
-        'recursos': recursos,
     })
 
 
