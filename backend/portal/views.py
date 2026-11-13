@@ -842,6 +842,18 @@ def cita_detalle_interactivo(request, cita_id):
              'interacciones': _cita_interacciones(user, cita.interacciones.all())},
         )
 
+    if role == Role.DIRECTOR:
+        # Vista de dirección: lectura global del caso (sin acciones de gestión).
+        cita = get_object_or_404(_cita_queryset_detalle(), pk=cita_id)
+        return render(
+            request,
+            'portal/partials/cita_detalle_director.html',
+            {
+                'cita': cita,
+                'interacciones': _cita_interacciones(user, cita.interacciones.all()),
+            },
+        )
+
     raise PermissionDenied
 
 

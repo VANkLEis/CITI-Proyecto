@@ -1,45 +1,56 @@
 /* CITI — Identidad visual UCC */
 :root {
-  --ucc-azul-fundadores: #0a2540;
-  --ucc-azul-diversidad: #00a896;
-  --ucc-verde-solidario: #6da020;
+  /* Paleta oficial UCC (Manual de Imagen Corporativa) */
+  --ucc-azul-fundadores: #132740;
+  --ucc-azul-diversidad: #00acc9;
+  --ucc-verde-solidario: #80ba27;
   --ucc-verde-libertad: #cad400;
   --ucc-gris-equidad: #5f5e5e;
 
+  /* Paleta semáforo (estados de asignación) */
+  --sem-rojo: #d32f2f;            /* Solicitada */
+  --sem-amarillo-oscuro: #d99a00; /* Asignada */
+  --sem-amarillo-claro: #f7d44c;  /* En proceso */
+  --sem-verde: #2e9e44;           /* Finalizada */
+  --sem-gris: #9b9a9a;            /* Cancelada */
+
   --ucc: var(--ucc-azul-fundadores);
   --accent: var(--ucc-verde-solidario);
-  --accent-hover: #578617;
+  --accent-hover: #5f8c17;
   --highlight: var(--ucc-azul-diversidad);
 
   --bg: #f0f3f6;
   --surface: #ffffff;
   --card: #ffffff;
   --border: #dde3ea;
-  --text: #1a2332;
-  --muted: #5f6b7a;
-  --success: #2d8a3e;
-  --warning: #c47d0e;
-  --danger: #c53030;
+  --text: #14263d;
+  --muted: #5f5e5e;
+  --success: #2e9e44;
+  --warning: #e6a700;
+  --danger: #d32f2f;
 
-  /* Semáforo de estados CITI — fuente única para badges, tarjetas, gráficos
-     y línea de tiempo. Progresión rojo → naranja → ámbar → verde; cancelada
-     queda en gris (fuera del flujo). */
-  --estado-solicitada: #b91c1c;
-  --estado-solicitada-soft: #fee2e2;
-  --estado-asignada: #c2410c;
-  --estado-asignada-soft: #ffedd5;
-  --estado-en-proceso: #a16207;
-  --estado-en-proceso-soft: #fef9c3;
-  --estado-finalizada: #15803d;
-  --estado-finalizada-soft: #dcfce7;
-  --estado-cancelada: #6b7280;
-  --estado-cancelada-soft: #e5e7eb;
+  /* Alias de compatibilidad usados por badges, tarjetas, gráficos y timeline */
+  --estado-solicitada: var(--sem-rojo);
+  --estado-solicitada-soft: #fde0e0;
+  --estado-solicitada-ink: #a31f1f;
+  --estado-asignada: var(--sem-amarillo-oscuro);
+  --estado-asignada-soft: #f9e0a0;
+  --estado-asignada-ink: #6b4a00;
+  --estado-en-proceso: var(--sem-amarillo-claro);
+  --estado-en-proceso-soft: #fff6c2;
+  --estado-en-proceso-ink: #7a6500;
+  --estado-finalizada: var(--sem-verde);
+  --estado-finalizada-soft: #d9f2de;
+  --estado-finalizada-ink: #1b6b2d;
+  --estado-cancelada: var(--sem-gris);
+  --estado-cancelada-soft: #e6e6e6;
+  --estado-cancelada-ink: #5f5e5e;
 
   --radius: 10px;
   --sidebar-w: 260px;
   --wrap: 1320px;
-  --shadow: 0 1px 3px rgba(10, 37, 64, 0.08);
-  --shadow-md: 0 4px 12px rgba(10, 37, 64, 0.1);
+  --shadow: 0 1px 3px rgba(19, 39, 64, 0.08);
+  --shadow-md: 0 4px 12px rgba(19, 39, 64, 0.1);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -167,19 +178,19 @@ a { color: inherit; text-decoration: none; }
 }
 .stat-card strong { display: block; font-size: 1.8rem; color: var(--ucc); font-weight: 700; }
 .stat-card span { font-size: 0.8rem; color: var(--muted); }
-.stat-card.accent strong { color: var(--ucc); }
+.stat-card.accent strong { color: var(--ucc-verde-solidario); }
 
 /* Semáforo aplicado a las tarjetas de métricas por estado */
-.stat-card--solicitada { border-top: 3px solid var(--estado-solicitada); }
-.stat-card--solicitada strong { color: var(--estado-solicitada); }
-.stat-card--asignada { border-top: 3px solid var(--estado-asignada); }
-.stat-card--asignada strong { color: var(--estado-asignada); }
-.stat-card--en-proceso { border-top: 3px solid var(--estado-en-proceso); }
-.stat-card--en-proceso strong { color: var(--estado-en-proceso); }
-.stat-card--finalizada { border-top: 3px solid var(--estado-finalizada); }
-.stat-card--finalizada strong { color: var(--estado-finalizada); }
-.stat-card--cancelada { border-top: 3px solid var(--estado-cancelada); }
-.stat-card--cancelada strong { color: var(--estado-cancelada); }
+.stat-card--solicitada { border-top: 3px solid var(--sem-rojo); }
+.stat-card--solicitada strong { color: var(--estado-solicitada-ink); }
+.stat-card--asignada { border-top: 3px solid var(--sem-amarillo-oscuro); }
+.stat-card--asignada strong { color: var(--estado-asignada-ink); }
+.stat-card--en-proceso { border-top: 3px solid var(--sem-amarillo-claro); }
+.stat-card--en-proceso strong { color: var(--estado-en-proceso-ink); }
+.stat-card--finalizada { border-top: 3px solid var(--sem-verde); }
+.stat-card--finalizada strong { color: var(--estado-finalizada-ink); }
+.stat-card--cancelada { border-top: 3px solid var(--sem-gris); }
+.stat-card--cancelada strong { color: var(--estado-cancelada-ink); }
 
 .card {
   background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
@@ -203,17 +214,17 @@ a { color: inherit; text-decoration: none; }
 .data-table tbody tr:hover { background: #f8fafb; }
 
 .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; }
-.badge-pending { background: #fef3cd; color: #856404; }
-.badge-active { background: #d1ecf9; color: #0c5460; }
-.badge-done { background: #d4edda; color: #155724; }
-.badge-area-sistemas { background: #dbeafe; color: #1e40af; }
-.badge-area-civil { background: #ffedd5; color: #9a3412; }
-.badge-area-mixto { background: #e8f6fa; color: #0c5460; }
-.badge-estado-solicitada { background: var(--estado-solicitada-soft); color: var(--estado-solicitada); }
-.badge-estado-asignada { background: var(--estado-asignada-soft); color: var(--estado-asignada); }
-.badge-estado-en_proceso { background: var(--estado-en-proceso-soft); color: var(--estado-en-proceso); }
-.badge-estado-finalizada { background: var(--estado-finalizada-soft); color: var(--estado-finalizada); }
-.badge-estado-cancelada { background: var(--estado-cancelada-soft); color: #374151; }
+.badge-pending { background: #fff6c2; color: #7a6500; }
+.badge-active { background: #d6f1f6; color: #00667a; }
+.badge-done { background: #d9f2de; color: #1b6b2d; }
+.badge-area-sistemas { background: #d6f1f6; color: #00667a; }
+.badge-area-civil { background: #e4f1cc; color: #4d7414; }
+.badge-area-mixto { background: #f3f6c4; color: #6b7100; }
+.badge-estado-solicitada { background: var(--estado-solicitada-soft); color: var(--estado-solicitada-ink); }
+.badge-estado-asignada { background: var(--estado-asignada-soft); color: var(--estado-asignada-ink); }
+.badge-estado-en_proceso { background: var(--estado-en-proceso-soft); color: var(--estado-en-proceso-ink); }
+.badge-estado-finalizada { background: var(--estado-finalizada-soft); color: var(--estado-finalizada-ink); }
+.badge-estado-cancelada { background: var(--estado-cancelada-soft); color: var(--estado-cancelada-ink); }
 
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
@@ -485,13 +496,13 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   border-top: 1px solid var(--border); overflow-x: auto;
 }
 .timeline-step { flex: 1; min-width: 120px; position: relative; text-align: center;
-  --timeline-color: var(--estado-finalizada);
-  --timeline-glow: rgba(21, 128, 61, 0.18);
+  --timeline-color: var(--sem-verde);
+  --timeline-glow: rgba(46, 158, 68, 0.18);
 }
-.timeline-step--solicitada { --timeline-color: var(--estado-solicitada); --timeline-glow: rgba(185, 28, 28, 0.16); }
-.timeline-step--asignada { --timeline-color: var(--estado-asignada); --timeline-glow: rgba(194, 65, 12, 0.16); }
-.timeline-step--en_proceso { --timeline-color: var(--estado-en-proceso); --timeline-glow: rgba(161, 98, 7, 0.18); }
-.timeline-step--finalizada { --timeline-color: var(--estado-finalizada); --timeline-glow: rgba(21, 128, 61, 0.18); }
+.timeline-step--solicitada { --timeline-color: var(--sem-rojo); --timeline-glow: rgba(211, 47, 47, 0.16); }
+.timeline-step--asignada { --timeline-color: var(--sem-amarillo-oscuro); --timeline-glow: rgba(217, 154, 0, 0.20); }
+.timeline-step--en_proceso { --timeline-color: var(--sem-amarillo-claro); --timeline-glow: rgba(247, 212, 76, 0.35); }
+.timeline-step--finalizada { --timeline-color: var(--sem-verde); --timeline-glow: rgba(46, 158, 68, 0.18); }
 .timeline-step::before {
   content: ''; position: absolute; top: 13px; left: 0; right: 0;
   height: 3px; background: var(--border); z-index: 0;
@@ -506,15 +517,15 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   font-size: 0.7rem; color: var(--muted); font-weight: 700;
 }
 .timeline-step.hecho .timeline-marker { border-color: var(--timeline-color); background: var(--timeline-color); color: white; }
+.timeline-step--en_proceso.hecho .timeline-marker { color: var(--estado-en-proceso-ink); }
 .timeline-step.actual .timeline-marker { box-shadow: 0 0 0 4px var(--timeline-glow); }
-.timeline-step.cancelada .timeline-marker { border-color: var(--estado-cancelada); background: var(--estado-cancelada); color: white; }
+.timeline-step.cancelada .timeline-marker { border-color: var(--sem-gris); background: var(--sem-gris); color: white; }
 .timeline-label { font-size: 0.74rem; font-weight: 700; color: var(--muted); }
 .timeline-step.hecho .timeline-label { color: var(--ucc); }
 .timeline-date { display: block; font-size: 0.66rem; color: var(--muted); margin-top: 0.1rem; }
 .timeline-cancelled {
   margin: 0 1.25rem 1rem; padding: 0.7rem 1rem; border-radius: 8px;
-  background: var(--estado-cancelada-soft); border: 1px solid #d1d5db;
-  color: #374151; font-size: 0.82rem;
+  background: #ececec; border: 1px solid #d4d4d4; color: #5f5e5e; font-size: 0.82rem;
 }
 
 .attachment-box { margin: 0 1.25rem 1rem; padding: 0.8rem 1rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; font-size: 0.82rem; }
@@ -665,10 +676,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em;
   background: var(--ucc); color: #fff; border-radius: 999px; padding: 0.3rem 0.85rem;
 }
-.proceso-estados .estado-pill--solicitada { background: var(--estado-solicitada); }
-.proceso-estados .estado-pill--asignada { background: var(--estado-asignada); }
-.proceso-estados .estado-pill--en_proceso { background: var(--estado-en-proceso); }
-.proceso-estados .estado-pill--finalizada { background: var(--estado-finalizada); }
+.proceso-estados .estado-pill--solicitada { background: var(--estado-solicitada-soft); color: var(--estado-solicitada-ink); }
+.proceso-estados .estado-pill--asignada { background: var(--estado-asignada-soft); color: var(--estado-asignada-ink); }
+.proceso-estados .estado-pill--en_proceso { background: var(--estado-en-proceso-soft); color: var(--estado-en-proceso-ink); }
+.proceso-estados .estado-pill--finalizada { background: var(--estado-finalizada-soft); color: var(--estado-finalizada-ink); }
 
 .landing-band { background: var(--ucc-azul-fundadores); color: #e8eef5; padding-block: 4.5rem; }
 .band-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 3rem; align-items: center; }
@@ -730,13 +741,22 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 .chart-label { font-size: 0.82rem; color: var(--muted); }
 .chart-track { background: #edf1f5; border-radius: 6px; height: 14px; overflow: hidden; }
 .chart-bar { height: 100%; background: var(--ucc-azul-diversidad); border-radius: 6px; min-width: 2px; transition: width 0.4s ease; }
-.chart-bar--solicitada { background: var(--estado-solicitada); }
-.chart-bar--asignada { background: var(--estado-asignada); }
-.chart-bar--en_proceso { background: var(--estado-en-proceso); }
-.chart-bar--finalizada { background: var(--estado-finalizada); }
-.chart-bar--cancelada { background: var(--estado-cancelada); }
-.chart-bar--area1 { background: var(--ucc); }
-.chart-bar--area2 { background: var(--ucc-azul-diversidad); }
+/* Solicitudes por estado — paleta semáforo */
+.chart-bar--1 { background: var(--sem-rojo); }             /* Solicitada */
+.chart-bar--2 { background: var(--sem-amarillo-oscuro); }  /* Asignada */
+.chart-bar--3 { background: var(--sem-amarillo-claro); }   /* En proceso */
+.chart-bar--4 { background: var(--sem-verde); }            /* Finalizada */
+.chart-bar--5 { background: var(--sem-gris); }             /* Cancelada */
+/* Equivalentes por nombre de estado (los usan las plantillas) */
+.chart-bar--solicitada { background: var(--sem-rojo); }
+.chart-bar--asignada { background: var(--sem-amarillo-oscuro); }
+.chart-bar--en_proceso { background: var(--sem-amarillo-claro); }
+.chart-bar--finalizada { background: var(--sem-verde); }
+.chart-bar--cancelada { background: var(--sem-gris); }
+
+/* Solicitudes por área */
+.chart-bar--area1 { background: var(--ucc-azul-diversidad); }
+.chart-bar--area2 { background: var(--ucc-verde-solidario); }
 .chart-num { font-weight: 700; font-size: 0.86rem; color: var(--ucc); text-align: right; }
 .chart-note { font-size: 0.76rem; color: var(--muted); margin-top: 0.6rem; }
 .exec-empty { color: var(--muted); font-size: 0.88rem; }
@@ -784,18 +804,18 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   content: ''; position: absolute; left: -1.05rem; top: 6px; width: 10px; height: 10px;
   border-radius: 50%; background: var(--ucc-azul-diversidad); border: 2px solid #fff; box-shadow: 0 0 0 1px var(--border);
 }
-.evento-item--creada::before { background: var(--estado-solicitada); }
+.evento-item--creada::before { background: var(--sem-rojo); }
 .evento-item--revisada::before,
 .evento-item--docente_asignado::before,
 .evento-item--tutor_asignado::before,
-.evento-item--asignada::before { background: var(--estado-asignada); }
-.evento-item--iniciada::before { background: var(--estado-en-proceso); }
-.evento-item--finalizada::before, .evento-item--acta_registrada::before { background: var(--estado-finalizada); }
-.evento-item--cancelada::before { background: var(--estado-cancelada); }
-.evento-item--feedback::before { background: #ca8a04; }
-.evento-item--entrega_publicada::before { background: var(--estado-asignada); }
-.evento-item--decision_cliente::before { background: var(--estado-finalizada); }
-.evento-item--estado_cambiado::before { background: #64748b; }
+.evento-item--asignada::before { background: var(--sem-amarillo-oscuro); }
+.evento-item--iniciada::before { background: var(--sem-amarillo-claro); }
+.evento-item--finalizada::before, .evento-item--acta_registrada::before { background: var(--sem-verde); }
+.evento-item--cancelada::before { background: var(--sem-gris); }
+.evento-item--feedback::before { background: var(--sem-amarillo-oscuro); }
+.evento-item--entrega_publicada::before { background: var(--sem-amarillo-oscuro); }
+.evento-item--decision_cliente::before { background: var(--sem-verde); }
+.evento-item--estado_cambiado::before { background: #5f5e5e; }
 .evento-hora { font-size: 0.74rem; color: var(--muted); }
 .evento-body strong { display: inline-block; font-size: 0.88rem; color: var(--text); margin-left: 0.4rem; }
 .evento-actor { font-size: 0.76rem; color: var(--ucc); font-weight: 600; margin-left: 0.4rem; }
@@ -908,7 +928,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 .segu-header h2 { color: var(--ucc); font-size: 1.3rem; margin: 0.15rem 0 0.5rem; }
 .segu-meta { font-size: 0.85rem; color: var(--muted); display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap; }
 .segu-actions { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; justify-content: center; }
-.segu-cancel-note { margin-top: 0.8rem; background: #fde8e8; color: #721c24; border-radius: 8px; padding: 0.6rem 0.85rem; font-size: 0.85rem; }
+.segu-cancel-note { margin-top: 0.8rem; background: #ececec; color: #5f5e5e; border-radius: 8px; padding: 0.6rem 0.85rem; font-size: 0.85rem; }
 .segu-entrega { border-left: 4px solid var(--warning); }
 .segu-decision-form .form-group { margin: 0.8rem 0 0.6rem; }
 

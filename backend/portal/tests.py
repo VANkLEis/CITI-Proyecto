@@ -89,11 +89,20 @@ class RoleAccessMatrixTests(TestCase):
                         f'{login_role}->{target_role} no redirige al portal propio',
                     )
 
-    def test_director_sin_detalle_interactivo(self):
+    def test_director_ve_detalle_en_solo_lectura(self):
         self.client.force_login(self.users[Role.DIRECTOR])
-        cita_cliente = None
-        r = self.client.get(f'/panel/cita/{(cita_cliente or 1)}/detalle/')
-        self.assertEqual(r.status_code, 403)
+        cita = CitaAsesoria.objects.create(
+            franja=make_franja(Area.SISTEMAS),
+            cliente=self.users[Role.CLIENTE],
+            subespecialidad='web',
+            asunto='Detalle para dirección',
+        )
+        r = self.client.get(reverse('portal:cita_detalle', args=[cita.pk]))
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, 'Detalle para dirección')
+        self.assertContains(r, 'solo lectura')
+        self.assertNotContains(r, 'Confirmar asignación')
+        self.assertNotContains(r, 'Guardar cambios')
 
     def test_login_con_portal_incorrecto_no_autentica(self):
         r = self.client.post(
