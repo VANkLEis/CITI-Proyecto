@@ -189,8 +189,9 @@ def landing(request):
             'value': 'civil',
             'label': 'Ingeniería Civil',
             'corto': 'Civil',
-            'descripcion': ('Estructuras, interventoría, vías y planos de obra '
-                            'con acompañamiento académico.'),
+            'descripcion': ('Laboratorios de concretos, suelos y geotecnia, pavimentos '
+                            'y topografía/SIG; estructuras, hidráulica, tránsito, vías '
+                            'e interventoría con acompañamiento académico.'),
             'foto': 'images/landing/area-civil.jpg',
             'foto_alt': 'Maqueta arquitectonica revisada por estudiantes de ingenieria',
             'subespecialidades': Subespecialidad.choices_for_area(Area.CIVIL),

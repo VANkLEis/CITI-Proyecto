@@ -148,6 +148,14 @@ class ReservasApiTests(TestCase):
         self.assertEqual(cita.estado, CitaAsesoria.Estado.SOLICITADA)
         self.assertEqual(cita.cliente, self.cliente1)
 
+    def test_reserva_civil_con_especialidad_de_laboratorio(self):
+        r = self._post(self.cliente1, {
+            'franja_id': self.franja_civ.pk, 'asunto': 'Suelos',
+            'subespecialidad': 'suelos', 'tipo_servicio': 'orientacion'})
+        self.assertEqual(r.status_code, 200)
+        cita = CitaAsesoria.objects.get(pk=r.json()['cita_id'])
+        self.assertEqual(cita.subespecialidad, 'suelos')
+
     def test_reserva_duplicada_misma_cliente_franja(self):
         self._post(self.cliente1, {'franja_id': self.franja.pk, 'subespecialidad': 'web'})
         r = self._post(self.cliente1, {'franja_id': self.franja.pk, 'subespecialidad': 'web'})
@@ -1544,6 +1552,26 @@ class NavegacionRegresionF4Tests(TestCase):
         self.assertNotContains(r, 'orgModal')
         self.assertNotContains(r, 'org-scroll')
         self.assertContains(r, 'modalidades')  # diferenciación presente
+
+    def test_catalogo_civil_incluye_portafolio_de_laboratorios(self):
+        from scheduling.subespecialidades import Subespecialidad
+
+        civil = dict(Subespecialidad.choices_for_area(Area.CIVIL))
+        # Nuevas especialidades tomadas del portafolio institucional de laboratorios
+        for code in ('concretos', 'suelos', 'pavimentos', 'topografia',
+                     'hidraulica', 'transito'):
+            self.assertIn(code, civil)
+        # Códigos heredados que no deben desaparecer (compatibilidad de datos)
+        for code in ('estructuras', 'interventoria', 'vias', 'planos'):
+            self.assertIn(code, civil)
+
+        r = self.client.get('/')
+        self.assertContains(r, 'Concretos')
+        self.assertContains(r, 'Suelos y geotecnia')
+        self.assertContains(r, 'Pavimentos')
+        self.assertContains(r, 'Topografía y SIG')
+        self.assertContains(r, 'Hidráulica')
+        self.assertContains(r, 'Tránsito y transporte')
 
     def test_mis_solicitudes_cliente_y_notificaciones(self):
         self.client.force_login(self.cliente)

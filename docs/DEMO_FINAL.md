@@ -21,8 +21,8 @@ Abrir `http://127.0.0.1:8000/`. Cuentas: `docs/demo/CUENTAS_DE_PRUEBA.md`
 ## Acto I — Identidad institucional (2 min)
 
 1. Landing: hero concreto ("Asesorías de ingeniería y tecnología para el
-   Tolima"), barra de hechos (2 áreas · 8 especialidades · 0 costo) — los 8
-   servicios se leen del catálogo real de la plataforma.
+   Tolima"), barra de hechos (2 áreas · 14 especialidades · 0 costo) — los 14
+   servicios se leen del catálogo real de la plataforma (4 Sistemas + 10 Civil).
 2. Navegar Servicios → Cómo funciona (los 4 estados reales del sistema) →
    banda "Cada caso deja trazabilidad real" → banners (los dos enlazan a
    rutas verdaderas).

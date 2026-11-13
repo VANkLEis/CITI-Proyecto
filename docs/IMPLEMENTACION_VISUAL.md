@@ -6,13 +6,13 @@
 
 | Sección | Contenido | Fuente de verdad |
 |---|---|---|
-| Hero | Titular concreto ("Asesorías de ingeniería y tecnología para el Tolima"), propuesta institucional, CTA primario *Solicitar una asesoría* → registro, secundario *Ver cómo funciona* → ancla `#proceso`, barra de 3 hechos | Los "8 especialidades técnicas" salen de `Subespecialidad.POR_AREA` (2×4 del catálogo real, pasado por contexto de la vista) |
+| Hero | Titular concreto ("Asesorías de ingeniería y tecnología para el Tolima"), propuesta institucional, CTA primario *Solicitar una asesoría* → registro, secundario *Ver cómo funciona* → ancla `#proceso`, barra de 3 hechos | Las 14 especialidades técnicas salen de `Subespecialidad.POR_AREA` (4 Sistemas + 10 Civil del catálogo real, pasado por contexto de la vista) |
 | Servicios (`#servicios`) | Tarjeta por área (Sistemas/Civil) con foto, descripción, chips de especialidades y los 2 tipos de servicio con su responsable | `portal/views.py::landing` construye `catalogo` desde el código real, no texto plano |
 | Cómo funciona (`#proceso`) | 5 pasos numerados + columna visual con los **4 estados reales** del flujo | Coinciden 1:1 con `CitaAsesoria.Estado` y las vistas portal/docente/acta/feedback |
 | Banda "Gestión con evidencia" | Beneficios reales del sistema (centralización, responsables, historial, indicadores) | Todos implementados (Módulo C) |
 | Quiénes somos / Líneas / Ventajas / Beneficios / Portales | Contenido institucional del manual CITI, conservado | Enlaces solo a rutas existentes |
 | Banners ×2 | *Solicita una asesoría* → `/cuenta/registro/`; *Conoce nuestras áreas* → `#servicios` | Sin enlaces inventados; sin teléfonos/redes falsos |
-| Footer | Identidad + navegación + línea de créditos de fotografía | — |
+| Footer | Identidad + navegación | — |
 
 **Navegación:** los paneles de los 5 roles tienen ahora sidebar con enlaces reales (`dashboard_base` → bloque `sidebar_nav` rellenado en cada plantilla): el director enlaza *Resumen ejecutivo / Trazabilidad / Administración*; el coordinador, *Bandeja / Trazabilidad de mi área*.
 

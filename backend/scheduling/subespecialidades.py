@@ -12,6 +12,13 @@ class Subespecialidad:
     INTERVENTORIA = 'interventoria'
     VIAS = 'vias'
     PLANOS = 'planos'
+    # Portafolio de laboratorios de Ingeniería Civil (PPTX institucional)
+    CONCRETOS = 'concretos'
+    SUELOS = 'suelos'
+    PAVIMENTOS = 'pavimentos'
+    TOPOGRAFIA = 'topografia'
+    HIDRAULICA = 'hidraulica'
+    TRANSITO = 'transito'
 
     LABELS = {
         BD: 'Bases de Datos',
@@ -22,11 +29,21 @@ class Subespecialidad:
         INTERVENTORIA: 'Interventoría',
         VIAS: 'Vías',
         PLANOS: 'Planos',
+        CONCRETOS: 'Concretos',
+        SUELOS: 'Suelos y geotecnia',
+        PAVIMENTOS: 'Pavimentos',
+        TOPOGRAFIA: 'Topografía y SIG',
+        HIDRAULICA: 'Hidráulica',
+        TRANSITO: 'Tránsito y transporte',
     }
 
     POR_AREA = {
         Area.SISTEMAS: [BD, WEB, REDES, CIBER],
-        Area.CIVIL: [ESTRUCTURAS, INTERVENTORIA, VIAS, PLANOS],
+        Area.CIVIL: [
+            CONCRETOS, SUELOS, PAVIMENTOS, TOPOGRAFIA,
+            ESTRUCTURAS, HIDRAULICA, TRANSITO, VIAS,
+            INTERVENTORIA, PLANOS,
+        ],
     }
 
     @classmethod
