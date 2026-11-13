@@ -3,7 +3,7 @@
 {% endif %}
 <div class="cita-timeline">
   {% for paso in cita.timeline %}
-    <div class="timeline-step{% if paso.hecho %} hecho{% endif %}{% if paso.actual %} actual{% endif %}">
+    <div class="timeline-step timeline-step--{{ paso.estado }}{% if paso.hecho %} hecho{% endif %}{% if paso.actual %} actual{% endif %}">
       <div class="timeline-marker">{% if paso.hecho %}✓{% else %}{{ forloop.counter }}{% endif %}</div>
       <div class="timeline-label">{{ paso.label }}</div>
       {% if paso.fecha %}<span class="timeline-date">{{ paso.fecha|date:"d/m/Y H:i" }}</span>{% endif %}

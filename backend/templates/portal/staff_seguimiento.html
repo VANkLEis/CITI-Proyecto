@@ -90,7 +90,7 @@
             {% if c.entrega_pendiente %}
               <span class="badge badge-estado-asignada">pendiente de aprobación</span>
             {% elif c.ajustes_solicitados_total %}
-              <span class="badge badge-estado-cancelada">{{ c.ajustes_solicitados_total }} ajuste(s)</span>
+              <span class="badge badge-estado-solicitada">{{ c.ajustes_solicitados_total }} ajuste(s)</span>
             {% else %}
               {{ c.interacciones.count }}
             {% endif %}

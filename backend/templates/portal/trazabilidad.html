@@ -58,11 +58,11 @@
 
 <div class="stats-row">
   <div class="stat-card accent"><strong>{{ kpis.recibidas }}</strong><span>Recibidas</span></div>
-  <div class="stat-card"><strong>{{ kpis.pendientes }}</strong><span>Pendientes</span></div>
-  <div class="stat-card"><strong>{{ kpis.asignadas }}</strong><span>Asignadas</span></div>
-  <div class="stat-card"><strong>{{ kpis.en_proceso }}</strong><span>En proceso</span></div>
-  <div class="stat-card"><strong>{{ kpis.finalizadas }}</strong><span>Finalizadas</span></div>
-  <div class="stat-card"><strong>{{ kpis.canceladas }}</strong><span>Canceladas</span></div>
+  <div class="stat-card stat-card--solicitada"><strong>{{ kpis.pendientes }}</strong><span>Pendientes</span></div>
+  <div class="stat-card stat-card--asignada"><strong>{{ kpis.asignadas }}</strong><span>Asignadas</span></div>
+  <div class="stat-card stat-card--en-proceso"><strong>{{ kpis.en_proceso }}</strong><span>En proceso</span></div>
+  <div class="stat-card stat-card--finalizada"><strong>{{ kpis.finalizadas }}</strong><span>Finalizadas</span></div>
+  <div class="stat-card stat-card--cancelada"><strong>{{ kpis.canceladas }}</strong><span>Canceladas</span></div>
 </div>
 
 <div class="exec-grid">
@@ -98,7 +98,7 @@
       {% for f in estados %}
         <div class="chart-row">
           <span class="chart-label">{{ f.label }}</span>
-          <div class="chart-track"><div class="chart-bar chart-bar--{{ forloop.counter }}" style="width: {{ f.pct }}%;"></div></div>
+          <div class="chart-track"><div class="chart-bar chart-bar--{{ f.estado }}" style="width: {{ f.pct }}%;"></div></div>
           <span class="chart-num">{{ f.n }}</span>
         </div>
       {% empty %}<p class="exec-empty">Sin datos en el período.</p>{% endfor %}

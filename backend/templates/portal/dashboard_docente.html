@@ -12,9 +12,9 @@
 
 {% block dashboard_content %}
 <div class="stats-row">
-  <div class="stat-card accent"><strong>{{ kpis.asignados }}</strong><span>Mis casos asignados</span></div>
+  <div class="stat-card stat-card--asignada"><strong>{{ kpis.asignados }}</strong><span>Mis casos asignados</span></div>
   <div class="stat-card"><strong>{{ kpis.semana }}</strong><span>Citas de la semana</span></div>
-  <div class="stat-card"><strong>{{ kpis.pendientes_cierre }}</strong><span>Pendientes de cierre</span></div>
+  <div class="stat-card stat-card--en-proceso"><strong>{{ kpis.pendientes_cierre }}</strong><span>Pendientes de cierre</span></div>
 </div>
 
 <div class="card">

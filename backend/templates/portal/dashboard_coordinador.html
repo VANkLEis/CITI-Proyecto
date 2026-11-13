@@ -13,9 +13,9 @@
 
 {% block dashboard_content %}
 <div class="stats-row">
-  <div class="stat-card accent"><strong>{{ kpis.nuevas }}</strong><span>Solicitudes nuevas</span></div>
-  <div class="stat-card"><strong>{{ kpis.en_proceso }}</strong><span>Casos en proceso</span></div>
-  <div class="stat-card"><strong>{{ kpis.finalizadas }}</strong><span>Asesorías finalizadas</span></div>
+  <div class="stat-card stat-card--solicitada"><strong>{{ kpis.nuevas }}</strong><span>Solicitudes nuevas</span></div>
+  <div class="stat-card stat-card--en-proceso"><strong>{{ kpis.en_proceso }}</strong><span>Casos en proceso</span></div>
+  <div class="stat-card stat-card--finalizada"><strong>{{ kpis.finalizadas }}</strong><span>Asesorías finalizadas</span></div>
 </div>
 
 <div class="card">

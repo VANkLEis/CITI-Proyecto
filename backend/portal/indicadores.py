@@ -217,7 +217,7 @@ def por_estado(qs):
     total = sum(conteo.values())
     for valor, label in CitaAsesoria.Estado.choices:
         n = conteo.get(valor, 0)
-        filas.append({'label': label, 'n': n,
+        filas.append({'estado': valor, 'label': label, 'n': n,
                       'pct': round(n * 100 / total, 1) if total else 0})
     return filas, total
 

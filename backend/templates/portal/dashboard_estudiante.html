@@ -11,8 +11,8 @@
 
 {% block dashboard_content %}
 <div class="stats-row">
-  <div class="stat-card accent"><strong>{{ kpis.casos_asignados }}</strong><span>Casos asignados</span></div>
-  <div class="stat-card"><strong>{{ kpis.casos_cerrados }}</strong><span>Casos cerrados</span></div>
+  <div class="stat-card stat-card--asignada"><strong>{{ kpis.casos_asignados }}</strong><span>Casos asignados</span></div>
+  <div class="stat-card stat-card--finalizada"><strong>{{ kpis.casos_cerrados }}</strong><span>Casos cerrados</span></div>
   <div class="stat-card">
     <strong>{% if kpis.promedio_valoracion is not None %}{{ kpis.promedio_valoracion }}/5{% else %}—{% endif %}</strong>
     <span>Valoración media de sus casos</span>
