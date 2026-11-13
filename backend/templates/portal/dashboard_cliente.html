@@ -15,15 +15,15 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
 <style>
   #calendar { background: white; border-radius: var(--radius); padding: 1rem; border: 1px solid var(--border); }
-  .fc .fc-button-primary { background: var(--ucc-verde-solidario); border-color: #6da020; }
+  .fc .fc-button-primary { background: var(--ucc-verde-solidario); border-color: var(--accent-hover); }
   .consultorio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
   .consultorio-card { border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--border); background: white; box-shadow: var(--shadow); }
   .consultorio-sistemas h3::before, .consultorio-civil h3::before {
     content: ''; display: inline-block; width: 8px; height: 8px;
     border-radius: 50%; margin-right: 8px; vertical-align: 2px;
   }
-  .consultorio-sistemas h3::before { background: #2563eb; }
-  .consultorio-civil h3::before { background: #d97706; }
+  .consultorio-sistemas h3::before { background: var(--ucc-azul-diversidad); }
+  .consultorio-civil h3::before { background: var(--ucc-verde-solidario); }
   @media (max-width: 900px) { .consultorio-grid { grid-template-columns: 1fr; } }
 </style>
 {% endblock %}

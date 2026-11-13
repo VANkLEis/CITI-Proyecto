@@ -204,7 +204,18 @@ class ReservasApiTests(TestCase):
         r = self.client.get(f'/agenda/api/eventos/?{qs}')
         self.assertEqual(r.status_code, 200)
         eventos = r.json()
-        self.assertTrue(any(e['id'] == f'franja-{self.franja.pk}' for e in eventos))
+        ev = next(e for e in eventos if e['id'] == f'franja-{self.franja.pk}')
+        # Paleta UCC: Sistemas = azul diversidad
+        self.assertEqual(ev['backgroundColor'], '#00acc9')
+        self.assertEqual(ev['textColor'], '#062a33')
+
+        qs2 = urlencode({'start': self.franja_civ.inicio.isoformat(),
+                         'end': (self.franja_civ.fin + timedelta(days=1)).isoformat()})
+        r2 = self.client.get(f'/agenda/api/eventos/?{qs2}')
+        ev2 = next(e for e in r2.json() if e['id'] == f'franja-{self.franja_civ.pk}')
+        # Paleta UCC: Civil = verde solidario
+        self.assertEqual(ev2['backgroundColor'], '#80ba27')
+        self.assertEqual(ev2['textColor'], '#1f3307')
 
 
 class StateMachineTests(TestCase):

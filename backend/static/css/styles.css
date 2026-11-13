@@ -637,8 +637,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 .servicio-card:hover .servicio-media img { transform: scale(1.025); }
 .servicio-body { padding: 1.6rem 1.6rem 1.75rem; display: flex; flex-direction: column; gap: 0.9rem; flex: 1; }
 .servicio-body h3 { color: var(--ucc); font-size: 1.25rem; }
-.servicio-card--sistemas { border-top: 4px solid #2563eb; }
-.servicio-card--civil { border-top: 4px solid #d97706; }
+.servicio-card--sistemas { border-top: 4px solid var(--ucc-azul-diversidad); }
+.servicio-card--civil { border-top: 4px solid var(--ucc-verde-solidario); }
 .servicio-body > p { color: var(--muted); font-size: 0.95rem; }
 .servicio-subs { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .servicio-subs li {

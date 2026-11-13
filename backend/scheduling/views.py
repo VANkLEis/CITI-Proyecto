@@ -66,6 +66,7 @@ def calendario_eventos_api(request):
                 'title': f'Disponible ({disponibles}) — {franja.get_area_display()}',
                 'backgroundColor': palette['disponible'],
                 'borderColor': palette['borde'],
+                'textColor': palette['texto'],
                 'display': 'block',
                 'extendedProps': {**base['extendedProps'], 'disponible': True},
             })
@@ -73,8 +74,9 @@ def calendario_eventos_api(request):
             events.append({
                 **base,
                 'title': f'Ocupado — {franja.get_area_display()}',
-                'backgroundColor': '#94a3b8',
-                'borderColor': '#64748b',
+                'backgroundColor': '#9b9a9a',
+                'borderColor': '#7a7a7a',
+                'textColor': '#ffffff',
                 'extendedProps': {**base['extendedProps'], 'disponible': False},
             })
 
@@ -96,7 +98,8 @@ def calendario_eventos_api(request):
             'start': f.inicio.isoformat(),
             'end': f.fin.isoformat(),
             'backgroundColor': palette['cita'],
-            'borderColor': palette['borde'],
+            'borderColor': palette['cita_borde'],
+            'textColor': palette['cita_texto'],
             'extendedProps': {
                 'cita_id': cita.pk,
                 'franja_id': f.pk,
