@@ -1,0 +1,88 @@
+@startuml
+title <b>CITI · Casos de uso reales</b>\nCinco roles vigentes y sus interacciones principales
+left to right direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 220
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam rectangleBackgroundColor #F7FAFC
+skinparam rectangleBorderColor #00ACC9
+skinparam rectangleFontColor #132740
+skinparam componentBackgroundColor #F7FAFC
+skinparam componentBorderColor #00ACC9
+skinparam componentFontColor #132740
+skinparam databaseBackgroundColor #E8F6FA
+skinparam databaseBorderColor #132740
+skinparam databaseFontColor #132740
+skinparam nodeBackgroundColor #F7FAFC
+skinparam nodeBorderColor #80BA27
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+skinparam noteFontColor #5F4A00
+skinparam classBackgroundColor #F7FAFC
+skinparam classBorderColor #132740
+skinparam classFontColor #132740
+skinparam classFontSize 14
+skinparam stateBackgroundColor #F7FAFC
+skinparam stateBorderColor #00ACC9
+skinparam stateFontColor #132740
+skinparam sequenceParticipantBackgroundColor #F7FAFC
+skinparam sequenceParticipantBorderColor #00ACC9
+skinparam sequenceLifeLineBorderColor #B8C4D0
+skinparam sequenceArrowColor #5F6B7A
+
+actor "Cliente / Empresa" as cliente
+actor "Estudiante\n(consultor / tutor)" as estudiante
+actor "Docente asesor" as docente
+actor "Coordinador\nde área" as coordinador
+actor "Director CITI" as director
+
+rectangle "Sistema CITI" {
+  usecase "UC-01\nRegistrarse / iniciar sesión" as uc01
+  usecase "UC-02\nSolicitar asesoría o consultoría" as uc02
+  usecase "UC-03\nConsultar mis solicitudes\ny seguimiento" as uc03
+  usecase "UC-04\nComentar / solicitar ajuste" as uc04
+  usecase "UC-05\nAprobar o rechazar entregable" as uc05
+  usecase "UC-06\nCancelar solicitud" as uc06
+  usecase "UC-07\nRegistrar bitácora de apoyo" as uc07
+  usecase "UC-08\nConsultar casos de apoyo" as uc08
+  usecase "UC-09\nGestionar caso y publicar entregable" as uc09
+  usecase "UC-10\nEmitir acta de cierre" as uc10
+  usecase "UC-11\nRevisar bandeja y asignar\nresponsables" as uc11
+  usecase "UC-12\nSeguimiento e interacciones\nde su área" as uc12
+  usecase "UC-13\nConsultar trazabilidad\ny exportar CSV" as uc13
+  usecase "UC-14\nPanel ejecutivo e indicadores" as uc14
+  usecase "UC-15\nAdministrar registros" as uc15
+}
+
+cliente --> uc01
+cliente --> uc02
+cliente --> uc03
+cliente --> uc04
+cliente --> uc05
+cliente --> uc06
+estudiante --> uc07
+estudiante --> uc08
+docente --> uc09
+docente --> uc10
+coordinador --> uc11
+coordinador --> uc12
+coordinador --> uc13
+director --> uc13
+director --> uc14
+director --> uc15
+
+note bottom of uc13
+  El coordinador ve solo su área;
+  el director tiene alcance global.
+end note
+@enduml

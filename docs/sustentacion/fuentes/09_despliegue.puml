@@ -1,0 +1,79 @@
+@startuml
+title <b>CITI - Arquitectura de despliegue</b>\nDesarrollo local vs. produccion
+left to right direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 220
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam rectangleBackgroundColor #F7FAFC
+skinparam rectangleBorderColor #00ACC9
+skinparam rectangleFontColor #132740
+skinparam componentBackgroundColor #F7FAFC
+skinparam componentBorderColor #00ACC9
+skinparam componentFontColor #132740
+skinparam databaseBackgroundColor #E8F6FA
+skinparam databaseBorderColor #132740
+skinparam databaseFontColor #132740
+skinparam nodeBackgroundColor #F7FAFC
+skinparam nodeBorderColor #80BA27
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+skinparam noteFontColor #5F4A00
+skinparam classBackgroundColor #F7FAFC
+skinparam classBorderColor #132740
+skinparam classFontColor #132740
+skinparam classFontSize 14
+skinparam stateBackgroundColor #F7FAFC
+skinparam stateBorderColor #00ACC9
+skinparam stateFontColor #132740
+skinparam sequenceParticipantBackgroundColor #F7FAFC
+skinparam sequenceParticipantBorderColor #00ACC9
+skinparam sequenceLifeLineBorderColor #B8C4D0
+skinparam sequenceArrowColor #5F6B7A
+
+package "Entorno desarrollo (local)" {
+  node "Windows\nNavegador" as devbrowser
+  node "runserver\nWSGI de desarrollo" as devserver
+  database "SQLite\ndb.sqlite3" as devdb
+  folder "MEDIA_ROOT\nlocal" as devmedia
+  devbrowser --> devserver : HTTP :8000
+  devserver --> devdb : ORM
+  devserver --> devmedia : adjuntos
+}
+
+package "Entorno produccion" {
+  cloud "GitHub\norigin/main" as github
+  node "Nginx\nHTTPS - reverse proxy" as nginx
+  node "Gunicorn / uWSGI\nworkers WSGI" as gunicorn
+  node "Django 5\nconfig.wsgi" as django
+  database "PostgreSQL\nDATABASE_URL" as pg
+  folder "MEDIA_ROOT\nvolumen / S3 futuro" as media
+  node "Variables de entorno\nDJANGO_ENV=produccion" as env
+  node "Navegador\nHTTPS" as prodbrowser
+  prodbrowser --> nginx
+  nginx --> gunicorn
+  gunicorn --> django
+  django --> pg
+  django --> media
+  env --> django
+  github --> nginx : despliegue
+}
+
+note bottom of django
+  Coleccion de estaticos con collectstatic.
+  HTTPS, HSTS, cookies seguras y ALLOWED_HOSTS.
+end note
+note bottom of pg
+  Postgres es la opcion recomendada para
+  concurrencia y bloqueo select_for_update.
+end note
+@enduml

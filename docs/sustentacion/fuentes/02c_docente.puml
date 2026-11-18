@@ -1,0 +1,28 @@
+@startuml
+title <b>Docente asesor</b>
+left to right direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 200
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam usecaseBackgroundColor #F7FAFC
+skinparam usecaseBorderColor #00ACC9
+skinparam usecaseFontColor #132740
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+actor "Docente asesor" as actor
+rectangle "Sistema CITI" {
+  usecase "UC-09\nGestionar caso y publicar entregable" as uc09
+  usecase "UC-10\nEmitir acta de cierre" as uc10
+}
+actor --> uc09
+actor --> uc10
+@enduml

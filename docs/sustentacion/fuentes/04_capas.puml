@@ -1,0 +1,75 @@
+@startuml
+title <b>CITI - Arquitectura logica por capas (MVT + servicios)</b>\nRecorrido de una peticion HTTP
+left to right direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 220
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam rectangleBackgroundColor #F7FAFC
+skinparam rectangleBorderColor #00ACC9
+skinparam rectangleFontColor #132740
+skinparam componentBackgroundColor #F7FAFC
+skinparam componentBorderColor #00ACC9
+skinparam componentFontColor #132740
+skinparam databaseBackgroundColor #E8F6FA
+skinparam databaseBorderColor #132740
+skinparam databaseFontColor #132740
+skinparam nodeBackgroundColor #F7FAFC
+skinparam nodeBorderColor #80BA27
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+skinparam noteFontColor #5F4A00
+skinparam classBackgroundColor #F7FAFC
+skinparam classBorderColor #132740
+skinparam classFontColor #132740
+skinparam classFontSize 14
+skinparam stateBackgroundColor #F7FAFC
+skinparam stateBorderColor #00ACC9
+skinparam stateFontColor #132740
+skinparam sequenceParticipantBackgroundColor #F7FAFC
+skinparam sequenceParticipantBorderColor #00ACC9
+skinparam sequenceLifeLineBorderColor #B8C4D0
+skinparam sequenceArrowColor #5F6B7A
+
+rectangle "1. Navegador\nHTML - CSS - JS" as n1 #E8F6FA
+rectangle "2. URLconf\nconfig/urls.py" as n2 #E8F6FA
+rectangle "3. Middleware + Auth\nsesion - CSRF - roles" as n3 #FFF8E1
+rectangle "4. Vista FBV\nportal/views.py" as n4 #E8F6FA
+rectangle "5. Servicio de dominio\ntrazabilidad.py - indicadores.py" as n5 #FFF8E1
+rectangle "6. Modelo y reglas\naccounts - scheduling" as n6 #F1F8E6
+rectangle "7. ORM\nDjango ORM" as n7 #EEF2F7
+database "8. Base de datos\nSQLite / PostgreSQL" as n8 #EEF2F7
+rectangle "Template\nDjango HTML" as tpl #E8F6FA
+
+n1 --> n2 : HTTP
+n2 --> n3 : ruta
+n3 --> n4 : usuario autorizado
+n4 --> n5 : llama servicio
+n5 --> n6 : aplica regla
+n6 --> n7 : persiste
+n7 --> n8 : SQL
+n4 --> tpl : renderiza
+note bottom of tpl : Respuesta HTML al navegador.
+
+legend bottom
+  <b>Capas</b>
+  Presentacion: navegador, URLconf, vista y template.
+  Aplicacion: middleware/auth y servicios de dominio.
+  Dominio: modelos y reglas de negocio.
+  Infraestructura: ORM y base de datos.
+endlegend
+
+note bottom of n5
+  Recorrido: URL -> Middleware/Auth -> View -> Service -> ORM -> DB -> Template.
+  Las reglas criticas (estados, permisos, cupos) no viven en el template.
+end note
+@enduml

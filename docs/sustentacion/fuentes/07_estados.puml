@@ -1,0 +1,72 @@
+@startuml
+title <b>CITI - Maquina de estados de una solicitud</b>\nTransiciones formales implementadas
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 220
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam rectangleBackgroundColor #F7FAFC
+skinparam rectangleBorderColor #00ACC9
+skinparam rectangleFontColor #132740
+skinparam componentBackgroundColor #F7FAFC
+skinparam componentBorderColor #00ACC9
+skinparam componentFontColor #132740
+skinparam databaseBackgroundColor #E8F6FA
+skinparam databaseBorderColor #132740
+skinparam databaseFontColor #132740
+skinparam nodeBackgroundColor #F7FAFC
+skinparam nodeBorderColor #80BA27
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+skinparam noteFontColor #5F4A00
+skinparam classBackgroundColor #F7FAFC
+skinparam classBorderColor #132740
+skinparam classFontColor #132740
+skinparam classFontSize 14
+skinparam stateBackgroundColor #F7FAFC
+skinparam stateBorderColor #00ACC9
+skinparam stateFontColor #132740
+skinparam sequenceParticipantBackgroundColor #F7FAFC
+skinparam sequenceParticipantBorderColor #00ACC9
+skinparam sequenceLifeLineBorderColor #B8C4D0
+skinparam sequenceArrowColor #5F6B7A
+
+state "Solicitada" as solicitada
+state "Asignada" as asignada
+state "En proceso" as en_proceso
+state "Finalizada" as finalizada
+state "Cancelada" as cancelada
+
+[*] --> solicitada : cliente reserva
+solicitada --> asignada : coordinador asigna docente/tutor
+solicitada --> cancelada : cliente cancela
+asignada --> en_proceso : docente inicia
+asignada --> finalizada : cierre directo permitido
+asignada --> cancelada : cliente / coordinacion
+en_proceso --> finalizada : docente cierra con resumen
+en_proceso --> cancelada : cancelacion
+finalizada --> en_proceso : ajuste solicitado por el cliente
+finalizada --> [*]
+cancelada --> [*]
+
+note right of asignada
+  Una consultoria especializada
+  requiere docente responsable (I-6).
+end note
+note right of finalizada
+  La aprobacion del cliente NO finaliza.
+  El cierre administrativo lo hace el docente.
+end note
+note bottom of cancelada
+  Cancelada es terminal.
+  No hay retrocesos manuales del equipo.
+end note
+@enduml

@@ -1,0 +1,85 @@
+@startuml
+title <b>CITI - Contexto C4 (Nivel 1)</b>\nActores, frontera del sistema y sistemas externos
+left to right direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 220
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam rectangleBackgroundColor #F7FAFC
+skinparam rectangleBorderColor #00ACC9
+skinparam rectangleFontColor #132740
+skinparam componentBackgroundColor #F7FAFC
+skinparam componentBorderColor #00ACC9
+skinparam componentFontColor #132740
+skinparam databaseBackgroundColor #E8F6FA
+skinparam databaseBorderColor #132740
+skinparam databaseFontColor #132740
+skinparam nodeBackgroundColor #F7FAFC
+skinparam nodeBorderColor #80BA27
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+skinparam noteFontColor #5F4A00
+skinparam classBackgroundColor #F7FAFC
+skinparam classBorderColor #132740
+skinparam classFontColor #132740
+skinparam classFontSize 14
+skinparam stateBackgroundColor #F7FAFC
+skinparam stateBorderColor #00ACC9
+skinparam stateFontColor #132740
+skinparam sequenceParticipantBackgroundColor #F7FAFC
+skinparam sequenceParticipantBorderColor #00ACC9
+skinparam sequenceLifeLineBorderColor #B8C4D0
+skinparam sequenceArrowColor #5F6B7A
+
+actor "Cliente / Empresa" as cliente
+actor "Estudiante\n(consultor / tutor)" as estudiante
+actor "Docente asesor" as docente
+actor "Coordinador\nde area" as coordinador
+actor "Director CITI" as director
+
+rectangle "Sistema CITI\nConsultorio de Ingenieria, Tecnologia e Innovacion\nUCC Campus Ibague-El Espinal" as citi {
+  rectangle "Landing publica\ny registro de empresa" as landing
+  rectangle "Portales por rol\nCliente - Estudiante - Docente\nCoordinador - Director" as portales
+  rectangle "Agenda y solicitudes\nfranjas - reservas - estados" as agenda
+  rectangle "Trazabilidad y metricas\nCitaEvento - indicadores - CSV" as traza
+  rectangle "Administracion\nDjango Admin" as admin
+}
+
+node "Navegador web\nHTML - CSS - JavaScript" as browser
+cloud "CDN FullCalendar\n(calendario del cliente)" as cdn
+node "Servidor WSGI\nDjango 5.x" as wsgi
+database "Base de datos\nSQLite (dev) / PostgreSQL (prod)" as db
+folder "MEDIA_ROOT\nAdjuntos de solicitudes" as media
+cloud "GitHub\norigin/main" as github
+
+cliente --> landing : registra empresa / inicia sesion
+cliente --> portales : solicita, sigue y aprueba
+estudiante --> portales : registra bitacora
+docente --> portales : gestiona casos y entregables
+coordinador --> portales : revisa y asigna
+director --> portales : consulta indicadores globales
+director --> admin : administra registros
+browser --> landing : HTTP
+browser --> portales : HTTP
+landing --> wsgi
+portales --> wsgi
+agenda --> db : persiste y consulta
+traza --> db : eventos e indicadores
+wsgi --> media : adjuntos autorizados
+portales --> cdn : calendario
+github --> wsgi : despliegue
+
+note bottom of citi
+  La frontera del sistema agrupa la aplicacion Django.
+  Los actores solo acceden a traves de HTTP y reglas de rol.
+end note
+@enduml

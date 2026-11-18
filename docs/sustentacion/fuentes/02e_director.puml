@@ -1,0 +1,30 @@
+@startuml
+title <b>Director CITI</b>
+left to right direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 200
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam usecaseBackgroundColor #F7FAFC
+skinparam usecaseBorderColor #00ACC9
+skinparam usecaseFontColor #132740
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+actor "Director CITI" as actor
+rectangle "Sistema CITI" {
+  usecase "UC-13\nConsultar trazabilidad y exportar CSV" as uc13
+  usecase "UC-14\nPanel ejecutivo e indicadores" as uc14
+  usecase "UC-15\nAdministrar registros" as uc15
+}
+actor --> uc13
+actor --> uc14
+actor --> uc15
+@enduml

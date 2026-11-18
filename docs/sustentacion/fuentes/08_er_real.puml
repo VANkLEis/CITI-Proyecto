@@ -1,0 +1,156 @@
+@startuml
+title <b>CITI - Modelo Entidad-Relacion real</b>\n8 modelos implementados (Django ORM)
+top to bottom direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 220
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam rectangleBackgroundColor #F7FAFC
+skinparam rectangleBorderColor #00ACC9
+skinparam rectangleFontColor #132740
+skinparam componentBackgroundColor #F7FAFC
+skinparam componentBorderColor #00ACC9
+skinparam componentFontColor #132740
+skinparam databaseBackgroundColor #E8F6FA
+skinparam databaseBorderColor #132740
+skinparam databaseFontColor #132740
+skinparam nodeBackgroundColor #F7FAFC
+skinparam nodeBorderColor #80BA27
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+skinparam noteFontColor #5F4A00
+skinparam classBackgroundColor #F7FAFC
+skinparam classBorderColor #132740
+skinparam classFontColor #132740
+skinparam classFontSize 14
+skinparam stateBackgroundColor #F7FAFC
+skinparam stateBorderColor #00ACC9
+skinparam stateFontColor #132740
+skinparam sequenceParticipantBackgroundColor #F7FAFC
+skinparam sequenceParticipantBorderColor #00ACC9
+skinparam sequenceLifeLineBorderColor #B8C4D0
+skinparam sequenceArrowColor #5F6B7A
+
+hide circle
+skinparam linetype ortho
+skinparam nodesep 28
+skinparam ranksep 34
+
+class Empresa {
+  id : BigAutoField <<PK>>
+  razon_social : CharField
+  nit : CharField
+  direccion : CharField
+  telefono : CharField
+  sector : CharField
+}
+
+class CustomUser {
+  id : BigAutoField <<PK>>
+  email : EmailField <<UK>>
+  password : CharField
+  role : director | coordinador | docente | estudiante | cliente
+  area : sistemas | civil | mixto
+  student_type : consultor | tutor
+  empresa_id : FK Empresa
+  is_staff : BooleanField
+}
+
+class PerfilEstudiante {
+  id : BigAutoField <<PK>>
+  usuario_id : OneToOne CustomUser
+  semestre : PositiveInteger
+  creditos_aprobados : PositiveInteger
+  promedio_general : Decimal
+  autorizado_como_tutor : Boolean
+}
+
+class FranjaHoraria {
+  id : BigAutoField <<PK>>
+  inicio : DateTime
+  fin : DateTime
+  area : sistemas | civil | mixto
+  capacidad : PositiveSmallInteger
+  activa : Boolean
+  creada_por_id : FK CustomUser
+}
+
+class CitaAsesoria {
+  id : BigAutoField <<PK>>
+  franja_id : FK FranjaHoraria
+  cliente_id : FK CustomUser
+  asunto : CharField
+  subespecialidad : CharField
+  tipo_servicio : orientacion | especializada
+  estado : solicitada | asignada | en_proceso | finalizada | cancelada
+  docente_asignado_id : FK CustomUser
+  estudiante_apoyo_id : FK CustomUser
+  archivo_adjunto : FileField
+  resumen_cierre : TextField
+  asignada_en : DateTime
+  cerrada_en : DateTime
+  calificacion : PositiveSmallInteger
+}
+
+class NotaBitacora {
+  id : BigAutoField <<PK>>
+  cita_id : FK CitaAsesoria
+  autor_id : FK CustomUser
+  texto : TextField
+  creada_en : DateTime
+}
+
+class CitaEvento {
+  id : BigAutoField <<PK>>
+  cita_id : FK CitaAsesoria
+  usuario_id : FK CustomUser
+  actor_label : CharField
+  tipo : CharField
+  estado_anterior : CharField
+  estado_nuevo : CharField
+  descripcion : TextField
+  metadata : JSONField
+  fecha : DateTime
+}
+
+class CitaInteraccion {
+  id : BigAutoField <<PK>>
+  cita_id : FK CitaAsesoria
+  autor_id : FK CustomUser
+  rol_autor : CharField
+  tipo : general | observacion | respuesta | nota_interna | ajuste | entrega | aprobacion | rechazo
+  texto : TextField
+  datos_extra : JSONField
+  para_cliente : Boolean
+  fecha : DateTime
+}
+
+Empresa "1" -- "0..*" CustomUser : emplea
+CustomUser "1" -- "0..1" PerfilEstudiante : perfil academico
+FranjaHoraria "1" -- "0..*" CitaAsesoria : agenda
+CustomUser "1" -- "0..*" CitaAsesoria : solicita
+CustomUser "0..1" -- "0..*" CitaAsesoria : docente
+CustomUser "0..1" -- "0..*" CitaAsesoria : tutor
+CitaAsesoria "1" -- "0..*" NotaBitacora : notas
+CitaAsesoria "1" -- "0..*" CitaEvento : eventos
+CitaAsesoria "1" -- "0..*" CitaInteraccion : interacciones
+CustomUser "1" -- "0..*" CitaEvento : actor
+CustomUser "1" -- "0..*" CitaInteraccion : autor
+
+note right of CitaAsesoria
+  UniqueConstraint parcial:
+  (franja, cliente) para estados activos.
+end note
+note bottom of CitaEvento
+  Registro append-only; sin update/delete desde el portal.
+end note
+@enduml

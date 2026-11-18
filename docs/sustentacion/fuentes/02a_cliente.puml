@@ -1,0 +1,36 @@
+@startuml
+title <b>Cliente / Empresa</b>
+left to right direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 18
+skinparam dpi 200
+skinparam ArrowColor #5F6B7A
+skinparam ArrowThickness 1.4
+skinparam actorBackgroundColor #E8F6FA
+skinparam actorBorderColor #00ACC9
+skinparam actorFontColor #132740
+skinparam usecaseBackgroundColor #F7FAFC
+skinparam usecaseBorderColor #00ACC9
+skinparam usecaseFontColor #132740
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #DDE3EA
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #D99A00
+actor "Cliente / Empresa" as actor
+rectangle "Sistema CITI" {
+  usecase "UC-01\nRegistrarse / iniciar sesion" as uc01
+  usecase "UC-02\nSolicitar asesoria o consultoria" as uc02
+  usecase "UC-03\nConsultar mis solicitudes\ny seguimiento" as uc03
+  usecase "UC-04\nComentar / solicitar ajuste" as uc04
+  usecase "UC-05\nAprobar o rechazar entregable" as uc05
+  usecase "UC-06\nCancelar solicitud" as uc06
+}
+actor --> uc01
+actor --> uc02
+actor --> uc03
+actor --> uc04
+actor --> uc05
+actor --> uc06
+@enduml
