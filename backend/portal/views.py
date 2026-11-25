@@ -18,7 +18,10 @@ from portal.forms import (
     AsignarDocenteForm, DecisionClienteForm, DocenteCasoForm, EntregableForm,
     FeedbackClienteForm, InteraccionClienteForm, InteraccionEquipoForm, NotaBitacoraForm,
 )
-from scheduling.models import CitaAsesoria, CitaEvento, CitaInteraccion, NotaBitacora, TipoServicio
+from scheduling.models import (
+    CitaAsesoria, CitaEvento, CitaInteraccion, NotaBitacora, SolicitudPublica,
+    TipoServicio,
+)
 from scheduling.trazabilidad import (
     asignar_cita, auditar_guardado_form, cambio_estado, interacciones_visibles,
     nota_asignacion, publicar_entrega, registrar_decision_cliente,
@@ -82,6 +85,9 @@ def director_dashboard(request):
         'franjas_activas': FranjaHoraria.objects.filter(
             activa=True, inicio__gt=timezone.now()).count(),
         'total_usuarios': CustomUser.objects.count(),
+        'solicitudes_publicas_nuevas': SolicitudPublica.objects.filter(
+            estado__in=(SolicitudPublica.Estado.RECIBIDA,
+                        SolicitudPublica.Estado.EN_REVISION)).count(),
         'hoy': hoy,
     }
     return render(request, 'portal/dashboard_director.html', context)
@@ -163,63 +169,6 @@ def trazabilidad_csv(request):
     return response
 
 
-def landing(request):
-    # Catalogo REAL de servicios: proviene de Subespecialidad (mismo que usa
-    # la reserva en el portal cliente). Sin invencion.
-    catalog_by_area = {
-        Area.SISTEMAS: {
-            'value': 'sistemas',
-            'label': 'Ingeniería de Sistemas',
-            'corto': 'Sistemas',
-            'descripcion': ('Software, bases de datos, redes y ciberseguridad '
-                            'para PyMEs de la región.'),
-            'foto': 'images/landing/area-sistemas.jpg',
-            'foto_alt': 'Equipo revisando una solucion de software en portatil',
-            'subespecialidades': Subespecialidad.choices_for_area(Area.SISTEMAS),
-            'tipos': [
-                {'nombre': 'Asesoría / orientación técnica',
-                 'quien': ('Respuesta puntual, acompañamiento y recomendaciones; '
-                           'la ejecuta el estudiante tutor con dirección docente.')},
-                {'nombre': 'Consultoría estructurada',
-                 'quien': ('Docente responsable, ficha de diagnóstico/alcance/'
-                           'metodología, entregables y aprobación del cliente.')},
-            ],
-        },
-        Area.CIVIL: {
-            'value': 'civil',
-            'label': 'Ingeniería Civil',
-            'corto': 'Civil',
-            'descripcion': ('Laboratorios de concretos, suelos y geotecnia, pavimentos '
-                            'y topografía/SIG; estructuras, hidráulica, tránsito, vías '
-                            'e interventoría con acompañamiento académico.'),
-            'foto': 'images/landing/area-civil.jpg',
-            'foto_alt': 'Maqueta arquitectonica revisada por estudiantes de ingenieria',
-            'subespecialidades': Subespecialidad.choices_for_area(Area.CIVIL),
-            'tipos': [
-                {'nombre': 'Asesoría / orientación técnica',
-                 'quien': ('Respuesta puntual, acompañamiento y recomendaciones; '
-                           'la ejecuta el estudiante tutor con dirección docente.')},
-                {'nombre': 'Consultoría estructurada',
-                 'quien': ('Docente responsable, ficha de diagnóstico/alcance/'
-                           'metodología, entregables y aprobación del cliente.')},
-            ],
-        },
-    }
-    catalogo = list(catalog_by_area.values())
-    total_especialidades = sum(
-        len(Subespecialidad.POR_AREA[area]) for area in (Area.SISTEMAS, Area.CIVIL)
-    )
-    if request.user.is_authenticated:
-        from portal.role_routing import dashboard_url_for_role
-
-        return redirect(dashboard_url_for_role(request.user.role))
-    return render(request, 'portal/landing.html', {
-        'roles': Role.choices,
-        'catalogo': catalogo,
-        'total_especialidades': total_especialidades,
-    })
-
-
 @login_required
 @role_required(Role.COORDINADOR)
 def coordinador_dashboard(request):
@@ -245,6 +194,11 @@ def coordinador_dashboard(request):
             'area_label': Area(area).label,
             'kpis': kpis,
             'solicitudes': solicitudes,
+            'solicitudes_publicas_nuevas': SolicitudPublica.objects.filter(
+                Q(area=area) | Q(area=Area.MIXTO),
+                estado__in=(SolicitudPublica.Estado.RECIBIDA,
+                            SolicitudPublica.Estado.EN_REVISION),
+            ).count(),
         },
     )
 

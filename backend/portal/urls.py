@@ -1,11 +1,36 @@
 from django.urls import path
 
-from portal import views
+from portal import views, views_public, views_solicitudes
 
 app_name = 'portal'
 
 urlpatterns = [
-    path('', views.landing, name='landing'),
+    # --- Zona pública (Fase 05) ---
+    path('', views_public.landing, name='landing'),
+    path('portafolio/', views_public.portafolio_list, name='portafolio'),
+    path('portafolio/<slug:slug>/', views_public.portafolio_detail, name='portafolio_detail'),
+    path('talleres/', views_public.talleres_list, name='talleres'),
+    path('talleres/solicitar/', views_public.taller_solicitud, name='taller_solicitud'),
+    path('talleres/<slug:slug>/solicitar/', views_public.taller_solicitud,
+         name='taller_solicitud_especifico'),
+    path('diagnostico/', views_public.diagnostico_solicitud, name='diagnostico'),
+    path('diagnostico/gracias/', views_public.solicitud_gracias, name='diagnostico_gracias'),
+    path('solicitud/gracias/', views_public.solicitud_gracias, name='solicitud_gracias'),
+    path('privacidad/', views_public.privacidad, name='privacidad'),
+
+    # --- Triage privado de solicitudes públicas ---
+    path('panel/solicitudes/', views_solicitudes.solicitudes_publicas,
+         name='solicitudes_publicas'),
+    path('panel/solicitudes/<int:pk>/', views_solicitudes.solicitud_publica_detalle,
+         name='solicitud_publica_detalle'),
+    path('panel/solicitudes/<int:pk>/aprobar/', views_solicitudes.solicitud_publica_aprobar,
+         name='solicitud_publica_aprobar'),
+    path('panel/solicitudes/<int:pk>/rechazar/', views_solicitudes.solicitud_publica_rechazar,
+         name='solicitud_publica_rechazar'),
+    path('panel/solicitudes/<int:pk>/convertir/', views_solicitudes.solicitud_publica_convertir,
+         name='solicitud_publica_convertir'),
+
+    # --- Paneles privados existentes ---
     path('panel/director/', views.director_dashboard, name='director_dashboard'),
     path('panel/trazabilidad/', views.trazabilidad, name='trazabilidad'),
     path('panel/trazabilidad/exportar.csv', views.trazabilidad_csv, name='trazabilidad_csv'),
