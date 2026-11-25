@@ -1,0 +1,24 @@
+{% load static %}
+<header class="pub-header">
+  <div class="pub-wrap pub-header-inner">
+    <a class="pub-brand" href="{% url 'portal:landing' %}">
+      <img src="{% static 'images/Logo_ucc.png' %}" alt="Universidad Cooperativa de Colombia" width="46" height="46">
+      <span class="pub-brand-text">
+        <strong>CITI UCC</strong>
+        <small>Consultorio de Ingeniería, Tecnología e Innovación · Ibagué–El Espinal</small>
+      </span>
+    </a>
+    <button type="button" class="pub-nav-toggle" id="pubNavToggle"
+            aria-expanded="false" aria-controls="pubNav" aria-label="Abrir navegación">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="pub-nav" id="pubNav" aria-label="Navegación principal">
+      <a href="{% url 'portal:landing' %}#modalidades">Modalidades</a>
+      <a href="{% url 'portal:portafolio' %}">Portafolio</a>
+      <a href="{% url 'portal:talleres' %}">Talleres</a>
+      <a href="{% url 'portal:landing' %}#proceso">Cómo funciona</a>
+      <a class="pub-btn pub-btn-ghost" href="{% url 'accounts:login' %}">Portal académico</a>
+      <a class="pub-btn pub-btn-solid" href="{% url 'portal:diagnostico' %}">Agendar diagnóstico</a>
+    </nav>
+  </div>
+</header>

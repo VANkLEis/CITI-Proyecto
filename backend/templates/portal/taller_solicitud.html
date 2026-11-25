@@ -1,0 +1,92 @@
+{% extends "portal/public_base.html" %}
+{% load static %}
+
+{% block title %}Solicitar taller — CITI UCC{% endblock %}
+{% block meta_description %}Solicita una charla o taller del CITI para tu organización, fundación o grupo comunitario.{% endblock %}
+
+{% block public_content %}
+<section class="pub-page-head">
+  <div class="pub-wrap">
+    <p class="pub-kicker">Capacitaciones</p>
+    <h1>{% if taller %}Solicitar “{{ taller.titulo }}”{% else %}Solicitar una charla o taller{% endif %}</h1>
+    <p class="pub-lede">
+      Completa los datos de la organización y del grupo. El equipo del CITI
+      revisará la solicitud y coordinará la fecha y la modalidad.
+    </p>
+  </div>
+</section>
+
+<section class="pub-section">
+  <div class="pub-wrap pub-form-grid">
+    <div class="pub-form-aside">
+      {% if taller %}
+        <div class="pub-panel">
+          <p class="pub-card-meta">{{ taller.get_publico_objetivo_display }}</p>
+          <h2>{{ taller.titulo }}</h2>
+          <p>{{ taller.descripcion }}</p>
+          <ul class="pub-workshop-facts">
+            <li><span>Modalidad</span><strong>{{ taller.get_modalidad_display }}</strong></li>
+            <li><span>Nivel</span><strong>{{ taller.get_nivel_display }}</strong></li>
+            {% if taller.duracion %}<li><span>Duración</span><strong>{{ taller.duracion }}</strong></li>{% endif %}
+          </ul>
+        </div>
+      {% endif %}
+      <div class="pub-panel pub-panel--soft">
+        <h2>Qué pasa después</h2>
+        <ol class="pub-steps pub-steps--compact">
+          <li>Revisamos la solicitud y el público objetivo.</li>
+          <li>Confirmamos temática, fecha tentativa y modalidad.</li>
+          <li>Agendamos el taller con el equipo académico.</li>
+        </ol>
+      </div>
+    </div>
+
+    <form class="pub-form" method="post">
+      {% csrf_token %}
+      {{ form.website }}
+
+      {% if form.non_field_errors %}
+        <div class="pub-alert pub-alert--error" role="alert">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+      {% endif %}
+
+      <fieldset>
+        <legend>Datos de contacto</legend>
+        {% include "portal/partials/form_field.html" with field=form.nombre_contacto %}
+        {% include "portal/partials/form_field.html" with field=form.cargo %}
+        {% include "portal/partials/form_field.html" with field=form.organizacion %}
+        {% include "portal/partials/form_field.html" with field=form.nit %}
+        {% include "portal/partials/form_field.html" with field=form.email %}
+        {% include "portal/partials/form_field.html" with field=form.telefono %}
+      </fieldset>
+
+      <fieldset>
+        <legend>Sobre el taller</legend>
+        {% include "portal/partials/form_field.html" with field=form.taller %}
+        {% include "portal/partials/form_field.html" with field=form.tema_interes %}
+        {% include "portal/partials/form_field.html" with field=form.publico_objetivo %}
+        {% include "portal/partials/form_field.html" with field=form.numero_participantes %}
+        {% include "portal/partials/form_field.html" with field=form.descripcion %}
+        {% include "portal/partials/form_field.html" with field=form.fecha_preferida %}
+        {% include "portal/partials/form_field.html" with field=form.turno_preferido %}
+        {% include "portal/partials/form_field.html" with field=form.modalidad_preferida %}
+      </fieldset>
+
+      <div class="pub-field pub-field--check">
+        {{ form.acepta_contacto }}
+        <label for="{{ form.acepta_contacto.id_for_label }}">
+          {{ form.acepta_contacto.label }}
+        </label>
+        {% for error in form.acepta_contacto.errors %}<p class="pub-error">{{ error }}</p>{% endfor %}
+      </div>
+
+      <button class="pub-btn pub-btn-solid pub-btn-lg" type="submit">Enviar solicitud</button>
+      <p class="pub-micro">
+        Tratamos los datos solo para gestionar esta solicitud.
+        <a href="{% url 'portal:privacidad' %}">Ver tratamiento de datos</a>.
+      </p>
+    </form>
+  </div>
+</section>
+{% endblock %}

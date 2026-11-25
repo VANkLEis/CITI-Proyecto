@@ -1,0 +1,18 @@
+{% load static %}
+{% comment %}
+  Video decorativo con degradación elegante.
+  - `poster` es la imagen actual de landing: si el MP4 aún no existe, el
+    navegador muestra el poster.
+  - La <img> de respaldo queda debajo del video: un video que falla pinta fondo
+    transparente, así que la imagen se ve sin necesidad de JS.
+  - `prefers-reduced-motion` (CSS en public.css) oculta el video y deja la
+    imagen fija. public.js además pausa la reproducción.
+{% endcomment %}
+<div class="pub-media" data-media-video>
+  <video class="pub-media-video" autoplay muted loop playsinline preload="metadata"
+         poster="{% static poster %}" aria-hidden="true" tabindex="-1"
+         onerror="this.closest('[data-media-video]').classList.add('is-fallback')">
+    <source src="{% static video %}" type="video/mp4">
+  </video>
+  <img class="pub-media-fallback" src="{% static fallback %}" alt="{{ alt }}" loading="lazy">
+</div>

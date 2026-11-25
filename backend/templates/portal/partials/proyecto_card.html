@@ -1,0 +1,27 @@
+{% load static %}
+<article class="pub-card pub-project">
+  <a class="pub-card-media" href="{% url 'portal:portafolio_detail' proyecto.slug %}"
+     aria-hidden="true" tabindex="-1">
+    {% if proyecto.imagen_url %}
+      <img src="{{ proyecto.imagen_url }}" alt="{{ proyecto.imagen_alt|default:proyecto.titulo }}" loading="lazy">
+    {% else %}
+      <span class="pub-card-media-empty"></span>
+    {% endif %}
+    <span class="pub-tag pub-tag--{{ proyecto.linea }}">{{ proyecto.get_linea_display }}</span>
+  </a>
+  <div class="pub-card-body">
+    <p class="pub-card-meta">
+      {% if proyecto.organizacion %}{{ proyecto.organizacion }}{% endif %}
+      {% if proyecto.anio %} · {{ proyecto.anio }}{% endif %}
+    </p>
+    <h3><a href="{% url 'portal:portafolio_detail' proyecto.slug %}">{{ proyecto.titulo }}</a></h3>
+    <p>{{ proyecto.resumen }}</p>
+    {% if proyecto.metricas_validas %}
+      <ul class="pub-metrics">
+        {% for metrica in proyecto.metricas_validas|slice:":2" %}
+          <li><strong>{{ metrica.valor }}</strong><span>{{ metrica.label }}</span></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</article>

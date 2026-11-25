@@ -1,0 +1,50 @@
+{% extends "portal/public_base.html" %}
+{% load static %}
+
+{% block title %}Talleres y capacitaciones — CITI UCC{% endblock %}
+{% block meta_description %}Talleres del CITI para fundaciones, emprendedores jóvenes, personas mayores y pymes: inteligencia artificial, herramientas digitales y gestión tecnológica.{% endblock %}
+
+{% block public_content %}
+<section class="pub-page-head">
+  <div class="pub-wrap">
+    <p class="pub-kicker">Capacitaciones y talleres</p>
+    <h1>Temas que abren oportunidades</h1>
+    <p class="pub-lede">
+      Diseñamos y dictamos talleres para organizaciones, fundaciones, grupos
+      comunitarios y equipos de trabajo. Cuéntanos a quién va dirigido y qué
+      necesitan aprender.
+    </p>
+    <div class="pub-actions">
+      <a class="pub-btn pub-btn-solid" href="{% url 'portal:taller_solicitud' %}">
+        Solicitar una charla o taller
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="pub-section">
+  <div class="pub-wrap">
+    <nav class="pub-filters" aria-label="Filtrar por público objetivo">
+      <a class="pub-filter{% if not publico_activo %} is-active{% endif %}"
+         href="{% url 'portal:talleres' %}">Todos</a>
+      {% for code, label in publicos %}
+        <a class="pub-filter{% if publico_activo == code %} is-active{% endif %}"
+           href="{% url 'portal:talleres' %}?publico={{ code }}">{{ label }}</a>
+      {% endfor %}
+    </nav>
+
+    <div class="pub-grid-3">
+      {% for taller in talleres %}
+        {% include "portal/partials/taller_card.html" %}
+      {% empty %}
+        <div class="pub-empty">
+          <p>No hay talleres publicados para este público por ahora.</p>
+          <p><a class="pub-link" href="{% url 'portal:taller_solicitud' %}">Propón un tema →</a></p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "portal/partials/public_cta.html" %}
+{% endblock %}

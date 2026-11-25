@@ -1,0 +1,9 @@
+{% load static %}
+<div class="pub-field{% if field.errors %} has-error{% endif %}">
+  <label for="{{ field.id_for_label }}">
+    {{ field.label }}{% if field.field.required %}<span class="pub-req" aria-hidden="true">*</span>{% endif %}
+  </label>
+  {{ field }}
+  {% if field.help_text %}<p class="pub-help">{{ field.help_text }}</p>{% endif %}
+  {% for error in field.errors %}<p class="pub-error">{{ error }}</p>{% endfor %}
+</div>

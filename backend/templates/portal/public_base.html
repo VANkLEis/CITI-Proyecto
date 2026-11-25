@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/public.css' %}?v=2026-11-25-a">
+{% endblock %}
+
+{% block body_class %}public-body{% endblock %}
+
+{% block content %}
+<a class="pub-skip" href="#contenido">Saltar al contenido</a>
+{% include "portal/partials/public_nav.html" %}
+<main id="contenido">
+  {% block public_content %}{% endblock %}
+</main>
+{% include "portal/partials/public_footer.html" %}
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/public.js' %}?v=2026-11-25-a" defer></script>
+{% endblock %}

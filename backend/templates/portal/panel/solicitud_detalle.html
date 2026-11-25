@@ -1,0 +1,200 @@
+{% extends "dashboard_base.html" %}
+{% load static %}
+
+{% block title %}CITI — {{ solicitud.codigo }}{% endblock %}
+{% block page_title %}{{ solicitud.codigo }}{% endblock %}
+{% block page_subtitle %}{{ solicitud.organizacion }} · {{ solicitud.get_tipo_necesidad_display }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/solicitudes.css' %}?v=2026-11-25-a">
+{% endblock %}
+
+{% block sidebar_nav %}
+  {% if request.user.role == 'director' %}
+    <a class="nav-item" href="{% url 'portal:director_dashboard' %}">Resumen ejecutivo</a>
+  {% else %}
+    <a class="nav-item" href="{% url 'portal:coordinador_dashboard' %}">Bandeja de asignación</a>
+  {% endif %}
+  <a class="nav-item is-active" href="{% url 'portal:solicitudes_publicas' %}">Solicitudes públicas</a>
+  <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
+{% block dashboard_content %}
+<div style="margin-bottom:1rem;">
+  <a class="btn btn-sm" href="{% url 'portal:solicitudes_publicas' %}">← Volver a la bandeja</a>
+</div>
+
+<div class="triage-grid">
+  <div class="triage-stack">
+    <div class="card">
+      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;">
+        <h2>Ficha del solicitante</h2>
+        <span class="badge badge-sol-{{ solicitud.estado }}">{{ solicitud.get_estado_display }}</span>
+      </div>
+      <div class="card-body">
+        <dl class="triage-ficha">
+          <div><dt>Organización</dt><dd>{{ solicitud.organizacion }}</dd></div>
+          <div><dt>NIT</dt><dd>{{ solicitud.nit|default:"No indicado" }}</dd></div>
+          <div><dt>Contacto</dt><dd>{{ solicitud.nombre_contacto }}{% if solicitud.cargo %} · {{ solicitud.cargo }}{% endif %}</dd></div>
+          <div><dt>Tipo de solicitante</dt><dd>{{ solicitud.get_tipo_solicitante_display }}</dd></div>
+          <div><dt>Correo</dt><dd>{{ solicitud.email }}</dd></div>
+          <div><dt>Teléfono</dt><dd>{{ solicitud.telefono|default:"No indicado" }}</dd></div>
+          <div><dt>Necesidad</dt><dd>{{ solicitud.get_tipo_necesidad_display }}</dd></div>
+          <div><dt>Línea</dt><dd>{{ solicitud.get_linea_atencion_display }}</dd></div>
+          <div><dt>Área</dt><dd>{{ solicitud.get_area_display }}</dd></div>
+          <div><dt>Subespecialidad</dt><dd>{{ solicitud.get_subespecialidad_display }}</dd></div>
+          <div><dt>Fecha preferida</dt><dd>{{ solicitud.fecha_preferida|date:"d/m/Y"|default:"Sin preferencia" }}</dd></div>
+          <div><dt>Turno / modalidad</dt><dd>{{ solicitud.get_turno_preferido_display }} · {{ solicitud.get_modalidad_preferida_display }}</dd></div>
+          {% if es_taller %}
+            <div><dt>Taller solicitado</dt><dd>{{ solicitud.taller.titulo|default:solicitud.tema_interes }}</dd></div>
+            <div><dt>Público objetivo</dt><dd>{{ solicitud.publico_objetivo|default:"No indicado" }}</dd></div>
+            <div><dt>Participantes</dt><dd>{{ solicitud.numero_participantes|default:"No indicado" }}</dd></div>
+          {% endif %}
+          <div><dt>Recibida</dt><dd>{{ solicitud.creada_en|date:"d/m/Y H:i" }}</dd></div>
+          <div><dt>Consentimiento de contacto</dt><dd>{% if solicitud.acepta_contacto %}Sí{% else %}No{% endif %}</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>Reto descrito por el solicitante</h2></div>
+      <div class="card-body triage-stack" style="gap:0.9rem;">
+        <p class="triage-descripcion">{{ solicitud.descripcion }}</p>
+        {% if solicitud.objetivo %}
+          <div>
+            <p class="triage-ficha" style="display:block;"><span style="font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);">Resultado esperado</span></p>
+            <p style="font-size:.9rem;color:#26405c;">{{ solicitud.objetivo|linebreaksbr }}</p>
+          </div>
+        {% endif %}
+        {% if solicitud.observaciones_internas %}
+          <div>
+            <p style="font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);">Observaciones internas</p>
+            <p style="font-size:.88rem;color:#26405c;">{{ solicitud.observaciones_internas|linebreaksbr }}</p>
+          </div>
+        {% endif %}
+        {% if solicitud.motivo_rechazo %}
+          <div class="alert alert-error" style="font-size:.86rem;">
+            <strong>Motivo del rechazo:</strong> {{ solicitud.motivo_rechazo }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if solicitud.cita_id %}
+      <div class="card">
+        <div class="card-header"><h2>Cita generada</h2></div>
+        <div class="card-body">
+          <p style="font-size:.9rem;">
+            Esta solicitud se convirtió en la cita
+            <strong>CITI-{{ solicitud.cita.pk|stringformat:"05d" }}</strong>
+            el {{ solicitud.convertida_en|date:"d/m/Y H:i" }}.
+          </p>
+          <a class="btn btn-sm btn-primary"
+             href="{% url 'portal:cita_detalle' solicitud.cita.pk %}">Abrir la cita</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="triage-stack">
+    {% if puede_aprobar %}
+      <div class="card">
+        <div class="card-header"><h2>Aprobar alcance y clasificar</h2></div>
+        <div class="card-body">
+          <form class="triage-form" method="post"
+                action="{% url 'portal:solicitud_publica_aprobar' solicitud.pk %}">
+            {% csrf_token %}
+            {% if form_aprobacion.non_field_errors %}
+              <div class="alert alert-error">{{ form_aprobacion.non_field_errors }}</div>
+            {% endif %}
+            <div>
+              <label for="{{ form_aprobacion.linea_atencion.id_for_label }}">Línea de atención</label>
+              {{ form_aprobacion.linea_atencion }}
+              {{ form_aprobacion.linea_atencion.errors }}
+            </div>
+            <div>
+              <label for="{{ form_aprobacion.area.id_for_label }}">Área responsable</label>
+              {{ form_aprobacion.area }}
+              {{ form_aprobacion.area.errors }}
+            </div>
+            <div>
+              <label for="{{ form_aprobacion.subespecialidad.id_for_label }}">Subespecialidad</label>
+              {{ form_aprobacion.subespecialidad }}
+              {{ form_aprobacion.subespecialidad.errors }}
+            </div>
+            <div>
+              <label for="{{ form_aprobacion.observaciones.id_for_label }}">Observaciones internas</label>
+              {{ form_aprobacion.observaciones }}
+            </div>
+            <button class="btn btn-primary" type="submit">Aprobar solicitud</button>
+            {% if es_taller %}
+              <p class="helptext">
+                Es una capacitación: al aprobarla no se crea cita en el calendario.
+              </p>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if puede_convertir %}
+      <div class="card">
+        <div class="card-header"><h2>Convertir en cita</h2></div>
+        <div class="card-body">
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:.8rem;">
+            Elige la franja, el docente responsable y el tutor de apoyo. La cita
+            nace en estado <strong>Solicitada</strong> y queda en el historial.
+          </p>
+          <a class="btn btn-primary"
+             href="{% url 'portal:solicitud_publica_convertir' solicitud.pk %}">
+            Convertir y asignar
+          </a>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if puede_rechazar %}
+      <div class="card">
+        <div class="card-header"><h2>Rechazar</h2></div>
+        <div class="card-body">
+          <form class="triage-form" method="post"
+                action="{% url 'portal:solicitud_publica_rechazar' solicitud.pk %}">
+            {% csrf_token %}
+            <div>
+              <label for="{{ form_rechazo.motivo.id_for_label }}">Motivo (queda en el radicado)</label>
+              {{ form_rechazo.motivo }}
+              {{ form_rechazo.motivo.errors }}
+            </div>
+            <button class="btn btn-sm" type="submit"
+                    onclick="return confirm('¿Rechazar esta solicitud? El motivo quedará registrado.');">
+              Rechazar solicitud
+            </button>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="card">
+      <div class="card-header"><h2>Trazabilidad del triage</h2></div>
+      <div class="card-body">
+        <ul class="triage-historial">
+          <li><time>{{ solicitud.creada_en|date:"d/m/Y H:i" }}</time><span>Radicado recibido por el formulario público.</span></li>
+          {% if solicitud.revisada_en %}
+            <li><time>{{ solicitud.revisada_en|date:"d/m/Y H:i" }}</time>
+              <span>Revisada{% if solicitud.revisada_por %} por {{ solicitud.revisada_por.nombre_completo }}{% endif %}.</span></li>
+          {% endif %}
+          {% if solicitud.aprobada_en %}
+            <li><time>{{ solicitud.aprobada_en|date:"d/m/Y H:i" }}</time>
+              <span>Aprobada{% if solicitud.aprobada_por %} por {{ solicitud.aprobada_por.nombre_completo }}{% endif %}.</span></li>
+          {% endif %}
+          {% if solicitud.convertida_en %}
+            <li><time>{{ solicitud.convertida_en|date:"d/m/Y H:i" }}</time>
+              <span>Convertida en cita CITI-{{ solicitud.cita.pk|stringformat:"05d" }}.</span></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

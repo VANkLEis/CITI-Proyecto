@@ -1,0 +1,16 @@
+{% load static %}
+<article class="pub-card pub-workshop">
+  <div class="pub-card-body">
+    <p class="pub-card-meta">{{ taller.get_publico_objetivo_display }}</p>
+    <h3><a href="{% url 'portal:taller_solicitud_especifico' taller.slug %}">{{ taller.titulo }}</a></h3>
+    <p class="pub-workshop-tematica">{{ taller.tematica }}</p>
+    <ul class="pub-workshop-facts">
+      <li><span>Modalidad</span><strong>{{ taller.get_modalidad_display }}</strong></li>
+      <li><span>Nivel</span><strong>{{ taller.get_nivel_display }}</strong></li>
+      {% if taller.duracion %}<li><span>Duración</span><strong>{{ taller.duracion }}</strong></li>{% endif %}
+    </ul>
+    <a class="pub-link" href="{% url 'portal:taller_solicitud_especifico' taller.slug %}">
+      Solicitar este taller <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>

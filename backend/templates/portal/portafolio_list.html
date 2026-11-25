@@ -1,0 +1,46 @@
+{% extends "portal/public_base.html" %}
+{% load static %}
+
+{% block title %}Portafolio — CITI UCC{% endblock %}
+{% block meta_description %}Proyectos, casos de éxito y capacidades del CITI en Ingeniería de Sistemas, Civil, innovación con IA e impacto social.{% endblock %}
+
+{% block public_content %}
+<section class="pub-page-head">
+  <div class="pub-wrap">
+    <p class="pub-kicker">Portafolio</p>
+    <h1>Resultados que se pueden visitar</h1>
+    <p class="pub-lede">
+      Proyectos, avances y capacidades del consultorio en Sistemas, Civil,
+      innovación con inteligencia artificial e impacto social.
+    </p>
+  </div>
+</section>
+
+<section class="pub-section">
+  <div class="pub-wrap">
+    <nav class="pub-filters" aria-label="Filtrar por línea">
+      <a class="pub-filter{% if not linea_activa %} is-active{% endif %}"
+         href="{% url 'portal:portafolio' %}">Todas <span>{{ total }}</span></a>
+      {% for linea in lineas_con_conteo %}
+        <a class="pub-filter{% if linea_activa == linea.code %} is-active{% endif %}"
+           href="{% url 'portal:portafolio' %}?linea={{ linea.code }}">
+          {{ linea.label }} <span>{{ linea.n }}</span>
+        </a>
+      {% endfor %}
+    </nav>
+
+    <div class="pub-grid-3">
+      {% for proyecto in proyectos %}
+        {% include "portal/partials/proyecto_card.html" %}
+      {% empty %}
+        <div class="pub-empty">
+          <p>Aún no hay proyectos publicados en esta línea.</p>
+          <p><a class="pub-link" href="{% url 'portal:diagnostico' %}">Conversemos sobre tu proyecto →</a></p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "portal/partials/public_cta.html" %}
+{% endblock %}

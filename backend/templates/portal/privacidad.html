@@ -1,0 +1,67 @@
+{% extends "portal/public_base.html" %}
+{% load static %}
+
+{% block title %}Tratamiento de datos — CITI UCC{% endblock %}
+{% block meta_description %}Cómo trata el CITI los datos personales registrados en las solicitudes de diagnóstico y talleres.{% endblock %}
+
+{% block public_content %}
+<section class="pub-page-head">
+  <div class="pub-wrap pub-narrow">
+    <p class="pub-kicker">Información institucional</p>
+    <h1>Tratamiento de datos personales</h1>
+    <p class="pub-lede">
+      Los datos que registras en los formularios del CITI se usan únicamente
+      para gestionar tu solicitud y coordinar la atención.
+    </p>
+  </div>
+</section>
+
+<section class="pub-section">
+  <div class="pub-wrap pub-narrow pub-prose">
+    <h2>Qué datos recibimos</h2>
+    <p>
+      Nombre del contacto, cargo, organización, NIT (si aplica), correo
+      electrónico, teléfono y la descripción de la necesidad. En el caso de
+      talleres, también el público objetivo y el número estimado de
+      participantes.
+    </p>
+
+    <h2>Para qué los usamos</h2>
+    <ul>
+      <li>Revisar y clasificar la solicitud de diagnóstico o de taller.</li>
+      <li>Contactarte para confirmar la cita, la franja o la fecha del taller.</li>
+      <li>Registrar la trazabilidad del caso dentro del consultorio académico.</li>
+    </ul>
+
+    <h2>Quién accede</h2>
+    <p>
+      Solo el equipo del CITI con rol autorizado: Dirección, Coordinación de
+      área y los docentes o estudiantes asignados al caso. Cada acceso queda
+      registrado en el historial de la solicitud.
+    </p>
+
+    <h2>Cuánto tiempo conservamos los datos</h2>
+    <p>
+      El tiempo necesario para la gestión académica y el registro institucional
+      del servicio prestado.
+    </p>
+
+    <h2>Tus derechos</h2>
+    <p>
+      Puedes solicitar actualización, corrección o eliminación de tus datos
+      escribiendo al canal de contacto institucional del CITI. Atenderemos la
+      solicitud conforme a la normativa de protección de datos aplicable.
+    </p>
+
+    <p class="pub-micro">
+      Al enviar un formulario autorizas expresamente el contacto para gestionar
+      la solicitud registrada.
+    </p>
+
+    <div class="pub-actions">
+      <a class="pub-btn pub-btn-solid" href="{% url 'portal:diagnostico' %}">Agendar diagnóstico</a>
+      <a class="pub-btn pub-btn-ghost" href="{% url 'portal:landing' %}">Volver al inicio</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

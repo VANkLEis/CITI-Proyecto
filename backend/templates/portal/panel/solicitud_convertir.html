@@ -1,0 +1,91 @@
+{% extends "dashboard_base.html" %}
+{% load static %}
+
+{% block title %}CITI — Convertir {{ solicitud.codigo }}{% endblock %}
+{% block page_title %}Convertir en cita{% endblock %}
+{% block page_subtitle %}{{ solicitud.codigo }} · {{ solicitud.organizacion }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/solicitudes.css' %}?v=2026-11-25-a">
+{% endblock %}
+
+{% block sidebar_nav %}
+  {% if request.user.role == 'director' %}
+    <a class="nav-item" href="{% url 'portal:director_dashboard' %}">Resumen ejecutivo</a>
+  {% else %}
+    <a class="nav-item" href="{% url 'portal:coordinador_dashboard' %}">Bandeja de asignación</a>
+  {% endif %}
+  <a class="nav-item is-active" href="{% url 'portal:solicitudes_publicas' %}">Solicitudes públicas</a>
+  <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
+{% block dashboard_content %}
+<div style="margin-bottom:1rem;">
+  <a class="btn btn-sm" href="{% url 'portal:solicitud_publica_detalle' solicitud.pk %}">← Volver al radicado</a>
+</div>
+
+<div class="triage-grid">
+  <div class="card">
+    <div class="card-header"><h2>Datos que se copiarán a la cita</h2></div>
+    <div class="card-body">
+      <dl class="triage-ficha">
+        <div><dt>Radicado</dt><dd>{{ solicitud.codigo }}</dd></div>
+        <div><dt>Organización</dt><dd>{{ solicitud.organizacion }}</dd></div>
+        <div><dt>Línea aprobada</dt><dd>{{ solicitud.get_linea_atencion_display }}</dd></div>
+        <div><dt>Área</dt><dd>{{ solicitud.get_area_display }}</dd></div>
+        <div><dt>Subespecialidad</dt><dd>{{ solicitud.get_subespecialidad_display }}</dd></div>
+        <div><dt>Cliente</dt><dd>
+          {% if solicitud.cliente %}{{ solicitud.cliente.email }}
+          {% else %}Se creará desde el contacto ({{ solicitud.email }}){% endif %}
+        </dd></div>
+      </dl>
+      <p class="helptext" style="margin-top:1rem;">
+        Si el correo ya pertenece a un cliente, se vincula automáticamente. Si no,
+        se crea una cuenta inactiva con empresa para que el equipo la active.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Franja y equipo</h2></div>
+    <div class="card-body">
+      <form class="triage-form" method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div>
+          <label for="{{ form.franja.id_for_label }}">{{ form.franja.label }}</label>
+          {{ form.franja }}
+          {{ form.franja.errors }}
+          <p class="helptext">
+            Solo aparecen franjas futuras con cupo en {{ solicitud.get_area_display }}.
+          </p>
+        </div>
+
+        <div>
+          <label for="{{ form.docente.id_for_label }}">{{ form.docente.label }}</label>
+          {{ form.docente }}
+          {{ form.docente.errors }}
+          <p class="helptext">
+            Obligatorio si la línea es Consultoría Profesional.
+          </p>
+        </div>
+
+        <div>
+          <label for="{{ form.estudiante.id_for_label }}">{{ form.estudiante.label }}</label>
+          {{ form.estudiante }}
+          {{ form.estudiante.errors }}
+          <p class="helptext">
+            Solo estudiantes que cumplen semestre, créditos y promedio mínimos.
+          </p>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Convertir y asignar</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

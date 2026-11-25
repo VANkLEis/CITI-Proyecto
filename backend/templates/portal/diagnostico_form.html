@@ -1,0 +1,112 @@
+{% extends "portal/public_base.html" %}
+{% load static %}
+
+{% block title %}Diagnóstico estratégico — CITI UCC{% endblock %}
+{% block meta_description %}Agenda una sesión de diagnóstico estratégico con el CITI: conocemos tu reto, evaluamos el alcance y definimos el siguiente paso.{% endblock %}
+
+{% block public_content %}
+<section class="pub-page-head">
+  <div class="pub-wrap">
+    <p class="pub-kicker">Primer paso</p>
+    <h1>Agenda una sesión de diagnóstico estratégico</h1>
+    <p class="pub-lede">
+      Una conversación inicial para conocer tu necesidad, evaluar el alcance
+      técnico y definir si corresponde a proyección social o consultoría
+      profesional. Sin compromiso de recursos antes de esa sesión.
+    </p>
+  </div>
+</section>
+
+<section class="pub-section">
+  <div class="pub-wrap pub-form-grid">
+    <aside class="pub-form-aside">
+      <div class="pub-panel">
+        <h2>Cómo es la sesión</h2>
+        <ol class="pub-steps pub-steps--compact">
+          <li>Escuchamos el contexto y el resultado que esperas.</li>
+          <li>Identificamos el área y la especialidad que puede atenderlo.</li>
+          <li>Definimos el alcance y el equipo académico.</li>
+          <li>Acordamos los siguientes pasos y las condiciones.</li>
+        </ol>
+      </div>
+      <div class="pub-panel pub-panel--soft">
+        <h2>¿A quién está dirigido?</h2>
+        <ul class="pub-line-list">
+          <li>Empresas y pymes con un reto técnico.</li>
+          <li>Fundaciones y organizaciones sociales.</li>
+          <li>Emprendimientos juveniles.</li>
+          <li>Grupos comunitarios y personas mayores.</li>
+        </ul>
+      </div>
+    </aside>
+
+    <form class="pub-form" method="post">
+      {% csrf_token %}
+      {{ form.website }}
+
+      {% if form.non_field_errors %}
+        <div class="pub-alert pub-alert--error" role="alert">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+      {% endif %}
+
+      <fieldset>
+        <legend>Quién solicita</legend>
+        {% include "portal/partials/form_field.html" with field=form.tipo_solicitante %}
+        {% include "portal/partials/form_field.html" with field=form.nombre_contacto %}
+        {% include "portal/partials/form_field.html" with field=form.cargo %}
+        {% include "portal/partials/form_field.html" with field=form.organizacion %}
+        {% include "portal/partials/form_field.html" with field=form.nit %}
+        {% include "portal/partials/form_field.html" with field=form.email %}
+        {% include "portal/partials/form_field.html" with field=form.telefono %}
+      </fieldset>
+
+      <fieldset>
+        <legend>La necesidad</legend>
+        {% include "portal/partials/form_field.html" with field=form.tipo_necesidad %}
+        {% include "portal/partials/form_field.html" with field=form.area %}
+        {% include "portal/partials/form_field.html" with field=form.descripcion %}
+        {% include "portal/partials/form_field.html" with field=form.objetivo %}
+      </fieldset>
+
+      <fieldset>
+        <legend>Preferencia de agenda</legend>
+        {% include "portal/partials/form_field.html" with field=form.fecha_preferida %}
+        {% include "portal/partials/form_field.html" with field=form.turno_preferido %}
+        {% include "portal/partials/form_field.html" with field=form.modalidad_preferida %}
+        <p class="pub-help">
+          La fecha es una preferencia: el equipo confirma la franja al revisar la solicitud.
+        </p>
+      </fieldset>
+
+      <div class="pub-field pub-field--check">
+        {{ form.acepta_contacto }}
+        <label for="{{ form.acepta_contacto.id_for_label }}">
+          {{ form.acepta_contacto.label }}
+        </label>
+        {% for error in form.acepta_contacto.errors %}<p class="pub-error">{{ error }}</p>{% endfor %}
+      </div>
+
+      <button class="pub-btn pub-btn-solid pub-btn-lg" type="submit">Enviar solicitud de diagnóstico</button>
+      <p class="pub-micro">
+        Tratamos los datos solo para gestionar esta solicitud.
+        <a href="{% url 'portal:privacidad' %}">Ver tratamiento de datos</a>.
+      </p>
+    </form>
+  </div>
+</section>
+
+<section class="pub-section pub-section--alt">
+  <div class="pub-wrap">
+    <div class="pub-panel pub-panel--wide">
+      <h2>Condiciones y alcance</h2>
+      <p>
+        El alcance, el equipo asignado y las condiciones del servicio se definen
+        en la sesión de diagnóstico y quedan registrados en el historial de la
+        solicitud. Así la organización sabe qué recibe, cuándo y con qué
+        responsables.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

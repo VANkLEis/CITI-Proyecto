@@ -1,0 +1,136 @@
+{% extends "dashboard_base.html" %}
+{% load static %}
+
+{% block title %}CITI — Solicitudes públicas{% endblock %}
+{% block page_title %}Solicitudes públicas{% endblock %}
+{% block page_subtitle %}
+  {% if area_actor %}Bandeja de {{ area_actor|capfirst }} y solicitudes sin área{% else %}Bandeja global de intake público{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/solicitudes.css' %}?v=2026-11-25-a">
+{% endblock %}
+
+{% block sidebar_nav %}
+  {% if request.user.role == 'director' %}
+    <a class="nav-item" href="{% url 'portal:director_dashboard' %}">Resumen ejecutivo</a>
+  {% else %}
+    <a class="nav-item" href="{% url 'portal:coordinador_dashboard' %}">Bandeja de asignación</a>
+  {% endif %}
+  <a class="nav-item is-active" href="{% url 'portal:solicitudes_publicas' %}">Solicitudes públicas</a>
+  <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento</a>
+  <a class="nav-item" href="{% url 'portal:perfil' %}">Mi perfil</a>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="stats-row">
+  <div class="stat-card stat-card--solicitada">
+    <strong>{{ conteo.recibida|default:0 }}</strong><span>Recibidas sin revisar</span>
+  </div>
+  <div class="stat-card stat-card--asignada">
+    <strong>{{ conteo.en_revision|default:0 }}</strong><span>En revisión</span>
+  </div>
+  <div class="stat-card stat-card--en-proceso">
+    <strong>{{ conteo.aprobada|default:0 }}</strong><span>Aprobadas por convertir</span>
+  </div>
+  <div class="stat-card stat-card--finalizada">
+    <strong>{{ conteo.convertida|default:0 }}</strong><span>Convertidas en cita</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2>Intake público · {{ total_bandeja }} solicitud{{ total_bandeja|pluralize:"es" }}</h2>
+  </div>
+
+  <form class="sol-filter-bar" method="get" role="search">
+    <label>Estado
+      <select name="estado">
+        <option value="">Todos</option>
+        {% for code, label in estados %}
+          <option value="{{ code }}" {% if f_estado == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Necesidad
+      <select name="tipo">
+        <option value="">Todas</option>
+        {% for code, label in tipos %}
+          <option value="{{ code }}" {% if f_tipo == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Línea
+      <select name="linea">
+        <option value="">Todas</option>
+        {% for code, label in lineas %}
+          <option value="{{ code }}" {% if f_linea == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Área
+      <select name="area">
+        <option value="">Todas</option>
+        {% for code, label in areas %}
+          <option value="{{ code }}" {% if f_area == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Buscar
+      <input type="search" name="q" value="{{ q }}" placeholder="Radicado, organización o correo">
+    </label>
+    <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
+    <a class="btn btn-sm" href="{% url 'portal:solicitudes_publicas' %}">Limpiar</a>
+  </form>
+
+  <div class="card-body" style="padding:0;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Radicado</th>
+          <th>Recibida</th>
+          <th>Solicitante</th>
+          <th>Necesidad</th>
+          <th>Línea</th>
+          <th>Área</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for solicitud in solicitudes %}
+          <tr>
+            <td><span class="sol-codigo">{{ solicitud.codigo }}</span></td>
+            <td>{{ solicitud.creada_en|date:"d/m/Y H:i" }}</td>
+            <td>
+              <strong>{{ solicitud.organizacion }}</strong><br>
+              <span style="color:var(--muted);font-size:0.8rem;">{{ solicitud.nombre_contacto }}</span>
+            </td>
+            <td>{{ solicitud.get_tipo_necesidad_display }}</td>
+            <td>
+              <span class="badge badge-linea-{% if solicitud.linea_atencion == 'consultoria_profesional' %}pro{% else %}social{% endif %}">
+                {% if solicitud.linea_atencion == 'consultoria_profesional' %}Consultoría{% else %}Proyección social{% endif %}
+              </span>
+            </td>
+            <td>{{ solicitud.get_area_display }}</td>
+            <td>
+              <span class="badge badge-sol-{{ solicitud.estado }}">{{ solicitud.get_estado_display }}</span>
+            </td>
+            <td>
+              <a class="btn btn-sm btn-primary"
+                 href="{% url 'portal:solicitud_publica_detalle' solicitud.pk %}">Revisar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="8" class="triage-vacio">
+              No hay solicitudes con estos filtros. El intake público aparece aquí
+              en cuanto alguien envía el formulario de diagnóstico o de taller.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

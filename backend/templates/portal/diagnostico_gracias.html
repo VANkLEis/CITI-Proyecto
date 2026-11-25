@@ -1,0 +1,44 @@
+{% extends "portal/public_base.html" %}
+{% load static %}
+
+{% block title %}Solicitud recibida — CITI UCC{% endblock %}
+{% block meta_description %}Tu solicitud fue recibida por el CITI. Te contactaremos para agendar el diagnóstico.{% endblock %}
+
+{% block public_content %}
+<section class="pub-page-head pub-page-head--center">
+  <div class="pub-wrap pub-narrow">
+    <p class="pub-kicker">Solicitud recibida</p>
+    <h1>Gracias, ya tenemos tu solicitud</h1>
+    {% if codigo %}
+      <p class="pub-code">Radicado <strong>{{ codigo }}</strong></p>
+    {% endif %}
+    <p class="pub-lede">
+      Un asesor del CITI revisará la información y te contactará al correo
+      registrado para coordinar el siguiente paso.
+      {% if es_taller %}
+        Para talleres, la fecha y la modalidad se confirman con la organización.
+      {% endif %}
+    </p>
+    <div class="pub-actions pub-actions--center">
+      <a class="pub-btn pub-btn-solid" href="{% url 'portal:portafolio' %}">Conocer el portafolio</a>
+      <a class="pub-btn pub-btn-ghost" href="{% url 'portal:talleres' %}">Ver talleres</a>
+    </div>
+  </div>
+</section>
+
+<section class="pub-section">
+  <div class="pub-wrap pub-narrow">
+    <div class="pub-panel">
+      <h2>Qué sigue</h2>
+      <ol class="pub-steps pub-steps--compact">
+        <li>Revisión del alcance por parte de Dirección o Coordinación del CITI.</li>
+        <li>Clasificación de la línea de atención y del área responsable.</li>
+        <li>Contacto para confirmar la cita de diagnóstico o la fecha del taller.</li>
+      </ol>
+      <p class="pub-micro">
+        Guarda tu radicado: permite identificar tu solicitud en cualquier comunicación.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

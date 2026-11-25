@@ -6,6 +6,7 @@
 
 {% block sidebar_nav %}
   <a class="nav-item is-active" href="{% url 'portal:director_dashboard' %}">Resumen ejecutivo</a>
+  <a class="nav-item" href="{% url 'portal:solicitudes_publicas' %}">Solicitudes públicas{% if solicitudes_publicas_nuevas %}<span class="nav-count">{{ solicitudes_publicas_nuevas }}</span>{% endif %}</a>
   <a class="nav-item" href="{% url 'portal:staff_seguimiento' %}">Seguimiento global</a>
   <a class="nav-item" href="{% url 'portal:trazabilidad' %}">Trazabilidad e indicadores</a>
   <a class="nav-item" href="{% url 'portal:trazabilidad_csv' %}">Reportes (CSV)</a>

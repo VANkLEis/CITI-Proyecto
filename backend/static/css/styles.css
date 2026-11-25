@@ -975,3 +975,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
   .modalidad-card, .soli-card { transition: none; }
   .modalidad-card:hover, .soli-card:hover { transform: none; }
 }
+
+
+/* Contador de pendientes en la navegacion (Fase 05) */
+.nav-count {
+  display: inline-block; min-width: 20px; padding: 0 6px;
+  margin-left: 6px; border-radius: 999px;
+  background: var(--sem-rojo); color: #fff;
+  font-size: 0.7rem; font-weight: 700; text-align: center; line-height: 20px;
+}

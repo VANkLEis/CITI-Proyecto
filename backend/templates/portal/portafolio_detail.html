@@ -1,0 +1,85 @@
+{% extends "portal/public_base.html" %}
+{% load static %}
+
+{% block title %}{{ proyecto.titulo }} — Portafolio CITI UCC{% endblock %}
+{% block meta_description %}{{ proyecto.resumen|truncatechars:150 }}{% endblock %}
+
+{% block public_content %}
+<article class="pub-detail">
+  <section class="pub-page-head">
+    <div class="pub-wrap">
+      <p class="pub-kicker">
+        <a href="{% url 'portal:portafolio' %}">Portafolio</a> ·
+        {{ proyecto.get_linea_display }}
+      </p>
+      <h1>{{ proyecto.titulo }}</h1>
+      <p class="pub-lede">{{ proyecto.resumen }}</p>
+      <p class="pub-card-meta">
+        {% if proyecto.organizacion %}{{ proyecto.organizacion }}{% endif %}
+        {% if proyecto.anio %} · {{ proyecto.anio }}{% endif %}
+      </p>
+    </div>
+  </section>
+
+  <div class="pub-wrap pub-detail-grid">
+    <div class="pub-detail-body">
+      {% if proyecto.reto %}
+        <section>
+          <h2>El reto</h2>
+          <p>{{ proyecto.reto|linebreaksbr }}</p>
+        </section>
+      {% endif %}
+      {% if proyecto.solucion %}
+        <section>
+          <h2>La solución</h2>
+          <p>{{ proyecto.solucion|linebreaksbr }}</p>
+        </section>
+      {% endif %}
+      {% if proyecto.resultados %}
+        <section>
+          <h2>Resultados</h2>
+          <p>{{ proyecto.resultados|linebreaksbr }}</p>
+        </section>
+      {% endif %}
+    </div>
+
+    <aside class="pub-detail-aside">
+      {% if proyecto.imagen_url %}
+        <img class="pub-detail-img" src="{{ proyecto.imagen_url }}"
+             alt="{{ proyecto.imagen_alt|default:proyecto.titulo }}">
+      {% endif %}
+      {% if proyecto.metricas_validas %}
+        <div class="pub-detail-metrics">
+          <h2>Cifras del caso</h2>
+          <ul class="pub-metrics">
+            {% for metrica in proyecto.metricas_validas %}
+              <li><strong>{{ metrica.valor }}</strong><span>{{ metrica.label }}</span></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <a class="pub-btn pub-btn-solid" href="{% url 'portal:diagnostico' %}">
+        Conversar sobre un proyecto similar
+      </a>
+    </aside>
+  </div>
+</article>
+
+{% if relacionados %}
+<section class="pub-section pub-section--alt">
+  <div class="pub-wrap">
+    <header class="pub-section-head">
+      <p class="pub-kicker">Misma línea de trabajo</p>
+      <h2>Otros proyectos del portafolio</h2>
+    </header>
+    <div class="pub-grid-3">
+      {% for proyecto in relacionados %}
+        {% include "portal/partials/proyecto_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% include "portal/partials/public_cta.html" %}
+{% endblock %}

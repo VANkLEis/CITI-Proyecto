@@ -1,0 +1,27 @@
+{% load static %}
+<footer class="pub-footer">
+  <div class="pub-wrap pub-footer-grid">
+    <div class="pub-footer-brand">
+      <img src="{% static 'images/Logo_ucc.png' %}" alt="Universidad Cooperativa de Colombia" width="52" height="52">
+      <p>
+        <strong>CITI</strong> — Consultorio de Ingeniería, Tecnología e Innovación.<br>
+        Universidad Cooperativa de Colombia · Campus Ibagué–El Espinal.
+      </p>
+    </div>
+    <nav class="pub-footer-links" aria-label="Enlaces del sitio">
+      <a href="{% url 'portal:portafolio' %}">Portafolio</a>
+      <a href="{% url 'portal:talleres' %}">Talleres y capacitaciones</a>
+      <a href="{% url 'portal:diagnostico' %}">Diagnóstico estratégico</a>
+      <a href="{% url 'portal:privacidad' %}">Tratamiento de datos</a>
+      <a href="{% url 'accounts:login' %}">Portal académico</a>
+    </nav>
+    <div class="pub-footer-contact">
+      <p>Condiciones y alcance definidos en la sesión de diagnóstico.</p>
+      <p class="pub-muted">CITI · Ingeniería de Sistemas e Ingeniería Civil</p>
+    </div>
+  </div>
+  <div class="pub-wrap pub-footer-legal">
+    <span>© {% now "Y" %} Universidad Cooperativa de Colombia — CITI</span>
+    <span>Contenido institucional del consultorio académico.</span>
+  </div>
+</footer>
