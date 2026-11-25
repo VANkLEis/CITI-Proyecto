@@ -3,7 +3,10 @@ from django.contrib import admin, messages
 from django.utils import timezone
 
 from accounts.models import Area
-from scheduling.models import CitaAsesoria, CitaEvento, CitaInteraccion, FranjaHoraria, NotaBitacora
+from scheduling.models import (
+    CitaAsesoria, CitaEvento, CitaInteraccion, FranjaHoraria, NotaBitacora,
+    SolicitudPublica,
+)
 from scheduling.trazabilidad import cambio_estado, registrar_evento
 
 
@@ -63,9 +66,9 @@ class CitaAsesoriaAdmin(admin.ModelAdmin):
     form = CitaAsesoriaAdminForm
     list_display = (
         'codigo', 'empresa', 'franja', 'area_franja', 'subespecialidad',
-        'estado', 'docente_asignado', 'calificacion', 'creada_en',
+        'linea_atencion', 'estado', 'docente_asignado', 'calificacion', 'creada_en',
     )
-    list_filter = ('estado', 'franja__area', 'tipo_servicio', 'subespecialidad')
+    list_filter = ('estado', 'franja__area', 'tipo_servicio', 'linea_atencion', 'subespecialidad')
     search_fields = ('cliente__empresa__razon_social', 'asunto', 'id')
     raw_id_fields = ('cliente', 'franja', 'docente_asignado', 'estudiante_apoyo')
     date_hierarchy = 'creada_en'
@@ -74,7 +77,8 @@ class CitaAsesoriaAdmin(admin.ModelAdmin):
     inlines = [NotaBitacoraInline, CitaInteraccionInline, CitaEventoInline]
     readonly_fields = ('creada_en', 'actualizada_en', 'asignada_en', 'cerrada_en')
     fieldsets = (
-        ('Solicitud', {'fields': ('franja', 'cliente', 'asunto', 'subespecialidad', 'tipo_servicio')}),
+        ('Solicitud', {'fields': ('franja', 'cliente', 'asunto', 'subespecialidad',
+                                  'tipo_servicio', 'linea_atencion')}),
         ('Documentación', {'fields': ('archivo_adjunto',)}),
         ('Asignación de responsables', {'fields': ('docente_asignado', 'estudiante_apoyo')}),
         ('Estado y cierre', {'fields': ('estado', 'resumen_cierre', 'calificacion', 'comentario_cliente')}),
@@ -195,3 +199,69 @@ class FranjaHorariaAdmin(admin.ModelAdmin):
     @admin.display(boolean=True, description='Futura')
     def futuro(self, obj):
         return obj.inicio > timezone.now()
+
+
+@admin.register(SolicitudPublica)
+class SolicitudPublicaAdmin(admin.ModelAdmin):
+    """Bandeja de intake público. El triage real vive en el panel privado
+    (`/panel/solicitudes/`); aquí queda la vista administrativa de respaldo."""
+
+    list_display = (
+        'codigo', 'organizacion', 'tipo_solicitante', 'tipo_necesidad',
+        'linea_atencion', 'area', 'estado', 'creada_en',
+    )
+    list_filter = (
+        'estado', 'tipo_necesidad', 'linea_atencion', 'tipo_solicitante', 'area',
+    )
+    search_fields = ('codigo', 'organizacion', 'email', 'nombre_contacto', 'nit')
+    date_hierarchy = 'creada_en'
+    ordering = ('-creada_en',)
+    raw_id_fields = ('cliente', 'cita', 'revisada_por', 'aprobada_por', 'taller')
+    readonly_fields = (
+        'codigo', 'creada_en', 'actualizada_en',
+        'revisada_en', 'aprobada_en', 'convertida_en',
+    )
+    fieldsets = (
+        ('Radicado', {'fields': ('codigo', 'estado', 'creada_en', 'actualizada_en')}),
+        ('Solicitante', {'fields': (
+            'tipo_solicitante', 'nombre_contacto', 'cargo', 'organizacion',
+            'nit', 'email', 'telefono', 'acepta_contacto',
+        )}),
+        ('Necesidad', {'fields': (
+            'tipo_necesidad', 'linea_atencion', 'area', 'subespecialidad',
+            'descripcion', 'objetivo',
+        )}),
+        ('Taller / capacitación', {'fields': (
+            'taller', 'tema_interes', 'publico_objetivo', 'numero_participantes',
+        )}),
+        ('Preferencias de agenda', {'fields': (
+            'fecha_preferida', 'turno_preferido', 'modalidad_preferida',
+        )}),
+        ('Triage', {'fields': (
+            'cliente', 'cita', 'observaciones_internas', 'motivo_rechazo',
+            'revisada_por', 'revisada_en', 'aprobada_por', 'aprobada_en',
+            'convertida_en',
+        )}),
+    )
+    actions = ['marcar_en_revision']
+
+    def has_delete_permission(self, request, obj=None):
+        """El radicado es evidencia de contacto: no se borra desde admin."""
+        if not request.user.is_superuser:
+            return False
+        return super().has_delete_permission(request, obj)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            'cliente', 'cita', 'taller', 'revisada_por', 'aprobada_por')
+
+    @admin.action(description='Marcar como en revisión')
+    def marcar_en_revision(self, request, queryset):
+        pendientes = queryset.filter(estado=SolicitudPublica.Estado.RECIBIDA)
+        n = pendientes.update(estado=SolicitudPublica.Estado.EN_REVISION)
+        self.message_user(
+            request,
+            f'{n} solicitud(es) marcadas como en revisión. '
+            f'Se omitieron {queryset.count() - n} que ya estaban en otra etapa.',
+            messages.WARNING if queryset.count() - n else messages.INFO,
+        )
