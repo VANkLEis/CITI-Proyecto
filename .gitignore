@@ -26,5 +26,9 @@ media/
 Thumbs.db
 .DS_Store
 
-# Evidencias de validación E2E (Playwright MCP) — no forman parte del código
+# Evidencias de validaciÃ³n E2E (Playwright MCP) â€” no forman parte del cÃ³digo
 .playwright-mcp/
+
+# Estáticos recolectados (collectstatic) y respaldos locales de la base
+staticfiles/
+db.sqlite3.bak*

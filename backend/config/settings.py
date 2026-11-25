@@ -61,6 +61,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# WhiteNoise sirve los estáticos desde Gunicorn (imagen Docker). Es opcional
+# para no alterar el runserver local ni la suite de pruebas.
+CITI_USE_WHITENOISE = os.environ.get('CITI_USE_WHITENOISE', '0') == '1'
+if CITI_USE_WHITENOISE:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+# Demo en contenedor: Gunicorn no sirve /media/ por sí solo. NUNCA en producción
+# real (allí los medios los sirve Nginx/S3).
+CITI_SERVE_MEDIA = os.environ.get('CITI_SERVE_MEDIA', '0') == '1'
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -124,6 +134,17 @@ STATICFILES_DIRS = [
     PROJECT_ROOT / 'assets',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+if CITI_USE_WHITENOISE:
+    # CompressedStaticFilesStorage (sin manifest) comprime pero no exige que
+    # cada archivo referenciado exista: evita romper el arranque por un asset
+    # faltante y mantiene el comportamiento tolerante del proyecto.
+    STORAGES = {
+        'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+        },
+    }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

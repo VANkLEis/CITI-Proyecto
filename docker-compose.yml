@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: citi
+      POSTGRES_USER: citi
+      POSTGRES_PASSWORD: citi
+    volumes:
+      - citi_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U citi -d citi"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      # Demo: DJANGO_ENV=desarrollo + DJANGO_DEBUG=0 permite que el seed corra
+      # (IS_PRODUCTION se calcula solo con DJANGO_ENV, nunca con DEBUG).
+      DJANGO_ENV: desarrollo
+      DJANGO_DEBUG: "0"
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-docker-demo-citi-ucc-cambiar-en-produccion}"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0,web"
+      DATABASE_URL: "postgres://citi:citi@db:5432/citi"
+      CITI_DEMO_PASSWORD: "${CITI_DEMO_PASSWORD:-CITIPass2026*}"
+      CITI_SEED_ON_START: "${CITI_SEED_ON_START:-1}"
+      CITI_SERVE_MEDIA: "1"
+      CITI_USE_WHITENOISE: "1"
+      GUNICORN_WORKERS: "${GUNICORN_WORKERS:-3}"
+    volumes:
+      - citi_media:/app/backend/media
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  citi_pgdata:
+  citi_media:

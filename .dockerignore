@@ -1,0 +1,20 @@
+# Contexto de build de Docker: solo se copian backend/ y assets/.
+.git/
+.gitignore
+.gitattributes
+.venv/
+venv/
+backend/venv/
+**/__pycache__/
+**/*.py[cod]
+backend/db.sqlite3
+backend/db.sqlite3.bak-fase0
+backend/staticfiles/
+backend/media/
+docs/
+Presentacion final/
+.playwright-mcp/
+*.log
+.env
+.env.*
+!.env.docker.example
