@@ -3,6 +3,10 @@
 Qué crea `manage.py seed_demo`, cómo se comporta con datos existentes y cómo
 se comprueba la integridad. Implementación: `backend/accounts/demo_seed.py`.
 
+> Fase 05: el seed también crea portafolio, talleres y solicitudes públicas.
+> Ver `CONTENIDO_PUBLICO.md`. El comando `seed_demo_data` (el que ejecuta
+> Docker) produce exactamente el mismo conjunto.
+
 ## Principios
 
 | Principio | Detalle |
@@ -88,8 +92,8 @@ reubicación tras vencimiento, bloqueo en producción.
 
 ```powershell
 cd backend
-..\venv\Scripts\python.exe manage.py seed_demo   # reubica y refresca
-..\venv\Scripts\python.exe manage.py test        # opcional, humo rápido
+..\venv\Scripts\python.exe manage.py seed_demo_data   # equivale a seed_demo + contenido público
+..\venv\Scripts\python.exe manage.py test             # opcional, humo rápido
 ```
 Si el presentador consumió en vivo reservas del set (nuevas solicitudes),
 no se duplican al re-sembrar (clave por subespecialidad); simplemente

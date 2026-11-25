@@ -149,11 +149,11 @@ def ensure_demo_users():
 
 def _dar_permisos_admin_citi(user):
     """Mínimo privilegio: el director gestiona SOLO las entidades del dominio
-    CITI (apps accounts/scheduling); no es superusuario."""
+    CITI (apps accounts/scheduling/portal); no es superusuario."""
     from django.contrib.auth.models import Permission
 
     codes = list(Permission.objects.filter(
-        content_type__app_label__in=['accounts', 'scheduling']
+        content_type__app_label__in=['accounts', 'scheduling', 'portal']
     ).values_list('id', flat=True))
     current = set(user.user_permissions.values_list('id', flat=True))
     missing = set(codes) - current
@@ -605,12 +605,15 @@ _INTERACCIONES_GUIÓN = {
 
 def seed_all():
     """Orquestador del seed explícito (lo invoca `manage.py seed_demo`)."""
+    from accounts.demo_public import seed_public_content
+
     ensure_demo_users()
     archivadas, canceladas = archive_vencidas()
     franjas_nuevas = ensure_demo_franjas()
     citas_nuevas, citas_reubicadas = ensure_demo_citas()
     trazabilidad_simulada = _ajuste_temporal_demo()
     interacciones_nuevas = _simular_interacciones_demo()
+    contenido = seed_public_content(DEMO_PASSWORD)
     return {
         'archivadas': archivadas,
         'canceladas': canceladas,
@@ -619,4 +622,8 @@ def seed_all():
         'citas_reubicadas': citas_reubicadas,
         'trazabilidad_simulada': trazabilidad_simulada,
         'interacciones_nuevas': interacciones_nuevas,
+        'proyectos_nuevos': contenido['proyectos'],
+        'talleres_nuevos': contenido['talleres'],
+        'clientes_nuevos': contenido['clientes'],
+        'solicitudes_nuevas': contenido['solicitudes'],
     }

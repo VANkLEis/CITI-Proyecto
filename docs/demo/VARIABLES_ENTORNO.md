@@ -25,6 +25,16 @@ automáticamente (python-dotenv); la fuente de ejemplo es
 | `CITI_MIN_SEMESTRE_TUTOR` | `8` | Semestre mínimo para tutor |
 | `CITI_MIN_CREDITOS_TUTOR` | `130` | Créditos mínimos para tutor |
 | `CITI_MIN_PROMEDIO_TUTOR` | `4.0` | Promedio mínimo para tutor |
+| `CITI_USE_WHITENOISE` | `0` | `1` sirve estáticos desde Gunicorn (imagen Docker). No altera `runserver` |
+| `CITI_SERVE_MEDIA` | `0` | `1` sirve `/media/` sin `DEBUG`. **Solo demo en contenedor**; en producción usan Nginx/S3 |
+| `CITI_SEED_ON_START` | `1` (solo `entrypoint.sh`) | `1` migra y siembra datos demo al arrancar el contenedor; `0` no toca la base |
+| `PORT` | `8000` | Puerto publicado por `docker compose` |
+| `GUNICORN_WORKERS` | `3` | Workers de Gunicorn en el contenedor |
+
+> **`IS_PRODUCTION` se calcula únicamente con `DJANGO_ENV`**, nunca con
+> `DJANGO_DEBUG`. Por eso `DJANGO_ENV=desarrollo` + `DJANGO_DEBUG=0` es un modo
+> válido para la demo en Docker: apaga el modo debug pero mantiene habilitado
+> `seed_demo_data`.
 
 ## Comprobaciones de seguridad del modo producción
 
@@ -41,10 +51,18 @@ Detrás de reverse-proxy HTTPS, descomentar `SECURE_PROXY_SSL_HEADER` en setting
 # Sin configurar nada: valores de desarrollo.
 cd backend
 ..\venv\Scripts\python.exe manage.py migrate
-..\venv\Scripts\python.exe manage.py seed_demo
+..\venv\Scripts\python.exe manage.py seed_demo_data
 ..\venv\Scripts\python.exe manage.py runserver
 # http://127.0.0.1:8000/
 ```
+
+### Demo en Docker (equipo del docente)
+```bash
+docker compose up --build
+# http://localhost:8000
+```
+Compose fija `DJANGO_ENV=desarrollo` y `DJANGO_DEBUG=0`: la app no muestra
+páginas de error detalladas, pero el seed sigue habilitado. Ver `README.md`.
 
 ### Producción académica local con DEBUG apagado (recomendado al exponer en LAN)
 ```powershell
@@ -63,9 +81,10 @@ del plan (I-3) antes de exponerlos.
 ## Regeneración de datos de demo
 
 ```powershell
-..\venv\Scripts\python.exe manage.py seed_demo            # todo (idempotente)
-..\venv\Scripts\python.exe manage.py seed_demo --solo-usuarios
-..\venv\Scripts\python.exe manage.py seed_demo_users      # equivalente antiguo (solo usuarios)
+..\venv\Scripts\python.exe manage.py seed_demo_data        # todo + contenido público (idempotente)
+..\venv\Scripts\python.exe manage.py seed_demo_data --solo-usuarios
+..\venv\Scripts\python.exe manage.py seed_demo             # equivalente histórico
+..\venv\Scripts\python.exe manage.py seed_demo_users       # equivalente antiguo (solo usuarios)
 ```
 El comando **no elimina datos existentes** y se niega a ejecutarse en producción.
-Ver `DATOS_DEMO.md` para el contenido exacto del conjunto.
+Ver `DATOS_DEMO.md` y `CONTENIDO_PUBLICO.md` para el contenido exacto.

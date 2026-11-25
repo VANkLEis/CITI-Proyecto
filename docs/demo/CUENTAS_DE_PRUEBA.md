@@ -1,8 +1,9 @@
 # Cuentas de prueba — CITI (solo entorno local de desarrollo)
 
 Credenciales de **demostración académica local** creadas por
-`manage.py seed_demo`. **No usar en despliegues reales**; si el sistema se
-exposa fuera del portátil, cambiar o desactivar estas cuentas (ver
+`manage.py seed_demo` o `manage.py seed_demo_data` (equivalentes: el segundo es
+el que invoca el entrypoint de Docker). **No usar en despliegues reales**; si el
+sistema se expone fuera del portátil, cambiar o desactivar estas cuentas (ver
 `VARIABLES_ENTORNO.md`).
 
 Contraseña única (sobrepornible con `CITI_DEMO_PASSWORD`):
@@ -23,6 +24,19 @@ CITIPass2026*
 | Estudiante tutora (Sistemas) | `estudiante@citi.ucc.edu.co` | `?rol=estudiante` | Perfil real: 9° semestre, 150 créditos, promedio 4,50 → promotora a tutora automática |
 | Estudiante tutor (Civil) | `estudiante.civil@citi.ucc.edu.co` | `?rol=estudiante` | Perfil: 10° semestre, 168 créditos, promedio 4,30 |
 | Cliente / Empresa | `cliente@empresatolima.co` | `?rol=cliente` | Empresa: *Empresa Tolima Demo* NIT 900123456. Dueño de todas las solicitudes del set demo |
+
+Clientes adicionales del set público (Fase 05, misma contraseña única). Sirven
+para demostrar que una solicitud pública se vincula a un cliente existente:
+
+| Correo | Organización | Uso en la demo |
+|---|---|---|
+| `fundacion@citi.ucc.edu.co` | Fundación Horizonte | Solicitud de taller de IA (`DEMO-SOL-001`, recibida) |
+| `emprendimiento@citi.ucc.edu.co` | Ríos Tech | Asesoría de emprendimiento sin NIT (`DEMO-SOL-002`, en revisión) |
+| `pyme@citi.ucc.edu.co` | Comercializadora del Tolima | Consultoría profesional (`DEMO-SOL-003`, aprobada y lista para convertir) |
+
+> El seed también crea `comunidad@citi.ucc.edu.co` como **contacto** de la
+> solicitud `DEMO-SOL-004` (taller para personas mayores). No es una cuenta de
+> acceso: solo existe como dato de contacto de la solicitud.
 
 Cuentas adicionales de registro público (para probar login/registro):
 
