@@ -480,6 +480,9 @@
 .pub-prose h2 { color: var(--ucc); font-size: 1.15rem; margin: 1.8rem 0 0.5rem; }
 .pub-prose p, .pub-prose li { color: var(--muted); font-size: 0.94rem; line-height: 1.75; }
 .pub-prose ul { padding-left: 1.2rem; margin: 0.4rem 0 0.8rem; }
+.pub-prose table { width: 100%; border-collapse: collapse; margin: 0.6rem 0 1rem; font-size: 0.86rem; }
+.pub-prose th, .pub-prose td { border-bottom: 1px solid var(--border); padding: 0.45rem 0.5rem; text-align: left; }
+.pub-prose th { color: var(--ucc); font-weight: 700; }
 .pub-prose .pub-actions { margin-top: 2rem; }
 
 /* ---------- Footer ---------- */

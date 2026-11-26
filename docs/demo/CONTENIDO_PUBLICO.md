@@ -22,13 +22,17 @@ invocado desde `seed_all()` y por tanto disponible en `seed_demo` y
 > anterior se **despublica** (no se borra) para mantener el set 4+4. El caso de
 > emprendimiento juvenil sigue visible en la portada y en los talleres.
 
-Las tarjetas usan `imagen_static` (assets de `backend/static/images/landing/`)
-para que en Docker se vean sin depender del volumen de media.
+Las 8 tarjetas usan `imagen_static` con una **foto única por proyecto** en
+`backend/static/images/landing/`. El seed migra automáticamente las rutas
+antiguas (`area-civil.jpg`, `banner-campo.jpg`, etc.) sin sobrescribir imágenes
+personalizadas desde `/admin/`. Créditos y licencias:
+[`CREDITOS_IMAGENES.md`](CREDITOS_IMAGENES.md).
 
 ## Talleres (6 activos: 3 Civil + 3 Sistemas)
 
 Cada taller incluye **3 puntos clave del temario** en `puntos_clave` (JSON) y
-un campo `area` (`sistemas`/`civil`) que se muestra en la tarjeta pública.
+un campo `area` (`sistemas`/`civil`) que se muestra en la tarjeta pública. Sus
+6 imágenes también son únicas (ver `CREDITOS_IMAGENES.md`).
 
 | Slug | Área | Público | Modalidad | Nivel |
 |---|---|---|---|---|

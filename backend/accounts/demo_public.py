@@ -23,6 +23,18 @@ DESCRIPCION_LARGA = (
     'técnicas con un equipo que entienda el contexto local y deje evidencia '
     'del trabajo realizado.')
 
+# Rutas de imagen de iteraciones anteriores. El seed las migra a las nuevas
+# rutas, pero respeta cualquier imagen personalizada desde /admin/.
+LEGACY_IMAGE_PATHS = frozenset({
+    'images/landing/area-civil.jpg',
+    'images/landing/area-sistemas.jpg',
+    'images/landing/banner-asesoria.jpg',
+    'images/landing/banner-campo.jpg',
+    'images/landing/hero-equipo.jpg',
+    'images/landing/proceso-revision.jpg',
+    'images/landing/reportes-manos.jpg',
+})
+
 # ---------------------------------------------------------------------------
 # Portafolio
 # ---------------------------------------------------------------------------
@@ -44,8 +56,8 @@ PROYECTOS = (
             {'label': 'Casos centralizados', 'valor': '180+'},
             {'label': 'Tiempo de reporte', 'valor': '-60%'},
         ],
-        'imagen_static': 'images/landing/area-sistemas.jpg',
-        'imagen_alt': 'Equipo revisando un tablero de seguimiento en un portátil',
+        'imagen_static': 'images/landing/proyecto-trazabilidad-ong.jpg',
+        'imagen_alt': 'Profesionales de una fundación revisando casos y documentos en una mesa de trabajo',
         'destacado': True,
         'orden': 1,
     },
@@ -65,8 +77,8 @@ PROYECTOS = (
             {'label': 'Riesgos priorizados', 'valor': '14'},
             {'label': 'Acciones de cierre', 'valor': '9'},
         ],
-        'imagen_static': 'images/landing/banner-asesoria.jpg',
-        'imagen_alt': 'Sala de reuniones con documentación técnica sobre la mesa',
+        'imagen_static': 'images/landing/proyecto-ciberseguridad-pyme.jpg',
+        'imagen_alt': 'Rack de servidores y cableado de red en un centro de datos',
         'orden': 5,
     },
     {
@@ -86,8 +98,8 @@ PROYECTOS = (
             {'label': 'Apiques', 'valor': '6'},
             {'label': 'Ensayos de laboratorio', 'valor': '12'},
         ],
-        'imagen_static': 'images/landing/area-civil.jpg',
-        'imagen_alt': 'Estudiantes de ingeniería civil revisando una maqueta estructural',
+        'imagen_static': 'images/landing/proyecto-suelos-geotecnia.jpg',
+        'imagen_alt': 'Equipo de perforación para un estudio geotécnico de suelos',
         'destacado': True,
         'orden': 2,
     },
@@ -107,8 +119,8 @@ PROYECTOS = (
             {'label': 'Tramos evaluados', 'valor': '9'},
             {'label': 'Fases de intervención', 'valor': '3'},
         ],
-        'imagen_static': 'images/landing/banner-campo.jpg',
-        'imagen_alt': 'Trabajo de campo en infraestructura de redes',
+        'imagen_static': 'images/landing/proyecto-red-hidraulica.jpg',
+        'imagen_alt': 'Válvulas y tuberías de una red de distribución de agua',
         'orden': 4,
     },
     {
@@ -127,8 +139,8 @@ PROYECTOS = (
             {'label': 'Consultas frecuentes cubiertas', 'valor': '35'},
             {'label': 'Revisión humana', 'valor': '100%'},
         ],
-        'imagen_static': 'images/landing/reportes-manos.jpg',
-        'imagen_alt': 'Persona revisando indicadores y reportes impresos',
+        'imagen_static': 'images/landing/proyecto-asistente-ia.jpg',
+        'imagen_alt': 'Puestos de atención con computadores en un centro de servicios',
         'destacado': True,
         'orden': 3,
     },
@@ -149,8 +161,8 @@ PROYECTOS = (
             {'label': 'Participantes', 'valor': '40'},
             {'label': 'Sesiones', 'valor': '4'},
         ],
-        'imagen_static': 'images/landing/proceso-revision.jpg',
-        'imagen_alt': 'Grupo de personas en una sesión de capacitación',
+        'imagen_static': 'images/landing/proyecto-alfabetizacion-digital.jpg',
+        'imagen_alt': 'Persona mayor usando un computador portátil',
         'orden': 7,
     },
     {
@@ -170,8 +182,8 @@ PROYECTOS = (
             {'label': 'Lesiones identificadas', 'valor': '11'},
             {'label': 'Acciones priorizadas', 'valor': '3'},
         ],
-        'imagen_static': 'images/landing/area-civil.jpg',
-        'imagen_alt': 'Revisión estructural de una edificación comunitaria',
+        'imagen_static': 'images/landing/proyecto-patologia-estructural.jpg',
+        'imagen_alt': 'Vivienda antigua con grietas y humedad visibles en su fachada',
         'destacado': True,
         'orden': 6,
     },
@@ -192,8 +204,8 @@ PROYECTOS = (
             {'label': 'Kilómetros levantados', 'valor': '4,2'},
             {'label': 'Obras de drenaje', 'valor': '7'},
         ],
-        'imagen_static': 'images/landing/banner-campo.jpg',
-        'imagen_alt': 'Trabajo de campo topográfico en una vía rural',
+        'imagen_static': 'images/landing/proyecto-topografia-drenaje.jpg',
+        'imagen_alt': 'Topógrafos con estación total en una vía rural',
         'orden': 8,
     },
 )
@@ -225,8 +237,8 @@ TALLERES = (
             'Casos de uso en informes, encuestas y atención.',
             'Uso responsable y revisión humana.',
         ],
-        'imagen_static': 'images/landing/banner-asesoria.jpg',
-        'imagen_alt': 'Equipo de una fundación en una sesión de capacitación',
+        'imagen_static': 'images/landing/taller-ia-fundaciones.jpg',
+        'imagen_alt': 'Participantes en un taller de capacitación con pantalla y proyector',
         'orden': 1,
     },
     {
@@ -246,8 +258,8 @@ TALLERES = (
             'Materiales y control de humedad.',
             'Señales de alerta estructural.',
         ],
-        'imagen_static': 'images/landing/area-civil.jpg',
-        'imagen_alt': 'Maestros de obra revisando planos de vivienda',
+        'imagen_static': 'images/landing/taller-autoconstruccion.jpg',
+        'imagen_alt': 'Maestro de obra revisando planos de construcción',
         'orden': 2,
     },
     {
@@ -267,8 +279,8 @@ TALLERES = (
             'Presencia digital básica.',
             'Respaldos y contraseñas seguras.',
         ],
-        'imagen_static': 'images/landing/hero-equipo.jpg',
-        'imagen_alt': 'Jóvenes trabajando con herramientas digitales',
+        'imagen_static': 'images/landing/taller-emprendimiento-digital.jpg',
+        'imagen_alt': 'Equipo joven trabajando con portátiles alrededor de una mesa',
         'orden': 3,
     },
     {
@@ -288,8 +300,8 @@ TALLERES = (
             'Filtros y tratamiento básico.',
             'Mantenimiento y saneamiento comunitario.',
         ],
-        'imagen_static': 'images/landing/banner-campo.jpg',
-        'imagen_alt': 'Estructura comunitaria de captación de aguas lluvias',
+        'imagen_static': 'images/landing/taller-aguas-lluvias.jpg',
+        'imagen_alt': 'Tanque comunitario de almacenamiento de aguas lluvias',
         'orden': 4,
     },
     {
@@ -309,8 +321,8 @@ TALLERES = (
             'Prevención de estafas en internet.',
             'Trámites en línea y comunicación cotidiana.',
         ],
-        'imagen_static': 'images/landing/proceso-revision.jpg',
-        'imagen_alt': 'Personas mayores en un taller de herramientas digitales',
+        'imagen_static': 'images/landing/taller-adultos-mayores-digital.jpg',
+        'imagen_alt': 'Persona mayor usando un portátil en su casa',
         'orden': 5,
     },
     {
@@ -330,8 +342,8 @@ TALLERES = (
             'Autodiagnóstico y priorización.',
             'Rutinas de mantenimiento preventivo.',
         ],
-        'imagen_static': 'images/landing/banner-asesoria.jpg',
-        'imagen_alt': 'Persona mayor revisando el estado de su vivienda',
+        'imagen_static': 'images/landing/taller-mantenimiento-hogar.jpg',
+        'imagen_alt': 'Grieta en el muro de una vivienda como señal de mantenimiento',
         'orden': 6,
     },
 )
@@ -390,11 +402,19 @@ def seed_public_content(password):
     for datos in PROYECTOS:
         proyecto, creado = ProyectoPortafolio.objects.get_or_create(
             slug=datos['slug'], defaults=datos)
-        # Solo se sincroniza el orden editorial del set demo (no el contenido
-        # que el docente haya podido editar en /admin/).
-        if not creado and proyecto.orden != datos['orden']:
-            proyecto.orden = datos['orden']
-            proyecto.save(update_fields=['orden'])
+        # No sobrescribe contenido editado en admin: solo migra imágenes
+        # heredadas o vacías y sincroniza el orden editorial del set demo.
+        if not creado:
+            cambios = []
+            if not proyecto.imagen_static or proyecto.imagen_static in LEGACY_IMAGE_PATHS:
+                proyecto.imagen_static = datos['imagen_static']
+                proyecto.imagen_alt = datos['imagen_alt']
+                cambios.extend(['imagen_static', 'imagen_alt'])
+            if proyecto.orden != datos['orden']:
+                proyecto.orden = datos['orden']
+                cambios.append('orden')
+            if cambios:
+                proyecto.save(update_fields=cambios + ['actualizado_en'])
         nuevos['proyectos'] += 1 if creado else 0
 
     # Los proyectos retirados se despublican, no se borran.
@@ -405,9 +425,13 @@ def seed_public_content(password):
     for datos in TALLERES:
         taller, creado = Taller.objects.get_or_create(slug=datos['slug'], defaults=datos)
         if not creado:
-            # Backfill no destructivo: completa temario/área/orden si faltan,
-            # sin sobrescribir títulos ni descripciones editadas.
+            # Backfill no destructivo: completa temario/área/orden e imágenes
+            # heredadas si faltan, sin sobrescribir ediciones hechas en admin.
             cambios = []
+            if not taller.imagen_static or taller.imagen_static in LEGACY_IMAGE_PATHS:
+                taller.imagen_static = datos['imagen_static']
+                taller.imagen_alt = datos['imagen_alt']
+                cambios.extend(['imagen_static', 'imagen_alt'])
             if not taller.puntos_clave and datos.get('puntos_clave'):
                 taller.puntos_clave = datos['puntos_clave']
                 cambios.append('puntos_clave')

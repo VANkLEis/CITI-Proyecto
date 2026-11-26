@@ -2,3 +2,7 @@
 # repositorio se clone en Windows. Sin esto, Docker falla con
 # "/usr/bin/env: 'sh\r': No such file or directory".
 *.sh text eol=lf
+*.mp4 binary
+*.jpg binary
+*.jpeg binary
+*.png binary

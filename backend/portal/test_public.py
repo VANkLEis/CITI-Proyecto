@@ -5,11 +5,17 @@ que el build pueda ejecutar ambas sin mezclar responsabilidades.
 """
 
 from datetime import timedelta
+import re
+from pathlib import Path
 
+from django.conf import settings
+from django.contrib.staticfiles import finders
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from PIL import Image
 
+from accounts.demo_public import PROYECTOS, TALLERES
 from accounts.models import Area, CustomUser, Empresa, Role
 from portal.models import ProyectoPortafolio, Taller
 from scheduling.models import (
@@ -95,6 +101,9 @@ class PublicasBaseTests(TestCase):
         self.assertContains(r, 'hero-citi.mp4')
         self.assertContains(r, 'progreso-ingenieria.mp4')
         self.assertContains(r, 'resultados-impacto.mp4')
+        self.assertContains(r, 'hero-citi-poster.jpg')
+        self.assertContains(r, 'progreso-ingenieria-poster.jpg')
+        self.assertContains(r, 'resultados-impacto-poster.jpg')
         self.assertContains(r, 'id="modalidades"')
 
     def test_landing_sin_copy_asistencialista(self):
@@ -553,6 +562,38 @@ class SeedDemoDataTests(TestCase):
         self.assertEqual(Taller.objects.filter(activo=True, area='civil').count(), 3)
         self.assertEqual(Taller.objects.filter(activo=True, area='sistemas').count(), 3)
 
+    def test_seed_migra_imagenes_legacy(self):
+        from io import StringIO
+
+        from django.core.management import call_command
+
+        call_command('seed_demo_data', stdout=StringIO())
+        proyecto = ProyectoPortafolio.objects.get(slug='trazabilidad-casos-fundacion')
+        proyecto.imagen_static = 'images/landing/area-sistemas.jpg'
+        proyecto.save(update_fields=['imagen_static'])
+
+        call_command('seed_demo_data', stdout=StringIO())
+        proyecto.refresh_from_db()
+        self.assertEqual(
+            proyecto.imagen_static,
+            'images/landing/proyecto-trazabilidad-ong.jpg')
+        self.assertIsNotNone(finders.find(proyecto.imagen_static))
+
+    def test_seed_respeta_imagen_personalizada(self):
+        from io import StringIO
+
+        from django.core.management import call_command
+
+        call_command('seed_demo_data', stdout=StringIO())
+        proyecto = ProyectoPortafolio.objects.get(slug='trazabilidad-casos-fundacion')
+        proyecto.imagen_static = 'images/landing/mi-imagen-admin.jpg'
+        proyecto.save(update_fields=['imagen_static'])
+
+        call_command('seed_demo_data', stdout=StringIO())
+        proyecto.refresh_from_db()
+        self.assertEqual(
+            proyecto.imagen_static, 'images/landing/mi-imagen-admin.jpg')
+
 
 class TarjetasPublicasTests(TestCase):
     """Tarjetas uniformes, temario visible y alcance explícito."""
@@ -744,3 +785,70 @@ class TriageFiltroSugeridoTests(TestCase):
         r = self.client.get(reverse('portal:solicitud_publica_detalle',
                                     args=[self.solicitud.pk]))
         self.assertEqual(r.status_code, 302)
+
+
+class MediaPublicaTests(TestCase):
+    """Imágenes únicas, pósters y videos locales, sin CDNs externos."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cliente = CustomUser.objects.create_user(
+            email='media-cli@qa.local', password=PASSWORD, role=Role.CLIENTE,
+            empresa=Empresa.objects.create(razon_social='Media SA', nit='900-123'))
+
+    def test_imagenes_de_tarjetas_son_unicas_y_existen(self):
+        paths = [p['imagen_static'] for p in PROYECTOS]
+        paths += [t['imagen_static'] for t in TALLERES]
+        self.assertEqual(len(paths), 14)
+        self.assertEqual(len(set(paths)), 14)
+        for path in paths:
+            self.assertIsNotNone(finders.find(path), path)
+            with Image.open(Path(settings.BASE_DIR) / 'static' / path) as image:
+                self.assertEqual(image.size, (1600, 1000), path)
+
+    def test_posters_unicos_y_sin_colision_con_tarjetas(self):
+        r = self.client.get('/')
+        html = r.content.decode('utf-8')
+        posters = re.findall(r'poster="([^"]+)"', html)
+        self.assertEqual(len(posters), 3)
+        normalized = [
+            url[len(settings.STATIC_URL):] if url.startswith(settings.STATIC_URL)
+            else url.lstrip('/')
+            for url in posters
+        ]
+        self.assertEqual(len(set(normalized)), 3)
+        cards = {p['imagen_static'] for p in PROYECTOS}
+        cards |= {t['imagen_static'] for t in TALLERES}
+        self.assertFalse(cards & set(normalized))
+        for path in normalized:
+            self.assertIsNotNone(finders.find(path), path)
+            with Image.open(Path(settings.BASE_DIR) / 'static' / path) as image:
+                self.assertGreaterEqual(image.width, 1600, path)
+                self.assertGreaterEqual(image.height, 900, path)
+
+    def test_mp4_existen_pesan_limite_y_tienen_firma_ftyp(self):
+        limites = {
+            'hero-citi.mp4': 6,
+            'progreso-ingenieria.mp4': 4,
+            'resultados-impacto.mp4': 4,
+        }
+        for name, max_mb in limites.items():
+            path = Path(settings.BASE_DIR) / 'static' / 'videos' / name
+            self.assertTrue(path.exists(), name)
+            self.assertLessEqual(path.stat().st_size, max_mb * 1024 * 1024, name)
+            self.assertEqual(path.read_bytes()[4:8], b'ftyp', name)
+
+    def test_sin_cdn_externo_y_assets_vendorizados(self):
+        self.client.force_login(self.cliente)
+        for url in ('/', reverse('portal:cliente_dashboard')):
+            r = self.client.get(url)
+            self.assertNotContains(r, 'fonts.googleapis.com')
+            self.assertNotContains(r, 'cdn.jsdelivr.net')
+        for path in (
+            'vendor/fullcalendar/6.1.15/index.global.min.js',
+            'vendor/fullcalendar/6.1.15/LICENSE.md',
+            'fonts/open-sans/open-sans-latin-var.woff2',
+            'fonts/open-sans/OFL.txt',
+            'css/fonts.css',
+        ):
+            self.assertIsNotNone(finders.find(path), path)

@@ -1,31 +1,36 @@
 # Videos de la zona pública
 
-Los MP4 son **contenido externo reemplazable**: el sitio funciona sin ellos.
-Mientras no existan, el navegador muestra el `poster` (una imagen real de
-`static/images/landing/`) y la `<img>` de respaldo de
-`templates/portal/partials/media_video.html`.
+Los 3 MP4 están incluidos en `backend/static/videos/` y se generaron con
+`tools/generate_ken_burns.py` a partir de los pósters reales. Son contenido
+reemplazable: si se eliminan o fallan, el navegador muestra el `poster` y la
+`<img>` de respaldo de `templates/portal/partials/media_video.html`.
 
-## Archivos esperados
+## Archivos
 
-| Archivo | Uso | Poster de respaldo |
+| Archivo | Uso | Póster |
 |---|---|---|
-| `hero-citi.mp4` | Hero de la portada | `images/landing/hero-equipo.jpg` |
-| `progreso-ingenieria.mp4` | Sección "Cómo funciona" | `images/landing/proceso-revision.jpg` |
-| `resultados-impacto.mp4` | Banda del portafolio | `images/landing/reportes-manos.jpg` |
+| `hero-citi.mp4` | Hero de la portada | `images/landing/hero-citi-poster.jpg` |
+| `progreso-ingenieria.mp4` | Sección "Cómo funciona" | `images/landing/progreso-ingenieria-poster.jpg` |
+| `resultados-impacto.mp4` | Banda del portafolio | `images/landing/resultados-impacto-poster.jpg` |
 
 ## Especificaciones
 
 - Contenedor MP4 / H.264, sin audio (`-an`), `faststart`.
-- 8–10 s en loop continuo; sin cortes bruscos en el empalme.
+- 8–10 s en loop continuo; el zoom vuelve al punto inicial para evitar saltos.
 - Hero: 1920×1080, objetivo < 6 MB. Secciones: 1600×900, objetivo < 4 MB.
 - Sin texto quemado: el copy vive en la plantilla, no en el video.
 
-Comando de referencia (ffmpeg):
+## Regeneración
 
-```bash
-ffmpeg -i entrada.mp4 -an -vf "scale=1920:-2" -c:v libx264 -crf 23 \
-  -pix_fmt yuv420p -movflags +faststart hero-citi.mp4
+```powershell
+py -m venv tools/.venv
+tools\.venv\Scripts\python.exe -m pip install -r tools\requirements-video.txt
+tools\.venv\Scripts\python.exe tools\generate_ken_burns.py
 ```
+
+`imageio-ffmpeg` incluye el binario ffmpeg; no se instala ffmpeg en la imagen
+Docker. Después de regenerar, reconstruir el contenedor para que
+`collectstatic` copie los archivos.
 
 ## Reglas de implementación
 
