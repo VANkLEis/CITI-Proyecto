@@ -27,9 +27,9 @@
     <nav class="pub-filters" aria-label="Filtrar por público objetivo">
       <a class="pub-filter{% if not publico_activo %} is-active{% endif %}"
          href="{% url 'portal:talleres' %}">Todos</a>
-      {% for code, label in publicos %}
-        <a class="pub-filter{% if publico_activo == code %} is-active{% endif %}"
-           href="{% url 'portal:talleres' %}?publico={{ code }}">{{ label }}</a>
+      {% for grupo in grupos %}
+        <a class="pub-filter{% if publico_activo == grupo.code %} is-active{% endif %}"
+           href="{% url 'portal:talleres' %}?publico={{ grupo.code }}">{{ grupo.label }}</a>
       {% endfor %}
     </nav>
 

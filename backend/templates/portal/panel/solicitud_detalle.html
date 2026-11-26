@@ -98,6 +98,33 @@
   </div>
 
   <div class="triage-stack">
+    <div class="card filtro-sugerido {% if linea_sugerida == 'consultoria_profesional' %}filtro-sugerido--pro{% else %}filtro-sugerido--social{% endif %}">
+      <div class="card-header"><h2>Diagnóstico de Filtro Sugerido</h2></div>
+      <div class="card-body">
+        <dl class="triage-ficha">
+          <div>
+            <dt>Línea sugerida</dt>
+            <dd>
+              <span class="badge badge-linea-{% if linea_sugerida == 'consultoria_profesional' %}pro{% else %}social{% endif %}">
+                {% if linea_sugerida == 'consultoria_profesional' %}Consultoría Profesional{% else %}Proyección social{% endif %}
+              </span>
+            </dd>
+          </div>
+          <div><dt>Perfil</dt><dd>{{ solicitud.get_tipo_solicitante_display }}</dd></div>
+          <div><dt>Madurez</dt><dd>{{ solicitud.get_madurez_display|default:"No indicado" }}</dd></div>
+          <div><dt>Necesidad</dt><dd>{{ solicitud.get_tipo_necesidad_display }}</dd></div>
+        </dl>
+        {% if not linea_coincide %}
+          <div class="alert alert-warn" style="font-size:.84rem;margin-top:.9rem;">
+            Clasificada manualmente como
+            <strong>{{ solicitud.get_linea_atencion_display|default:"sin clasificar" }}</strong>;
+            el filtro sugiere <strong>{{ linea_sugerida_label }}</strong>.
+          </div>
+        {% endif %}
+        <p class="filtro-sugerido__guia">{{ accion_sugerida }}</p>
+      </div>
+    </div>
+
     {% if puede_aprobar %}
       <div class="card">
         <div class="card-header"><h2>Aprobar alcance y clasificar</h2></div>

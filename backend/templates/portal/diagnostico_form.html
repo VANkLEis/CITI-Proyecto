@@ -1,18 +1,18 @@
 {% extends "portal/public_base.html" %}
 {% load static %}
 
-{% block title %}Diagnóstico estratégico — CITI UCC{% endblock %}
-{% block meta_description %}Agenda una sesión de diagnóstico estratégico con el CITI: conocemos tu reto, evaluamos el alcance y definimos el siguiente paso.{% endblock %}
+{% block title %}Sesión Previa de Diagnóstico — CITI UCC{% endblock %}
+{% block meta_description %}Agenda una Sesión Previa de Diagnóstico y Conocimiento (30–45 min) con el CITI: evaluamos el alcance técnico antes de comprometer recursos.{% endblock %}
 
 {% block public_content %}
 <section class="pub-page-head">
   <div class="pub-wrap">
     <p class="pub-kicker">Primer paso</p>
-    <h1>Agenda una sesión de diagnóstico estratégico</h1>
+    <h1>Agenda tu Sesión Previa de Diagnóstico y Conocimiento</h1>
     <p class="pub-lede">
-      Una conversación inicial para conocer tu necesidad, evaluar el alcance
-      técnico y definir si corresponde a proyección social o consultoría
-      profesional. Sin compromiso de recursos antes de esa sesión.
+      Una conversación de <strong>30–45 minutos</strong> para escuchar tu
+      necesidad, evaluar el alcance técnico y definir la ruta de atención antes
+      de comprometer recursos.
     </p>
   </div>
 </section>
@@ -20,23 +20,52 @@
 <section class="pub-section">
   <div class="pub-wrap pub-form-grid">
     <aside class="pub-form-aside">
-      <div class="pub-panel">
-        <h2>Cómo es la sesión</h2>
-        <ol class="pub-steps pub-steps--compact">
-          <li>Escuchamos el contexto y el resultado que esperas.</li>
-          <li>Identificamos el área y la especialidad que puede atenderlo.</li>
-          <li>Definimos el alcance y el equipo académico.</li>
-          <li>Acordamos los siguientes pasos y las condiciones.</li>
-        </ol>
+      <div class="pub-panel pub-panel--social">
+        <p class="pub-kicker">Ruta 1</p>
+        <h2>Proyección y Extensión Social</h2>
+        <p>
+          Diagnóstico, orientación y transferencia de conocimiento. Es el punto
+          de entrada para organizaciones y comunidades.
+        </p>
+        <div class="pub-scope">
+          <div>
+            <p class="pub-scope__title">Incluye</p>
+            <ul class="pub-scope__list pub-scope__list--in">
+              <li>Sesión previa de diagnóstico y reconocimiento.</li>
+              <li>Orientación técnica y mentoría inicial.</li>
+              <li>Charlas y talleres grupales.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="pub-scope__title">No incluye</p>
+            <ul class="pub-scope__list pub-scope__list--out">
+              <li>Desarrollo de software completo a la medida.</li>
+              <li>Estudios técnicos extensos de ingeniería.</li>
+            </ul>
+          </div>
+        </div>
+        <p class="pub-micro">Sin barrera económica: el primer paso no exige compromiso de recursos.</p>
       </div>
-      <div class="pub-panel pub-panel--soft">
-        <h2>¿A quién está dirigido?</h2>
-        <ul class="pub-line-list">
-          <li>Empresas y pymes con un reto técnico.</li>
-          <li>Fundaciones y organizaciones sociales.</li>
-          <li>Emprendimientos juveniles.</li>
-          <li>Grupos comunitarios y personas mayores.</li>
-        </ul>
+
+      <div class="pub-panel pub-panel--pro">
+        <p class="pub-kicker">Ruta 2</p>
+        <h2>Consultoría Especializada</h2>
+        <p>
+          Proyectos de ingeniería aplicada con equipo asignado, cronograma por
+          hitos y entregables verificables.
+        </p>
+        <div class="pub-scope">
+          <div>
+            <p class="pub-scope__title">Incluye</p>
+            <ul class="pub-scope__list pub-scope__list--in">
+              <li>Software a la medida e integración de IA.</li>
+              <li>Arquitectura de sistemas.</li>
+              <li>Estudios técnicos de Ingeniería Civil.</li>
+              <li>Docente asesor + estudiantes tutores.</li>
+              <li>Cronograma por hitos y acta de cierre.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </aside>
 
@@ -62,8 +91,10 @@
       </fieldset>
 
       <fieldset>
-        <legend>La necesidad</legend>
+        <legend>Qué necesitas resolver</legend>
         {% include "portal/partials/form_field.html" with field=form.tipo_necesidad %}
+        {% include "portal/partials/form_field.html" with field=form.madurez %}
+        {% include "portal/partials/form_field.html" with field=form.tema_interes %}
         {% include "portal/partials/form_field.html" with field=form.area %}
         {% include "portal/partials/form_field.html" with field=form.descripcion %}
         {% include "portal/partials/form_field.html" with field=form.objetivo %}
@@ -87,7 +118,9 @@
         {% for error in form.acepta_contacto.errors %}<p class="pub-error">{{ error }}</p>{% endfor %}
       </div>
 
-      <button class="pub-btn pub-btn-solid pub-btn-lg" type="submit">Enviar solicitud de diagnóstico</button>
+      <button class="pub-btn pub-btn-solid pub-btn-lg" type="submit">
+        Solicitar la sesión previa
+      </button>
       <p class="pub-micro">
         Tratamos los datos solo para gestionar esta solicitud.
         <a href="{% url 'portal:privacidad' %}">Ver tratamiento de datos</a>.
@@ -101,10 +134,11 @@
     <div class="pub-panel pub-panel--wide">
       <h2>Condiciones y alcance</h2>
       <p>
-        El alcance, el equipo asignado y las condiciones del servicio se definen
-        en la sesión de diagnóstico y quedan registrados en el historial de la
-        solicitud. Así la organización sabe qué recibe, cuándo y con qué
-        responsables.
+        La sesión previa define en qué ruta entra tu necesidad. El alcance, el
+        equipo asignado y las condiciones del servicio quedan registrados en el
+        historial de la solicitud. La sesión no compromete un desarrollo de
+        software completo ni un estudio técnico extenso: eso corresponde a la
+        ruta de consultoría especializada.
       </p>
     </div>
   </div>

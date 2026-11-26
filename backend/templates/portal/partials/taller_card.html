@@ -1,15 +1,36 @@
 {% load static %}
 <article class="pub-card pub-workshop">
+  <a class="pub-card-media"
+     href="{% url 'portal:taller_solicitud' %}?taller={{ taller.slug|urlencode }}"
+     aria-hidden="true" tabindex="-1">
+    {% if taller.imagen_url %}
+      <img src="{{ taller.imagen_url }}" alt="{{ taller.imagen_alt|default:taller.titulo }}" loading="lazy">
+    {% else %}
+      <span class="pub-card-media-empty"></span>
+    {% endif %}
+    <span class="pub-tag">{{ taller.grupo_publico_label }}</span>
+  </a>
   <div class="pub-card-body">
     <p class="pub-card-meta">{{ taller.get_publico_objetivo_display }}</p>
-    <h3><a href="{% url 'portal:taller_solicitud_especifico' taller.slug %}">{{ taller.titulo }}</a></h3>
-    <p class="pub-workshop-tematica">{{ taller.tematica }}</p>
+    <h3>
+      <a href="{% url 'portal:taller_solicitud' %}?taller={{ taller.slug|urlencode }}">{{ taller.titulo }}</a>
+    </h3>
+    <p class="pub-card-summary">{{ taller.tematica }}</p>
+    {% if taller.puntos_clave_validos %}
+      <ul class="pub-workshop-points">
+        {% for punto in taller.puntos_clave_validos %}
+          <li>{{ punto }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     <ul class="pub-workshop-facts">
+      {% if taller.duracion %}
+        <li><span>Duración</span><strong>{{ taller.duracion }}</strong></li>
+      {% endif %}
       <li><span>Modalidad</span><strong>{{ taller.get_modalidad_display }}</strong></li>
       <li><span>Nivel</span><strong>{{ taller.get_nivel_display }}</strong></li>
-      {% if taller.duracion %}<li><span>Duración</span><strong>{{ taller.duracion }}</strong></li>{% endif %}
     </ul>
-    <a class="pub-link" href="{% url 'portal:taller_solicitud_especifico' taller.slug %}">
+    <a class="pub-link" href="{% url 'portal:taller_solicitud' %}?taller={{ taller.slug|urlencode }}">
       Solicitar este taller <span aria-hidden="true">→</span>
     </a>
   </div>

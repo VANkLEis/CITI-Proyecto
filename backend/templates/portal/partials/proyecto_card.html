@@ -15,7 +15,7 @@
       {% if proyecto.anio %} · {{ proyecto.anio }}{% endif %}
     </p>
     <h3><a href="{% url 'portal:portafolio_detail' proyecto.slug %}">{{ proyecto.titulo }}</a></h3>
-    <p>{{ proyecto.resumen }}</p>
+    <p class="pub-card-summary">{{ proyecto.resumen }}</p>
     {% if proyecto.metricas_validas %}
       <ul class="pub-metrics">
         {% for metrica in proyecto.metricas_validas|slice:":2" %}
