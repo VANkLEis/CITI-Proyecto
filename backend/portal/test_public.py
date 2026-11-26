@@ -79,7 +79,9 @@ class PublicasBaseTests(TestCase):
             resumen='No debe publicarse.', publicado=False)
         cls.taller_activo = Taller.objects.create(
             titulo='IA para fundaciones', tematica='Uso responsable de IA',
-            descripcion='Taller introductorio.', publico_objetivo='fundaciones')
+            descripcion='Taller introductorio.', publico_objetivo='fundaciones',
+            duracion='2 sesiones de 90 minutos', nivel='basico',
+            puntos_clave=['Qué es la IA', 'Casos de uso', 'Buenas prácticas'])
         cls.taller_inactivo = Taller.objects.create(
             titulo='Taller archivado', tematica='Tema viejo',
             descripcion='No debe mostrarse.', activo=False)
@@ -96,9 +98,10 @@ class PublicasBaseTests(TestCase):
         self.assertContains(r, 'id="modalidades"')
 
     def test_landing_sin_copy_asistencialista(self):
-        html = self.client.get('/').content.decode('utf-8').lower()
-        for prohibido in ('gratis', 'gratuita', 'sin costo', 'mínimo costo'):
-            self.assertNotIn(prohibido, html)
+        for url in ('/', '/diagnostico/', '/talleres/'):
+            html = self.client.get(url).content.decode('utf-8').lower()
+            for prohibido in ('gratis', 'gratuita', 'sin costo', 'mínimo costo'):
+                self.assertNotIn(prohibido, html, f'{prohibido} aparece en {url}')
 
     def test_landing_muestra_las_14_especialidades(self):
         r = self.client.get('/')
@@ -513,3 +516,194 @@ class SeedDemoDataTests(TestCase):
         with self.settings(IS_PRODUCTION=True):
             with self.assertRaises(CommandError):
                 call_command('seed_demo_data', stdout=StringIO())
+
+    def test_seed_completa_puntos_clave_y_no_duplica(self):
+        from io import StringIO
+
+        from django.core.management import call_command
+        from portal.models import Taller
+
+        call_command('seed_demo_data', stdout=StringIO())
+        talleres = list(Taller.objects.filter(activo=True))
+        self.assertEqual(len(talleres), 4)
+        for taller in talleres:
+            self.assertEqual(len(taller.puntos_clave_validos), 3, taller.slug)
+
+        # Simula un taller sembrado antes de existir el campo: se rellena.
+        primero = talleres[0]
+        primero.puntos_clave = []
+        primero.save(update_fields=['puntos_clave'])
+        call_command('seed_demo_data', stdout=StringIO())
+        primero.refresh_from_db()
+        self.assertEqual(len(primero.puntos_clave_validos), 3)
+        self.assertEqual(Taller.objects.count(), 4)
+
+
+class TarjetasPublicasTests(TestCase):
+    """Tarjetas uniformes, temario visible y alcance explícito."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.proyecto = ProyectoPortafolio.objects.create(
+            titulo='Proyecto con foto vertical', linea='sistemas',
+            resumen='Resumen de prueba para la tarjeta.', publicado=True)
+        cls.taller = Taller.objects.create(
+            titulo='Taller con temario', tematica='Bajada del taller.',
+            descripcion='Descripción larga.', publico_objetivo='fundaciones',
+            duracion='2 sesiones', nivel='basico',
+            puntos_clave=['Punto uno', 'Punto dos', 'Punto tres'])
+
+    def test_tarjeta_portafolio_usa_contenedor_uniforme(self):
+        r = self.client.get(reverse('portal:portafolio'))
+        self.assertContains(r, 'pub-card-media')
+        self.assertContains(r, 'pub-card-summary')
+
+    def test_tarjeta_taller_muestra_tres_puntos_y_nivel(self):
+        r = self.client.get(reverse('portal:talleres'))
+        self.assertContains(r, 'pub-workshop-points')
+        for punto in ('Punto uno', 'Punto dos', 'Punto tres'):
+            self.assertContains(r, punto)
+        self.assertContains(r, 'Desde cero')
+
+    def test_tarjeta_taller_enlaza_con_query_param(self):
+        r = self.client.get(reverse('portal:talleres'))
+        self.assertContains(r, f'?taller={self.taller.slug}')
+
+    def test_landing_muestra_alcance_y_ejemplos(self):
+        r = self.client.get('/')
+        for texto in ('Ruta 1', 'Ruta 2', 'Incluye', 'No incluye',
+                      'Así se ve en la práctica', 'Pensionados y adultos mayores'):
+            self.assertContains(r, texto)
+
+
+class TalleresFiltroTests(TestCase):
+    """Los cuatro grupos de público agrupan los cinco códigos del modelo."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.fundacion = Taller.objects.create(
+            titulo='Taller fundaciones', tematica='x', descripcion='y',
+            publico_objetivo='fundaciones')
+        cls.pyme = Taller.objects.create(
+            titulo='Taller pyme', tematica='x', descripcion='y',
+            publico_objetivo='pymes')
+        cls.comunidad = Taller.objects.create(
+            titulo='Taller comunidad', tematica='x', descripcion='y',
+            publico_objetivo='comunidad')
+
+    def test_filtra_grupo_pymes_comunidad(self):
+        r = self.client.get(reverse('portal:talleres'), {'publico': 'pymes_comunidad'})
+        self.assertContains(r, 'Taller pyme')
+        self.assertContains(r, 'Taller comunidad')
+        self.assertNotContains(r, 'Taller fundaciones')
+
+    def test_filtra_fundaciones(self):
+        r = self.client.get(reverse('portal:talleres'), {'publico': 'fundaciones'})
+        self.assertContains(r, 'Taller fundaciones')
+        self.assertNotContains(r, 'Taller pyme')
+
+    def test_preselecciona_taller_por_query_param(self):
+        r = self.client.get(reverse('portal:taller_solicitud'),
+                            {'taller': self.fundacion.slug})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.context['form'].initial.get('taller'), self.fundacion)
+
+    def test_slug_inexistente_no_rompe(self):
+        r = self.client.get(reverse('portal:taller_solicitud'),
+                            {'taller': 'no-existe'})
+        self.assertEqual(r.status_code, 200)
+        self.assertIsNone(r.context['form'].initial.get('taller'))
+
+
+class DiagnosticoPrevioTests(TestCase):
+    """Sesión previa: madurez, tres rutas y clasificación automática."""
+
+    def _post(self, **over):
+        datos = {
+            'tipo_solicitante': 'empresa',
+            'nombre_contacto': 'Ana Pérez',
+            'cargo': 'Gerente',
+            'organizacion': 'Empresa Demo',
+            'nit': '',
+            'email': 'ana@empresa.co',
+            'telefono': '3000000000',
+            'tipo_necesidad': 'asesoria',
+            'madurez': 'idea',
+            'tema_interes': '',
+            'area': 'sistemas',
+            'descripcion': DESCRIPCION,
+            'objetivo': 'Ordenar la operación',
+            'turno_preferido': 'manana',
+            'modalidad_preferida': 'virtual',
+            'acepta_contacto': 'on',
+        }
+        datos.update(over)
+        return self.client.post(reverse('portal:diagnostico'), datos)
+
+    def test_formulario_incluye_madurez_y_tres_necesidades(self):
+        r = self.client.get(reverse('portal:diagnostico'))
+        self.assertContains(r, 'Sesión Previa de Diagnóstico')
+        self.assertContains(r, '30–45')
+        for etiqueta in ('Orientación / Diagnóstico inicial',
+                         'Desarrollo o estudio técnico a medida',
+                         'Charla, capacitación o taller grupal',
+                         'Solo tengo una idea inicial'):
+            self.assertContains(r, etiqueta)
+
+    def test_guarda_madurez(self):
+        self._post(madurez='requerimientos')
+        s = SolicitudPublica.objects.get(email='ana@empresa.co')
+        self.assertEqual(s.madurez, 'requerimientos')
+
+    def test_capacitacion_sin_tema_no_crea(self):
+        r = self._post(tipo_necesidad='capacitacion', tema_interes='')
+        self.assertEqual(r.status_code, 200)
+        self.assertFalse(SolicitudPublica.objects.exists())
+
+    def test_capacitacion_con_tema_crea_social(self):
+        self._post(tipo_necesidad='capacitacion', tema_interes='IA para el equipo')
+        s = SolicitudPublica.objects.get(email='ana@empresa.co')
+        self.assertEqual(s.tipo_necesidad, 'capacitacion')
+        self.assertEqual(s.linea_atencion, LineaAtencion.PROYECCION_SOCIAL)
+
+    def test_consultoria_con_requerimientos_es_profesional(self):
+        self._post(tipo_necesidad='consultoria', madurez='requerimientos')
+        s = SolicitudPublica.objects.get(email='ana@empresa.co')
+        self.assertEqual(s.linea_atencion, LineaAtencion.CONSULTORIA_PROFESIONAL)
+        self.assertEqual(s.madurez, 'requerimientos')
+
+
+class TriageFiltroSugeridoTests(TestCase):
+    """El detalle privado muestra la pre-clasificación y las discrepancias."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.director = make_user('dir-fs@qa.local', Role.DIRECTOR)
+        cls.solicitud = make_solicitud(
+            email='fs@x.org',
+            tipo_necesidad=SolicitudPublica.TipoNecesidad.CONSULTORIA,
+            madurez=SolicitudPublica.Madurez.IDEA,
+            estado=SolicitudPublica.Estado.RECIBIDA)
+
+    def test_detalle_muestra_filtro_sugerido(self):
+        self.client.force_login(self.director)
+        r = self.client.get(reverse('portal:solicitud_publica_detalle',
+                                    args=[self.solicitud.pk]))
+        self.assertContains(r, 'Diagnóstico de Filtro Sugerido')
+        self.assertContains(r, 'Consultoría Profesional')
+        self.assertContains(r, 'Solo tengo una idea inicial')
+        self.assertContains(r, 'Convertir en cita')
+
+    def test_avisa_clasificacion_manual_distinta(self):
+        s = make_solicitud(
+            email='manual@x.org',
+            tipo_necesidad=SolicitudPublica.TipoNecesidad.CONSULTORIA,
+            linea_atencion=LineaAtencion.PROYECCION_SOCIAL)
+        self.client.force_login(self.director)
+        r = self.client.get(reverse('portal:solicitud_publica_detalle', args=[s.pk]))
+        self.assertContains(r, 'Clasificada manualmente')
+
+    def test_anonimo_no_ve_el_filtro(self):
+        r = self.client.get(reverse('portal:solicitud_publica_detalle',
+                                    args=[self.solicitud.pk]))
+        self.assertEqual(r.status_code, 302)

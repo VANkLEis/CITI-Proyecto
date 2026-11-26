@@ -153,6 +153,27 @@ PROYECTOS = (
         'imagen_alt': 'Grupo de personas en una sesión de capacitación',
         'orden': 6,
     },
+    {
+        'slug': 'validacion-tecnica-emprendimiento-juvenil',
+        'titulo': 'Validación técnica de un producto digital juvenil',
+        'linea': 'innovacion_ia',
+        'organizacion': 'Colectivo Juvenil Ibagué',
+        'anio': 2026,
+        'resumen': 'De la idea al alcance técnico: qué construir primero y con qué riesgos.',
+        'reto': 'El equipo tenía una idea de aplicación, pero no sabía si era '
+                'técnicamente viable ni por dónde empezar.',
+        'solucion': 'Sesión de diagnóstico, definición de alcance mínimo y '
+                    'prototipo de flujo con criterios de validación.',
+        'resultados': 'Plan de producto priorizado y decisión informada antes de '
+                      'invertir en desarrollo.',
+        'metricas': [
+            {'label': 'Flujos validados', 'valor': '3'},
+            {'label': 'Semanas de diagnóstico', 'valor': '2'},
+        ],
+        'imagen_static': 'images/landing/hero-equipo.jpg',
+        'imagen_alt': 'Jóvenes trabajando en el diseño de un producto digital',
+        'orden': 7,
+    },
 )
 
 # ---------------------------------------------------------------------------
@@ -170,6 +191,11 @@ TALLERES = (
         'duracion': '2 sesiones de 90 minutos',
         'modalidad': 'hibrida',
         'nivel': 'basico',
+        'puntos_clave': [
+            'Qué es la IA y qué no resuelve.',
+            'Casos de uso en informes, encuestas y atención.',
+            'Uso responsable y revisión humana.',
+        ],
         'imagen_static': 'images/landing/banner-asesoria.jpg',
         'imagen_alt': 'Equipo de una fundación en una sesión de capacitación',
         'orden': 1,
@@ -185,14 +211,19 @@ TALLERES = (
         'duracion': '1 sesión de 3 horas',
         'modalidad': 'presencial',
         'nivel': 'basico',
+        'puntos_clave': [
+            'Organización de clientes y finanzas.',
+            'Presencia digital básica.',
+            'Respaldos y contraseñas seguras.',
+        ],
         'imagen_static': 'images/landing/hero-equipo.jpg',
         'imagen_alt': 'Jóvenes trabajando con herramientas digitales',
         'orden': 2,
     },
     {
         'slug': 'alfabetizacion-digital-adultos-mayores',
-        'titulo': 'Alfabetización digital y trámites seguros',
-        'tematica': 'Usa internet, trámites en línea y contraseñas sin miedo ni riesgos.',
+        'titulo': 'Alfabetización digital y trámites seguros para adultos mayores',
+        'tematica': 'Uso seguro del celular, banca digital y trámites en línea, a su ritmo.',
         'descripcion': 'Sesiones guiadas para personas mayores y pensionados: '
                        'correo, trámites, videollamadas, contraseñas seguras y '
                        'cómo reconocer intentos de fraude.',
@@ -200,13 +231,18 @@ TALLERES = (
         'duracion': '4 sesiones de 2 horas',
         'modalidad': 'presencial',
         'nivel': 'basico',
+        'puntos_clave': [
+            'Uso seguro del celular y la banca digital.',
+            'Prevención de estafas en internet.',
+            'Trámites en línea y comunicación cotidiana.',
+        ],
         'imagen_static': 'images/landing/proceso-revision.jpg',
         'imagen_alt': 'Personas mayores en un taller de herramientas digitales',
         'orden': 3,
     },
     {
         'slug': 'gestion-tecnologica-pymes',
-        'titulo': 'Gestión tecnológica para pymes',
+        'titulo': 'Gestión tecnológica para pymes y comunidad',
         'tematica': 'Prioriza inversión tecnológica, riesgos y continuidad del negocio.',
         'descripcion': 'Taller para equipos directivos: inventario de activos '
                        'digitales, respaldos, accesos, proveedores y plan de '
@@ -215,6 +251,11 @@ TALLERES = (
         'duracion': '1 sesión de 4 horas',
         'modalidad': 'virtual',
         'nivel': 'intermedio',
+        'puntos_clave': [
+            'Inventario de activos digitales.',
+            'Respaldos, accesos y proveedores.',
+            'Plan de continuidad ante incidentes.',
+        ],
         'imagen_static': 'images/landing/reportes-manos.jpg',
         'imagen_alt': 'Directivos revisando indicadores de gestión tecnológica',
         'orden': 4,
@@ -274,6 +315,11 @@ def seed_public_content(password):
     talleres = {}
     for datos in TALLERES:
         taller, creado = Taller.objects.get_or_create(slug=datos['slug'], defaults=datos)
+        # Backfill no destructivo: completa el temario solo si quedó vacío
+        # (los talleres sembrados antes de existir `puntos_clave`).
+        if not creado and not taller.puntos_clave and datos.get('puntos_clave'):
+            taller.puntos_clave = datos['puntos_clave']
+            taller.save(update_fields=['puntos_clave', 'actualizado_en'])
         talleres[datos['slug']] = taller
         nuevos['talleres'] += 1 if creado else 0
 

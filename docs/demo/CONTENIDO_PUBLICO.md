@@ -5,7 +5,7 @@ invocado desde `seed_all()` y por tanto disponible en `seed_demo` y
 `seed_demo_data`. Claves de idempotencia: `slug` en portafolio/talleres y
 `codigo` en solicitudes.
 
-## Portafolio (6 proyectos publicados)
+## Portafolio (7 proyectos publicados)
 
 | Slug | Línea | Organización | Destacado |
 |---|---|---|---|
@@ -15,18 +15,22 @@ invocado desde `seed_all()` y por tanto disponible en `seed_demo` y
 | `optimizacion-red-agua` | Civil | JAC El Espinal | — |
 | `asistente-ia-atencion` | Innovación / IA | Centro de Servicios Regional | Sí |
 | `alfabetizacion-digital-mayores` | Impacto Social | Club de Pensionados del Tolima | — |
+| `validacion-tecnica-emprendimiento-juvenil` | Innovación / IA | Colectivo Juvenil Ibagué | — |
 
 Las tarjetas usan `imagen_static` (assets de `backend/static/images/landing/`)
 para que en Docker se vean sin depender del volumen de media.
 
 ## Talleres (4 activos)
 
+Cada taller incluye **3 puntos clave del temario** en `puntos_clave` (JSON),
+que se muestran como viñetas en la tarjeta pública.
+
 | Slug | Público | Modalidad | Nivel |
 |---|---|---|---|
-| `ia-aplicada-fundaciones-ong` | Fundaciones y ONG | Híbrida | Básico |
-| `herramientas-digitales-emprendedores` | Emprendedores jóvenes | Presencial | Básico |
-| `alfabetizacion-digital-adultos-mayores` | Adultos mayores | Presencial | Básico |
-| `gestion-tecnologica-pymes` | Pymes | Virtual | Intermedio |
+| `ia-aplicada-fundaciones-ong` | Fundaciones y ONG | Híbrida | Desde cero |
+| `herramientas-digitales-emprendedores` | Emprendimientos juveniles | Presencial | Desde cero |
+| `alfabetizacion-digital-adultos-mayores` | Pensionados y adultos mayores | Presencial | Desde cero |
+| `gestion-tecnologica-pymes` | Pymes y comunidad | Virtual | Intermedio |
 
 ## Solicitudes públicas (intake)
 
