@@ -91,7 +91,15 @@ class SolicitudDiagnosticoForm(_BasePublica):
         self.fields['tema_interes'].required = False
         self.fields['tema_interes'].help_text = (
             'Solo si pediste una charla o taller: tema que te interesa.')
-        self.fields['area'].help_text = 'Si no estás seguro, elige "Ambas áreas".'
+        self.fields['area'].help_text = (
+            'Sistemas: software, datos, IA. Civil: suelos, estructuras, hidráulica. '
+            'Si no estás seguro, elige "Ambas áreas".')
+        self.fields['descripcion'].widget.attrs['placeholder'] = (
+            'Ej.: necesitamos digitalizar un proceso interno (Sistemas) o evaluar '
+            'condiciones estructurales, de suelos o hidráulicas en un predio o '
+            'sede (Civil).')
+        self.fields['objetivo'].help_text = (
+            'Resultado esperado; ayuda a orientar la sesión previa de diagnóstico.')
         self.order_fields([
             'tipo_solicitante', 'nombre_contacto', 'cargo', 'organizacion', 'nit',
             'email', 'telefono', 'tipo_necesidad', 'madurez', 'tema_interes',

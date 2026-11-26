@@ -8,10 +8,10 @@
     {% else %}
       <span class="pub-card-media-empty"></span>
     {% endif %}
-    <span class="pub-tag">{{ taller.grupo_publico_label }}</span>
+    <span class="pub-tag">{{ taller.get_area_display }}</span>
   </a>
   <div class="pub-card-body">
-    <p class="pub-card-meta">{{ taller.get_publico_objetivo_display }}</p>
+    <p class="pub-card-meta">{{ taller.grupo_publico_label }}</p>
     <h3>
       <a href="{% url 'portal:taller_solicitud' %}?taller={{ taller.slug|urlencode }}">{{ taller.titulo }}</a>
     </h3>
