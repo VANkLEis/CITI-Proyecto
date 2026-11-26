@@ -133,7 +133,7 @@ cd backend
 Abrir <http://127.0.0.1:8000>.
 
 > Hay tres entornos virtuales en el repositorio: usar **`venv/`** (raíz).
-> `.venv/` tiene Django 6.x y `backend/venv/` no tiene Django.
+> `.venv/` tiene otra instalación de Django 5.2.19 y `backend/venv/` no tiene Django.
 
 ### Pruebas
 
@@ -144,9 +144,10 @@ cd backend
 ..\venv\Scripts\python.exe manage.py test
 ```
 
-163 pruebas: matriz de roles, reservas, estados, IDOR, registro, seed,
-trazabilidad, indicadores, seguimiento, interacciones, aprobaciones y la zona
-pública + triage (`backend/portal/test_public.py`).
+193 pruebas: matriz de roles, reservas, estados, IDOR, registro, seed,
+trazabilidad, indicadores, seguimiento, interacciones, aprobaciones, la zona
+pública + triage (`backend/portal/test_public.py`), seguridad de sesión, botón
+Volver y medios únicos.
 
 ---
 
@@ -161,6 +162,7 @@ backend/            Proyecto Django real (config + accounts + scheduling + porta
   static/           CSS/JS/imágenes/videos
 assets/             Assets institucionales adicionales (STATICFILES_DIRS)
 docs/demo/          Credenciales, datos y guion de demostración
+tools/              Generación reproducible de imágenes y videos (no runtime)
 Dockerfile · docker-compose.yml · entrypoint.sh
 ```
 
@@ -172,11 +174,13 @@ Django.
 
 ## Videos de la portada
 
-La portada usa `<video>` con `poster` y una imagen de respaldo. Los MP4 finales
+La portada usa `<video>` con `poster` y una imagen de respaldo. Los 3 MP4
 (`backend/static/videos/hero-citi.mp4`, `progreso-ingenieria.mp4`,
-`resultados-impacto.mp4`) son contenido reemplazable: mientras no existan, se ve
-el poster y la imagen de respaldo. Especificaciones en
-[`backend/static/videos/README.md`](backend/static/videos/README.md).
+`resultados-impacto.mp4`) están incluidos y se generaron con efecto Ken Burns
+desde los pósters locales. Siguen siendo reemplazables: si se eliminan, se ve el
+poster y la imagen de respaldo. Especificaciones y regeneración en
+[`backend/static/videos/README.md`](backend/static/videos/README.md) y
+[`tools/README.md`](tools/README.md).
 
 ---
 
