@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static portal_ui %}
 
 {% block flash_messages %}{% endblock %}
 
@@ -36,6 +36,7 @@
       </div>
     </header>
     <div class="page-content">
+      {% block page_back %}{% back_button %}{% endblock %}
       {% if messages %}
         <div class="django-messages" role="status" aria-live="polite">
           {% for message in messages %}
@@ -56,6 +57,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/back-button.js' %}?v=2026-11-26"></script>
 <script src="{% static 'js/portal-cita-modal.js' %}"></script>
 {% block dashboard_extra_js %}{% endblock %}
 {% endblock %}

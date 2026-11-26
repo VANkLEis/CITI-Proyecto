@@ -1,8 +1,10 @@
 {% extends "dashboard_base.html" %}
+{% load static %}
 
 {% block title %}CITI — Portal Cliente{% endblock %}
 {% block page_title %}Agenda de citas{% endblock %}
 {% block page_subtitle %}Portal de empresas{% endblock %}
+{% block page_back %}{% endblock %}
 
 {% block sidebar_nav %}
   <a class="nav-item is-active" href="{% url 'portal:cliente_dashboard' %}">Agenda y solicitud</a>
@@ -12,7 +14,6 @@
 {% endblock %}
 
 {% block extra_css %}
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
 <style>
   #calendar { background: white; border-radius: var(--radius); padding: 1rem; border: 1px solid var(--border); }
   .fc .fc-button-primary { background: var(--ucc-verde-solidario); border-color: var(--accent-hover); }
@@ -143,7 +144,8 @@
 
       <div class="form-group">
         <label for="archivoAdjunto">Documentación / Términos de referencia (Opcional)</label>
-        <input type="file" id="archivoAdjunto" accept=".pdf,.doc,.docx,.zip,.rar,.png,.jpg">
+        <input type="file" id="archivoAdjunto" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.png,.jpg,.jpeg">
+        <small style="color:var(--muted);">PDF, Word, Excel, TXT o imagen · máximo 10 MB</small>
       </div>
 
       <p id="franjaSeleccionada" style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Seleccione una franja en el calendario.</p>
@@ -193,7 +195,7 @@
 
 {% block dashboard_extra_js %}
 {{ subespecialidades_json|json_script:"subespecialidades-data" }}
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src="{% static 'vendor/fullcalendar/6.1.15/index.global.min.js' %}"></script>
 <script>
 (function () {
   const subsPorArea = JSON.parse(document.getElementById('subespecialidades-data').textContent);
@@ -316,6 +318,15 @@
       showAlert('Seleccione una subespecialidad válida para el área de la franja.', 'error');
       return;
     }
+
+    const archivo = archivoInput.files[0];
+    const extensionValida = /\.(pdf|docx?|xlsx?|txt|png|jpe?g)$/i;
+    if (archivo && (!extensionValida.test(archivo.name) ||
+                    archivo.size > 10 * 1024 * 1024)) {
+      showAlert('Adjunto no válido. Use PDF, Word, Excel, TXT o imagen de máximo 10 MB.', 'error');
+      return;
+    }
+
     btnReservar.disabled = true;
 
     const formData = new FormData();

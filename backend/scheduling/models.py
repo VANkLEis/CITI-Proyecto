@@ -2,7 +2,8 @@ import secrets
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (
+    FileExtensionValidator, MaxValueValidator, MinValueValidator)
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
@@ -10,6 +11,7 @@ from django.utils import timezone
 
 from accounts.models import Area, Role, StudentType
 from scheduling.subespecialidades import Subespecialidad
+from scheduling.validators import ALLOWED_EXTENSIONS, validate_adjunto_size
 
 
 class FranjaHoraria(models.Model):
@@ -136,7 +138,12 @@ class CitaAsesoria(models.Model):
         upload_to='documentos_citas/%Y/%m/',
         blank=True,
         null=True,
-        help_text='Documentación base o requerimientos subidos por el cliente.'
+        validators=[
+            FileExtensionValidator(allowed_extensions=ALLOWED_EXTENSIONS),
+            validate_adjunto_size,
+        ],
+        help_text='Documentación base o requerimientos subidos por el cliente '
+                  '(PDF, Word, Excel, TXT o imagen; máximo 10 MB).'
     )
     estado = models.CharField(
         max_length=20,

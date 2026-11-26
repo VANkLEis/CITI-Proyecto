@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'portal.middleware.PrivateNoCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -114,6 +115,17 @@ else:
         }
     }
 
+# Caché compartida por los workers de Gunicorn (bloqueo de login). En tests se
+# sustituye por LocMemCache; en producción con varias réplicas usar Redis.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.environ.get('CITI_CACHE_DIR') or str(BASE_DIR / '.cache'),
+        'TIMEOUT': 300,
+        'OPTIONS': {'MAX_ENTRIES': 1000},
+    }
+}
+
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -150,26 +162,36 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'portal:landing'
-LOGOUT_REDIRECT_URL = 'portal:landing'
+LOGOUT_REDIRECT_URL = 'accounts:login'
 
 # —— Filtro académico estudiante tutor (ajustables) ——
 CITI_MIN_SEMESTRE_TUTOR = int(os.environ.get('CITI_MIN_SEMESTRE_TUTOR', '8'))
 CITI_MIN_CREDITOS_TUTOR = int(os.environ.get('CITI_MIN_CREDITOS_TUTOR', '130'))
 CITI_MIN_PROMEDIO_TUTOR = os.environ.get('CITI_MIN_PROMEDIO_TUTOR', '4.0')
 
+# Bloqueo temporal de login: 6 fallos consecutivos por correo+IP durante 5 min.
+CITI_LOGIN_MAX_ATTEMPTS = int(os.environ.get('CITI_LOGIN_MAX_ATTEMPTS', '6'))
+CITI_LOGIN_LOCK_SECONDS = int(os.environ.get('CITI_LOGIN_LOCK_SECONDS', '300'))
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# —— Endurecimiento solo en producción (no rompe la demo local en HTTP) ——
+# —— Cabeceras y cookies seguras también en desarrollo (no rompen HTTP local) ——
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = 'same-origin'
+X_FRAME_OPTIONS = 'DENY'
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+# —— Endurecimiento solo en producción (HTTPS, cookies Secure, HSTS) ——
 if IS_PRODUCTION:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_HSTS_SECONDS', '31536000'))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_REFERRER_POLICY = 'same-origin'
-    X_FRAME_OPTIONS = 'DENY'
     # detrás de proxy/reverse-proxy (nginx): descomentar
     # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

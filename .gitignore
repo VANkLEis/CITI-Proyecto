@@ -32,3 +32,6 @@ Thumbs.db
 # Estáticos recolectados (collectstatic) y respaldos locales de la base
 staticfiles/
 db.sqlite3.bak*
+
+# Caché local (bloqueo temporal de login)
+.cache/

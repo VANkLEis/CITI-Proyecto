@@ -1,8 +1,13 @@
 from datetime import datetime, time, timedelta
 from decimal import Decimal
+import tempfile
 
+from django.conf import settings
+from django.core.cache import cache
+from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
@@ -1606,4 +1611,281 @@ class NavegacionRegresionF4Tests(TestCase):
         self.client.force_login(self.docente)
         r = self.client.get(reverse('portal:cliente_seguimiento', args=[cita.pk]))
         self.assertEqual(r.status_code, 302)
+
+
+class LogoutRedirectTests(TestCase):
+    """El cierre de sesión vuelve al login, no a la portada pública."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cliente = CustomUser.objects.create_user(
+            email='logout-cli@qa.local', password=PASSWORD, role=Role.CLIENTE,
+            empresa=make_empresa('Logout SA'))
+
+    def test_logout_redirige_a_login(self):
+        self.client.force_login(self.cliente)
+        r = self.client.post(reverse('accounts:logout'))
+        self.assertRedirects(r, reverse('accounts:login'))
+        self.assertNotIn('_auth_user_id', self.client.session)
+
+    def test_logout_muestra_mensaje_en_login(self):
+        self.client.force_login(self.cliente)
+        r = self.client.post(reverse('accounts:logout'), follow=True)
+        self.assertContains(r, 'Sesión cerrada.')
+        self.assertEqual(r.request['PATH_INFO'], reverse('accounts:login'))
+
+
+class BackNavigationTests(TestCase):
+    """Botón Volver consistente, con respaldo al dashboard del rol."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cliente = CustomUser.objects.create_user(
+            email='back-cli@qa.local', password=PASSWORD, role=Role.CLIENTE,
+            empresa=make_empresa('Back SA'))
+        cls.docente = make_user('back-doc@qa.local', Role.DOCENTE, Area.SISTEMAS)
+        cls.coordinador = make_user('back-coord@qa.local', Role.COORDINADOR, Area.SISTEMAS)
+        cls.director = make_user('back-dir@qa.local', Role.DIRECTOR)
+        cls.estudiante = CustomUser.objects.create_user(
+            email='back-est@qa.local', password=PASSWORD, role=Role.ESTUDIANTE,
+            area=Area.SISTEMAS, student_type=StudentType.CONSULTOR)
+        cls.cita = CitaAsesoria.objects.create(
+            franja=make_franja(Area.SISTEMAS), cliente=cls.cliente,
+            subespecialidad='web', asunto='Caso con volver',
+            estado=CitaAsesoria.Estado.ASIGNADA, docente_asignado=cls.docente)
+
+    def test_boton_volver_aparece_en_vistas_internas(self):
+        self.client.force_login(self.cliente)
+        r = self.client.get(reverse('portal:perfil'))
+        self.assertContains(r, 'data-back-button')
+        self.assertContains(r, f'href="{reverse("portal:cliente_dashboard")}"')
+
+    def test_boton_volver_no_aparece_en_dashboards_raiz(self):
+        casos = (
+            (self.cliente, 'portal:cliente_dashboard'),
+            (self.coordinador, 'portal:coordinador_dashboard'),
+            (self.docente, 'portal:docente_dashboard'),
+            (self.director, 'portal:director_dashboard'),
+            (self.estudiante, 'portal:estudiante_dashboard'),
+        )
+        for user, url_name in casos:
+            self.client.force_login(user)
+            r = self.client.get(reverse(url_name))
+            self.assertNotContains(r, 'data-back-button', msg_prefix=user.email)
+
+    def test_fallback_volver_es_dashboard_del_rol(self):
+        casos = (
+            (self.cliente, 'portal:cliente_dashboard'),
+            (self.coordinador, 'portal:coordinador_dashboard'),
+            (self.docente, 'portal:docente_dashboard'),
+            (self.director, 'portal:director_dashboard'),
+            (self.estudiante, 'portal:estudiante_dashboard'),
+        )
+        for user, url_name in casos:
+            self.client.force_login(user)
+            r = self.client.get(reverse('portal:perfil'))
+            self.assertContains(r, f'href="{reverse(url_name)}"', msg_prefix=user.email)
+
+    def test_boton_volver_carga_js_y_data_attribute(self):
+        self.client.force_login(self.cliente)
+        r = self.client.get(reverse('portal:perfil'))
+        self.assertContains(r, 'back-button.js')
+        self.assertContains(r, 'data-back-button')
+
+    def test_no_hay_volver_duplicado_en_detalle(self):
+        self.client.force_login(self.docente)
+        r = self.client.get(reverse('portal:docente_caso_detalle', args=[self.cita.pk]))
+        html = r.content.decode('utf-8')
+        self.assertEqual(html.count('data-back-button'), 1)
+
+
+class PrivateNoCacheTests(TestCase):
+    """Las rutas privadas y la agenda no deben quedar en caché."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cliente = CustomUser.objects.create_user(
+            email='cache-cli@qa.local', password=PASSWORD, role=Role.CLIENTE,
+            empresa=make_empresa('Cache SA'))
+
+    def test_panel_privado_sin_cache(self):
+        self.client.force_login(self.cliente)
+        r = self.client.get(reverse('portal:perfil'))
+        self.assertIn('no-store', r['Cache-Control'])
+        self.assertIn('no-cache', r['Cache-Control'])
+        self.assertIn('must-revalidate', r['Cache-Control'])
+        self.assertIn('max-age=0', r['Cache-Control'])
+        self.assertEqual(r['Pragma'], 'no-cache')
+        self.assertEqual(r['Expires'], '0')
+
+    def test_agenda_api_sin_cache(self):
+        self.client.force_login(self.cliente)
+        r = self.client.get('/agenda/api/eventos/')
+        self.assertIn('no-store', r['Cache-Control'])
+        self.assertEqual(r['Pragma'], 'no-cache')
+
+    def test_zona_publica_no_recibe_no_store(self):
+        r = self.client.get('/')
+        self.assertNotIn('no-store', r.get('Cache-Control', ''))
+
+    def test_login_tampoco_se_cachea(self):
+        r = self.client.get(reverse('accounts:login'))
+        self.assertIn('no-store', r['Cache-Control'])
+
+
+class SecurityHeadersTests(TestCase):
+    """Cabeceras y cookies seguras sin exigir HTTPS en desarrollo."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cliente = CustomUser.objects.create_user(
+            email='headers-cli@qa.local', password=PASSWORD, role=Role.CLIENTE,
+            empresa=make_empresa('Headers SA'))
+
+    def test_cabeceras_de_seguridad_en_desarrollo(self):
+        r = self.client.get('/')
+        self.assertEqual(r['X-Content-Type-Options'], 'nosniff')
+        self.assertEqual(r['X-Frame-Options'], 'DENY')
+        self.assertEqual(r['Referrer-Policy'], 'same-origin')
+
+    def test_cookie_sesion_httponly_samesite_lax_sin_secure(self):
+        r = self.client.post(reverse('accounts:login'), {
+            'username': self.cliente.email, 'password': PASSWORD,
+            'expected_role': Role.CLIENTE,
+        })
+        self.assertEqual(r.status_code, 302)
+        cookie = r.cookies['sessionid']
+        self.assertTrue(cookie['httponly'])
+        self.assertEqual(cookie['samesite'], 'Lax')
+        self.assertFalse(cookie['secure'])
+
+    def test_cookie_csrf_httponly_samesite_lax(self):
+        r = self.client.get(reverse('accounts:login'))
+        cookie = r.cookies['csrftoken']
+        self.assertTrue(cookie['httponly'])
+        self.assertEqual(cookie['samesite'], 'Lax')
+        self.assertFalse(cookie['secure'])
+
+    def test_ssl_redirect_desactivado_y_admin_carga(self):
+        self.assertFalse(getattr(settings, 'SECURE_SSL_REDIRECT', False))
+        self.assertEqual(self.client.get('/').status_code, 200)
+        self.assertEqual(self.client.get('/admin/login/').status_code, 200)
+
+
+@override_settings(CACHES={
+    'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'},
+})
+class LoginBruteForceTests(TestCase):
+    """6 fallos consecutivos bloquean correo+IP durante 5 minutos."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = CustomUser.objects.create_user(
+            email='brute-cli@qa.local', password=PASSWORD, role=Role.CLIENTE,
+            empresa=make_empresa('Brute SA'))
+
+    def setUp(self):
+        cache.clear()
+
+    def _fail(self, email=None, password='incorrecta', ip='10.0.0.10'):
+        return self.client.post(reverse('accounts:login'), {
+            'username': email or self.user.email,
+            'password': password,
+            'expected_role': Role.CLIENTE,
+        }, REMOTE_ADDR=ip)
+
+    def test_seis_fallos_bloquean_correo_ip(self):
+        for _ in range(6):
+            r = self._fail()
+        self.assertEqual(r.status_code, 429)
+        self.assertContains(r, 'Demasiados intentos', status_code=429)
+        r = self._fail(password=PASSWORD)
+        self.assertEqual(r.status_code, 429)
+
+    def test_bloqueo_expira_y_permite_login(self):
+        for _ in range(6):
+            self._fail()
+        cache.clear()  # simula el vencimiento del TTL de 5 minutos
+        r = self._fail(password=PASSWORD)
+        self.assertEqual(r.status_code, 302)
+
+    def test_login_exitoso_resetea_contador(self):
+        for _ in range(5):
+            self._fail()
+        r = self._fail(password=PASSWORD)
+        self.assertEqual(r.status_code, 302)
+        self.client.logout()
+        for _ in range(5):
+            r = self._fail()
+        self.assertNotEqual(r.status_code, 429)
+
+    def test_bloqueo_no_afecta_a_otro_correo_en_la_misma_ip(self):
+        for _ in range(6):
+            self._fail()
+        otro = CustomUser.objects.create_user(
+            email='brute-otro@qa.local', password=PASSWORD, role=Role.CLIENTE,
+            empresa=make_empresa('Otra Brute SA'))
+        r = self._fail(email=otro.email, password=PASSWORD)
+        self.assertEqual(r.status_code, 302)
+
+    def test_mensaje_de_bloqueo_es_generico(self):
+        for _ in range(6):
+            r = self._fail(email='no-existe@qa.local')
+        self.assertEqual(r.status_code, 429)
+        self.assertContains(r, 'Demasiados intentos', status_code=429)
+        self.assertNotContains(r, 'no está registrado', status_code=429)
+
+
+class AdjuntoValidationTests(TestCase):
+    """Extensión y tamaño se validan en el servidor, no solo en el HTML."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cliente = CustomUser.objects.create_user(
+            email='upload-cli@qa.local', password=PASSWORD, role=Role.CLIENTE,
+            empresa=make_empresa('Upload SA'))
+        cls.franja = make_franja(Area.SISTEMAS, capacidad=2)
+
+    def _post(self, archivo):
+        self.client.force_login(self.cliente)
+        return self.client.post('/agenda/api/reservar/', {
+            'franja_id': self.franja.pk,
+            'asunto': 'Adjunto de prueba',
+            'subespecialidad': 'web',
+            'tipo_servicio': 'orientacion',
+            'archivo_adjunto': archivo,
+        })
+
+    def test_extension_no_permitida_rechazada(self):
+        archivo = SimpleUploadedFile(
+            'malware.exe', b'MZ', content_type='application/octet-stream')
+        r = self._post(archivo)
+        self.assertEqual(r.status_code, 400)
+        self.assertFalse(CitaAsesoria.objects.exists())
+
+    def test_adjunto_mayor_a_10mb_rechazado(self):
+        archivo = SimpleUploadedFile(
+            'grande.pdf', b'x' * (10 * 1024 * 1024 + 1),
+            content_type='application/pdf')
+        r = self._post(archivo)
+        self.assertEqual(r.status_code, 400)
+        self.assertFalse(CitaAsesoria.objects.exists())
+
+    def test_adjunto_permitido_se_guarda(self):
+        archivo = SimpleUploadedFile(
+            'requerimientos.pdf', b'%PDF-1.4\n1 0 obj\n<<>>\nendobj\n',
+            content_type='application/pdf')
+        with tempfile.TemporaryDirectory() as media_root:
+            with self.settings(MEDIA_ROOT=media_root):
+                r = self._post(archivo)
+                self.assertEqual(r.status_code, 200, r.content)
+                cita = CitaAsesoria.objects.get()
+                self.assertTrue(cita.archivo_adjunto.name.endswith('.pdf'))
+
+    def test_full_clean_rechaza_zip(self):
+        cita = CitaAsesoria(
+            franja=self.franja, cliente=self.cliente, subespecialidad='web',
+            archivo_adjunto=SimpleUploadedFile('paquete.zip', b'PK'))
+        with self.assertRaises(ValidationError):
+            cita.full_clean()
 

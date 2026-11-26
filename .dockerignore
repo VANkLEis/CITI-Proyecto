@@ -11,7 +11,9 @@ backend/db.sqlite3
 backend/db.sqlite3.bak-fase0
 backend/staticfiles/
 backend/media/
+backend/.cache/
 docs/
+tools/
 Presentacion final/
 .playwright-mcp/
 *.log

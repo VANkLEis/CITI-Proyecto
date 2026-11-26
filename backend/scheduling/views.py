@@ -2,6 +2,7 @@ import json
 import os
 
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -15,6 +16,7 @@ from scheduling.area_styles import colores_para_area
 from scheduling.models import CitaAsesoria, CitaEvento, CitaInteraccion, FranjaHoraria
 from scheduling.subespecialidades import Subespecialidad
 from scheduling.trazabilidad import registrar_evento, registrar_interaccion
+from scheduling.validators import MAX_REQUEST_BYTES
 
 
 def _parse_range(request):
@@ -116,6 +118,18 @@ def calendario_eventos_api(request):
 @role_required(Role.CLIENTE)
 @require_POST
 def reservar_cita_api(request):
+    # Corte temprano por Content-Length: evita que un archivo gigante llegue a
+    # disco antes de que el validador de 10 MB pueda rechazarlo.
+    try:
+        content_length = int(request.META.get('CONTENT_LENGTH') or 0)
+    except (TypeError, ValueError):
+        content_length = 0
+    if content_length > MAX_REQUEST_BYTES:
+        return JsonResponse({
+            'ok': False,
+            'error': 'La solicitud supera el tamaño máximo permitido (10 MB).',
+        }, status=413)
+
     # Al recibir multipart/form-data (FormData), leemos directamente desde request.POST y request.FILES
     franja_id = request.POST.get('franja_id')
     asunto = (request.POST.get('asunto') or 'Asesoría CITI').strip()[:255]
@@ -202,8 +216,14 @@ def reservar_cita_api(request):
                     descripcion=f'Documentación adjunta: {os.path.basename(cita.archivo_adjunto.name)}.',
                     anterior=cita.estado, nuevo=cita.estado,
                 )
-    except Exception as exc:
-        return JsonResponse({'ok': False, 'error': str(exc)}, status=400)
+    except ValidationError as exc:
+        mensaje = exc.messages[0] if exc.messages else 'El archivo no es válido.'
+        return JsonResponse({'ok': False, 'error': mensaje}, status=400)
+    except Exception:
+        return JsonResponse({
+            'ok': False,
+            'error': 'No se pudo registrar la solicitud. Intente de nuevo.',
+        }, status=400)
 
     return JsonResponse({
         'ok': True,

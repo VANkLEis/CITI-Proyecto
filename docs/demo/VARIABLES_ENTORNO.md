@@ -22,6 +22,9 @@ automáticamente (python-dotenv); la fuente de ejemplo es
 | `DATABASE_URL` | — (SQLite) | Si empieza con `postgres://` / `postgresql://` usa PostgreSQL; cualquier otro esquema mantiene SQLite silenciosamente |
 | `DJANGO_HSTS_SECONDS` | `31536000` | HSTS en modo producción (`0` para desactivar) |
 | `CITI_DEMO_PASSWORD` | `CITIPass2026*` | Contraseña que asigna `seed_demo` a las cuentas locales de prueba. **Solo para datos de demostración locales** |
+| `CITI_LOGIN_MAX_ATTEMPTS` | `6` | Fallos consecutivos por correo+IP antes de bloquear el login |
+| `CITI_LOGIN_LOCK_SECONDS` | `300` | Duración del bloqueo temporal de login (5 min) |
+| `CITI_CACHE_DIR` | `backend/.cache` | Directorio de `FileBasedCache`; en Docker se crea solo y no requiere volumen |
 | `CITI_MIN_SEMESTRE_TUTOR` | `8` | Semestre mínimo para tutor |
 | `CITI_MIN_CREDITOS_TUTOR` | `130` | Créditos mínimos para tutor |
 | `CITI_MIN_PROMEDIO_TUTOR` | `4.0` | Promedio mínimo para tutor |

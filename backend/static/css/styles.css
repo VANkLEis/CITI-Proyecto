@@ -162,6 +162,17 @@ a { color: inherit; text-decoration: none; }
 
 .page-content { padding: 1.75rem 2rem; }
 
+.page-back {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  margin: 0 0 1rem; color: var(--ucc);
+  font-weight: 600; font-size: 0.88rem;
+}
+.page-back:hover { color: var(--highlight); }
+.page-back:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: 3px; border-radius: 4px;
+}
+
 .user-chip { display: flex; align-items: center; gap: 10px; }
 .user-avatar {
   width: 40px; height: 40px; border-radius: 50%;

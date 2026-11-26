@@ -66,6 +66,10 @@ class RoleLoginForm(AuthenticationForm):
         widget=forms.HiddenInput(attrs={'id': 'id_expected_role'}),
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.auth_failed = False
+
     def clean_expected_role(self):
         role = (self.cleaned_data.get('expected_role') or '').strip()
         if role not in dict(Role.choices):
@@ -86,8 +90,10 @@ class RoleLoginForm(AuthenticationForm):
                 password=password,
             )
             if self.user_cache is None:
+                self.auth_failed = True
                 raise forms.ValidationError('Correo o contraseña incorrectos.')
             if self.user_cache.role != expected_role:
+                self.auth_failed = True
                 raise forms.ValidationError(
                     f'Esta cuenta pertenece al portal «{self.user_cache.get_role_display()}», '
                     f'no al seleccionado.'
