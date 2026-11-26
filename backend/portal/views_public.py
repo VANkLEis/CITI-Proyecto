@@ -14,7 +14,9 @@ from django.utils import timezone
 
 from accounts.models import Area, Role
 from portal.forms_public import SolicitudDiagnosticoForm, SolicitudTallerForm
-from portal.models import LineaPortafolio, ProyectoPortafolio, Taller
+from portal.models import (
+    GRUPOS_PUBLICO, LineaPortafolio, ProyectoPortafolio, Taller,
+)
 from portal.role_routing import dashboard_url_for_role
 from scheduling.models import SolicitudPublica
 from scheduling.subespecialidades import Subespecialidad
@@ -98,15 +100,20 @@ def portafolio_detail(request, slug):
 
 def talleres_list(request):
     publico = (request.GET.get('publico') or '').strip()
+    grupos = [{'code': code, 'label': label}
+              for code, label, _codigos in GRUPOS_PUBLICO]
+    grupo = next((g for g in GRUPOS_PUBLICO if g[0] == publico), None)
+
     talleres = Taller.objects.filter(activo=True)
-    if publico in dict(Taller.Publico.choices):
-        talleres = talleres.filter(publico_objetivo=publico)
+    if grupo:
+        talleres = talleres.filter(publico_objetivo__in=grupo[2])
     else:
         publico = ''
+
     return render(request, 'portal/talleres_list.html', {
         'talleres': talleres,
         'publico_activo': publico,
-        'publicos': Taller.Publico.choices,
+        'grupos': grupos,
     })
 
 
@@ -147,6 +154,12 @@ def taller_solicitud(request, slug=None):
     taller = None
     if slug:
         taller = get_object_or_404(Taller.objects.filter(activo=True), slug=slug)
+    else:
+        # Enlaces de tarjeta: /talleres/solicitar/?taller=<slug>. Un slug
+        # inexistente se ignora (no rompe un enlace compartido).
+        slug_query = (request.GET.get('taller') or '').strip()
+        if slug_query:
+            taller = Taller.objects.filter(activo=True, slug=slug_query).first()
     inicial = {'taller': taller} if taller else {}
     form = SolicitudTallerForm(request.POST or None, initial=inicial)
     if request.method == 'POST':

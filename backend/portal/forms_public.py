@@ -66,13 +66,14 @@ class _BasePublica(forms.ModelForm):
 
 
 class SolicitudDiagnosticoForm(_BasePublica):
-    """Diagnóstico / asesoría / consultoría desde la web pública."""
+    """Sesión previa de diagnóstico: orientación, proyecto técnico o taller."""
 
     class Meta:
         model = SolicitudPublica
         fields = (
             'tipo_solicitante', 'nombre_contacto', 'cargo', 'organizacion', 'nit',
-            'email', 'telefono', 'area', 'tipo_necesidad', 'descripcion', 'objetivo',
+            'email', 'telefono', 'area', 'tipo_necesidad', 'madurez',
+            'tema_interes', 'descripcion', 'objetivo',
             'fecha_preferida', 'turno_preferido', 'modalidad_preferida',
             'acepta_contacto',
         )
@@ -83,19 +84,30 @@ class SolicitudDiagnosticoForm(_BasePublica):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # La web pública no ofrece "capacitación" en este formulario: tiene su
-        # propio flujo con catálogo de talleres.
-        self.fields['tipo_necesidad'].choices = [
-            (SolicitudPublica.TipoNecesidad.ASESORIA, 'Asesoría / Orientación inicial'),
-            (SolicitudPublica.TipoNecesidad.CONSULTORIA, 'Desarrollo / Consultoría técnica'),
-        ]
+        # Las tres rutas de entrada del CITI: orientación, proyecto técnico o
+        # capacitación. Los talleres tienen además su flujo con catálogo.
+        self.fields['tipo_necesidad'].choices = SolicitudPublica.TipoNecesidad.choices
+        self.fields['madurez'].required = False
+        self.fields['tema_interes'].required = False
+        self.fields['tema_interes'].help_text = (
+            'Solo si pediste una charla o taller: tema que te interesa.')
         self.fields['area'].help_text = 'Si no estás seguro, elige "Ambas áreas".'
         self.order_fields([
             'tipo_solicitante', 'nombre_contacto', 'cargo', 'organizacion', 'nit',
-            'email', 'telefono', 'tipo_necesidad', 'area', 'descripcion', 'objetivo',
+            'email', 'telefono', 'tipo_necesidad', 'madurez', 'tema_interes',
+            'area', 'descripcion', 'objetivo',
             'fecha_preferida', 'turno_preferido', 'modalidad_preferida',
             'acepta_contacto',
         ])
+
+    def clean(self):
+        data = super().clean()
+        if (data.get('tipo_necesidad') == SolicitudPublica.TipoNecesidad.CAPACITACION
+                and not (data.get('tema_interes') or '').strip()):
+            self.add_error(
+                'tema_interes',
+                'Indica el tema de la charla o taller que necesitas.')
+        return data
 
 
 class SolicitudTallerForm(_BasePublica):

@@ -195,9 +195,10 @@ def convertir_solicitud(solicitud, actor, franja, docente=None, estudiante=None)
     para que dos triages simultáneos no creen dos citas ni sobrevendan cupo.
     """
     with transaction.atomic():
+        # Sin select_related: PostgreSQL no permite FOR UPDATE sobre el lado
+        # nullable de un LEFT OUTER JOIN (cliente y taller son nullable).
         fresh = (SolicitudPublica.objects
                  .select_for_update()
-                 .select_related('cliente', 'taller')
                  .get(pk=solicitud.pk))
 
         if fresh.cita_id or fresh.estado == SolicitudPublica.Estado.CONVERTIDA:

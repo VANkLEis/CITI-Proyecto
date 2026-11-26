@@ -94,6 +94,11 @@ def _contexto_detalle(request, solicitud, **overrides):
     contexto = {
         'solicitud': solicitud,
         'role_label': _role_label(request.user),
+        'linea_sugerida': solicitud.linea_sugerida,
+        'linea_sugerida_label': dict(LineaAtencion.choices).get(
+            solicitud.linea_sugerida, ''),
+        'linea_coincide': solicitud.linea_atencion == solicitud.linea_sugerida,
+        'accion_sugerida': solicitud.accion_sugerida,
         'form_rechazo': RechazarSolicitudForm(),
         'puede_aprobar': solicitud.es_abierta,
         'puede_convertir': solicitud.puede_convertirse,
