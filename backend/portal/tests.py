@@ -1628,11 +1628,12 @@ class LogoutRedirectTests(TestCase):
         self.assertRedirects(r, reverse('accounts:login'))
         self.assertNotIn('_auth_user_id', self.client.session)
 
-    def test_logout_muestra_mensaje_en_login(self):
+    def test_logout_renderiza_login_sin_banner_sesion_cerrada(self):
         self.client.force_login(self.cliente)
         r = self.client.post(reverse('accounts:logout'), follow=True)
-        self.assertContains(r, 'Sesión cerrada.')
+        self.assertEqual(r.status_code, 200)
         self.assertEqual(r.request['PATH_INFO'], reverse('accounts:login'))
+        self.assertNotContains(r, 'Sesión cerrada.')
 
 
 class BackNavigationTests(TestCase):
