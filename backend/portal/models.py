@@ -40,7 +40,7 @@ class ImagenMixta(models.Model):
 
     imagen_static = models.CharField(
         max_length=255, blank=True,
-        help_text='Ruta dentro de static/, por ejemplo images/landing/area-sistemas.jpg')
+        help_text='Ruta dentro de static/, por ejemplo images/landing/proyecto-trazabilidad-ong.jpg')
     imagen_alt = models.CharField(max_length=200, blank=True)
 
     class Meta:

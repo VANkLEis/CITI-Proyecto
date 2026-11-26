@@ -144,7 +144,7 @@ cd backend
 ..\venv\Scripts\python.exe manage.py test
 ```
 
-193 pruebas: matriz de roles, reservas, estados, IDOR, registro, seed,
+195 pruebas: matriz de roles, reservas, estados, IDOR, registro, seed,
 trazabilidad, indicadores, seguimiento, interacciones, aprobaciones, la zona
 pública + triage (`backend/portal/test_public.py`), seguridad de sesión, botón
 Volver y medios únicos.

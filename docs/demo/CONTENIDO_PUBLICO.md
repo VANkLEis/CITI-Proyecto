@@ -25,7 +25,8 @@ invocado desde `seed_all()` y por tanto disponible en `seed_demo` y
 Las 8 tarjetas usan `imagen_static` con una **foto única por proyecto** en
 `backend/static/images/landing/`. El seed migra automáticamente las rutas
 antiguas (`area-civil.jpg`, `banner-campo.jpg`, etc.) sin sobrescribir imágenes
-personalizadas desde `/admin/`. Créditos y licencias:
+personalizadas desde `/admin/`; esos archivos heredados ya no se distribuyen.
+Créditos y licencias:
 [`CREDITOS_IMAGENES.md`](CREDITOS_IMAGENES.md).
 
 ## Talleres (6 activos: 3 Civil + 3 Sistemas)

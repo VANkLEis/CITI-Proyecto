@@ -143,7 +143,7 @@ class CitaAsesoria(models.Model):
             validate_adjunto_size,
         ],
         help_text='Documentación base o requerimientos subidos por el cliente '
-                  '(PDF, Word, Excel, TXT o imagen; máximo 10 MB).'
+                  '(PDF, Word, Excel o imagen; máximo 10 MB).'
     )
     estado = models.CharField(
         max_length=20,

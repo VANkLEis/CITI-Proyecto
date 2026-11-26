@@ -1435,7 +1435,7 @@ class CancelacionI4AdjuntoI3Tests(TestCase):
             asunto='En proceso', estado=CitaAsesoria.Estado.EN_PROCESO,
             docente_asignado=cls.docente)
         from django.core.files.base import ContentFile
-        cls.cita.archivo_adjunto.save('tdr.txt', ContentFile('doc F4'), save=True)
+        cls.cita.archivo_adjunto.save('tdr.pdf', ContentFile('doc F4'), save=True)
 
     def test_cancelacion_requiere_confirmacion(self):
         self.client.force_login(self.cliente)

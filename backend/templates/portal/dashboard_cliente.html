@@ -144,8 +144,8 @@
 
       <div class="form-group">
         <label for="archivoAdjunto">Documentación / Términos de referencia (Opcional)</label>
-        <input type="file" id="archivoAdjunto" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.png,.jpg,.jpeg">
-        <small style="color:var(--muted);">PDF, Word, Excel, TXT o imagen · máximo 10 MB</small>
+        <input type="file" id="archivoAdjunto" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg">
+        <small style="color:var(--muted);">PDF, Word, Excel o imagen · máximo 10 MB</small>
       </div>
 
       <p id="franjaSeleccionada" style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Seleccione una franja en el calendario.</p>
@@ -320,10 +320,10 @@
     }
 
     const archivo = archivoInput.files[0];
-    const extensionValida = /\.(pdf|docx?|xlsx?|txt|png|jpe?g)$/i;
+    const extensionValida = /\.(pdf|docx?|xlsx?|png|jpe?g)$/i;
     if (archivo && (!extensionValida.test(archivo.name) ||
                     archivo.size > 10 * 1024 * 1024)) {
-      showAlert('Adjunto no válido. Use PDF, Word, Excel, TXT o imagen de máximo 10 MB.', 'error');
+      showAlert('Adjunto no válido. Use PDF, Word, Excel o imagen de máximo 10 MB.', 'error');
       return;
     }
 

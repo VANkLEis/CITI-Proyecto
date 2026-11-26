@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.utils import timezone
 from PIL import Image
 
-from accounts.demo_public import PROYECTOS, TALLERES
+from accounts.demo_public import LEGACY_IMAGE_PATHS, PROYECTOS, TALLERES
 from accounts.models import Area, CustomUser, Empresa, Role
 from portal.models import ProyectoPortafolio, Taller
 from scheduling.models import (
@@ -95,8 +95,9 @@ class PublicasBaseTests(TestCase):
     def test_landing_publica_muestra_ctas_y_videos(self):
         r = self.client.get('/')
         self.assertEqual(r.status_code, 200)
-        self.assertContains(r, 'Transformamos desafíos reales')
-        self.assertContains(r, 'Agenda una sesión de diagnóstico estratégico')
+        self.assertContains(r, 'Ingeniería real para resolver')
+        self.assertContains(r, 'los retos de tu empresa o comunidad')
+        self.assertContains(r, 'Cuéntanos qué necesitas y agenda tu cita')
         self.assertContains(r, 'Portal académico')
         self.assertContains(r, 'hero-citi.mp4')
         self.assertContains(r, 'progreso-ingenieria.mp4')
@@ -147,6 +148,11 @@ class PublicasBaseTests(TestCase):
         r = self.client.get(reverse('portal:privacidad'))
         self.assertEqual(r.status_code, 200)
         self.assertContains(r, 'Tratamiento de datos personales')
+
+    def test_privacidad_sin_creditos_publicos(self):
+        r = self.client.get(reverse('portal:privacidad'))
+        self.assertNotContains(r, 'Créditos de imágenes')
+        self.assertNotContains(r, 'creditos-imagenes')
 
 
 class IntakePublicoTests(TestCase):
@@ -805,6 +811,11 @@ class MediaPublicaTests(TestCase):
             self.assertIsNotNone(finders.find(path), path)
             with Image.open(Path(settings.BASE_DIR) / 'static' / path) as image:
                 self.assertEqual(image.size, (1600, 1000), path)
+
+    def test_imagenes_heredadas_eliminadas(self):
+        for path in LEGACY_IMAGE_PATHS:
+            self.assertFalse(
+                (Path(settings.BASE_DIR) / 'static' / path).exists(), path)
 
     def test_posters_unicos_y_sin_colision_con_tarjetas(self):
         r = self.client.get('/')

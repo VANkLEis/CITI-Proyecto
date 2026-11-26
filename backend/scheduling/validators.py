@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 
-ALLOWED_EXTENSIONS = (
-    'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'png', 'jpg', 'jpeg')
+ALLOWED_EXTENSIONS = ('pdf', 'doc', 'docx', 'xls', 'xlsx', 'png', 'jpg', 'jpeg')
 MAX_ADJUNTO_BYTES = 10 * 1024 * 1024
 MAX_REQUEST_BYTES = MAX_ADJUNTO_BYTES + (1024 * 1024)
 
