@@ -212,6 +212,7 @@ class SolicitudPublicaAdmin(admin.ModelAdmin):
     )
     list_filter = (
         'estado', 'tipo_necesidad', 'linea_atencion', 'tipo_solicitante', 'area',
+        'madurez',
     )
     search_fields = ('codigo', 'organizacion', 'email', 'nombre_contacto', 'nit')
     date_hierarchy = 'creada_en'
@@ -228,7 +229,7 @@ class SolicitudPublicaAdmin(admin.ModelAdmin):
             'nit', 'email', 'telefono', 'acepta_contacto',
         )}),
         ('Necesidad', {'fields': (
-            'tipo_necesidad', 'linea_atencion', 'area', 'subespecialidad',
+            'tipo_necesidad', 'madurez', 'linea_atencion', 'area', 'subespecialidad',
             'descripcion', 'objetivo',
         )}),
         ('Taller / capacitación', {'fields': (

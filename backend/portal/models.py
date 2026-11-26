@@ -17,6 +17,17 @@ class LineaPortafolio(models.TextChoices):
     IMPACTO_SOCIAL = 'impacto_social', 'Impacto Social'
 
 
+# Agrupación de público para los filtros de /talleres/. Se mantienen los cinco
+# códigos del modelo (compatibilidad de datos) y se agrupan en cuatro entradas
+# visibles; `pymes` y `comunidad` comparten el grupo "Pymes y comunidad".
+GRUPOS_PUBLICO = (
+    ('fundaciones', 'Fundaciones / ONG', ('fundaciones',)),
+    ('jovenes', 'Emprendimientos juveniles', ('jovenes',)),
+    ('adultos_mayores', 'Pensionados y adultos mayores', ('adultos_mayores',)),
+    ('pymes_comunidad', 'Pymes y comunidad', ('pymes', 'comunidad')),
+)
+
+
 class ImagenMixta(models.Model):
     """Imagen subida en admin con respaldo a un archivo de `static/`.
 
@@ -101,10 +112,10 @@ class Taller(ImagenMixta):
     """Taller / capacitación ofertada en la zona pública."""
 
     class Publico(models.TextChoices):
-        FUNDACIONES = 'fundaciones', 'Fundaciones y ONG'
-        JOVENES = 'jovenes', 'Emprendedores jóvenes'
-        ADULTOS_MAYORES = 'adultos_mayores', 'Adultos mayores y pensionados'
-        PYMES = 'pymes', 'Pymes y organizaciones'
+        FUNDACIONES = 'fundaciones', 'Fundaciones / ONG'
+        JOVENES = 'jovenes', 'Emprendimientos juveniles'
+        ADULTOS_MAYORES = 'adultos_mayores', 'Pensionados y adultos mayores'
+        PYMES = 'pymes', 'Pymes y comunidad'
         COMUNIDAD = 'comunidad', 'Comunidad en general'
 
     class Modalidad(models.TextChoices):
@@ -113,7 +124,7 @@ class Taller(ImagenMixta):
         HIBRIDA = 'hibrida', 'Híbrida'
 
     class Nivel(models.TextChoices):
-        BASICO = 'basico', 'Básico'
+        BASICO = 'basico', 'Desde cero / sin conocimientos previos'
         INTERMEDIO = 'intermedio', 'Intermedio'
         AVANZADO = 'avanzado', 'Avanzado'
 
@@ -130,6 +141,9 @@ class Taller(ImagenMixta):
         max_length=20, choices=Modalidad.choices, default=Modalidad.PRESENCIAL)
     nivel = models.CharField(
         max_length=20, choices=Nivel.choices, default=Nivel.BASICO)
+    puntos_clave = models.JSONField(
+        default=list, blank=True,
+        help_text='Tres ideas clave del temario, una por elemento de la lista.')
     imagen = models.ImageField(
         upload_to='talleres/', blank=True, null=True,
         help_text='Opcional. Si se omite se usa la imagen de respaldo.')
@@ -146,6 +160,27 @@ class Taller(ImagenMixta):
 
     def __str__(self):
         return self.titulo
+
+    @property
+    def puntos_clave_validos(self):
+        """Máximo tres viñetas, ignorando valores vacíos o malformados."""
+        if not isinstance(self.puntos_clave, list):
+            return []
+        return [str(p).strip() for p in self.puntos_clave if str(p).strip()][:3]
+
+    @property
+    def grupo_publico(self):
+        for code, _label, codes in GRUPOS_PUBLICO:
+            if self.publico_objetivo in codes:
+                return code
+        return self.publico_objetivo
+
+    @property
+    def grupo_publico_label(self):
+        for _code, label, codes in GRUPOS_PUBLICO:
+            if self.publico_objetivo in codes:
+                return label
+        return self.get_publico_objetivo_display()
 
     def save(self, *args, **kwargs):
         if not self.slug:

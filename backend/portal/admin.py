@@ -60,6 +60,9 @@ class TallerAdmin(ImagenPreviewMixin, admin.ModelAdmin):
         ('Dirigido a', {'fields': (
             'publico_objetivo', 'modalidad', 'nivel', 'duracion',
         )}),
+        ('Temario', {'fields': ('puntos_clave',),
+                     'description': 'JSON: una lista de 3 ideas clave, por ejemplo '
+                                    '["Qué es la IA", "Casos de uso", "Buenas prácticas"]'}),
         ('Imagen', {'fields': ('imagen', 'imagen_static', 'imagen_alt', 'vista_previa')}),
         ('Publicación', {'fields': ('activo', 'orden')}),
         ('Auditoría', {'classes': ('collapse',),

@@ -511,16 +511,21 @@ class SolicitudPublica(models.Model):
     """
 
     class TipoSolicitante(models.TextChoices):
-        EMPRESA = 'empresa', 'Empresa'
+        EMPRESA = 'empresa', 'Empresa / Pyme'
         FUNDACION = 'fundacion', 'Fundación / ONG'
         EMPRENDIMIENTO = 'emprendimiento', 'Emprendimiento juvenil'
-        COMUNIDAD = 'comunidad', 'Comunidad / Adulto mayor'
-        OTRO = 'otro', 'Otro'
+        COMUNIDAD = 'comunidad', 'Grupo de pensionados / adultos mayores'
+        OTRO = 'otro', 'Comunidad / Otro'
 
     class TipoNecesidad(models.TextChoices):
-        ASESORIA = 'asesoria', 'Asesoría / Orientación inicial'
-        CONSULTORIA = 'consultoria', 'Desarrollo / Consultoría técnica'
-        CAPACITACION = 'capacitacion', 'Capacitación / Taller'
+        ASESORIA = 'asesoria', 'Orientación / Diagnóstico inicial'
+        CONSULTORIA = 'consultoria', 'Desarrollo o estudio técnico a medida'
+        CAPACITACION = 'capacitacion', 'Charla, capacitación o taller grupal'
+
+    class Madurez(models.TextChoices):
+        IDEA = 'idea', 'Solo tengo una idea inicial'
+        PROCESO = 'proceso', 'Tengo un proceso que quiero mejorar'
+        REQUERIMIENTOS = 'requerimientos', 'Ya tengo requerimientos definidos para desarrollar'
 
     class Estado(models.TextChoices):
         RECIBIDA = 'recibida', 'Recibida'
@@ -570,6 +575,9 @@ class SolicitudPublica(models.Model):
     tipo_necesidad = models.CharField(
         max_length=20, choices=TipoNecesidad.choices,
         default=TipoNecesidad.ASESORIA)
+    madurez = models.CharField(
+        max_length=20, choices=Madurez.choices, blank=True, default='',
+        help_text='Estado de madurez declarado por el solicitante.')
     linea_atencion = models.CharField(
         max_length=30, choices=LineaAtencion.choices, blank=True, default='',
         help_text='Se deriva del tipo de necesidad; el triage puede ajustarla.')
@@ -642,6 +650,23 @@ class SolicitudPublica(models.Model):
         if tipo_necesidad == SolicitudPublica.TipoNecesidad.CONSULTORIA:
             return LineaAtencion.CONSULTORIA_PROFESIONAL
         return LineaAtencion.PROYECCION_SOCIAL
+
+    @property
+    def linea_sugerida(self):
+        """Pre-clasificación derivada de la necesidad declarada (no editable)."""
+        return self.linea_para(self.tipo_necesidad)
+
+    @property
+    def accion_sugerida(self):
+        """Guía de un renglón para el triage del Director/Coordinador."""
+        if self.tipo_necesidad == self.TipoNecesidad.CAPACITACION:
+            return ('Aprobar y coordinar fecha con la organización. '
+                    'Una capacitación no genera cita en el calendario.')
+        if self.linea_sugerida == LineaAtencion.CONSULTORIA_PROFESIONAL:
+            return ('Convertir en cita y asignar docente responsable + estudiantes '
+                    'tutores; cronograma por hitos y acta de cierre.')
+        return ('Aprobar como orientación o mentoría; asignar estudiante tutor '
+                'con dirección docente.')
 
     def _generar_codigo(self):
         for _ in range(20):
