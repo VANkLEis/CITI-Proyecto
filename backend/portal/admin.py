@@ -46,9 +46,9 @@ class ProyectoPortafolioAdmin(ImagenPreviewMixin, admin.ModelAdmin):
 
 @admin.register(Taller)
 class TallerAdmin(ImagenPreviewMixin, admin.ModelAdmin):
-    list_display = ('titulo', 'publico_objetivo', 'modalidad', 'nivel',
+    list_display = ('titulo', 'area', 'publico_objetivo', 'modalidad', 'nivel',
                     'duracion', 'activo', 'orden', 'vista_previa')
-    list_filter = ('activo', 'publico_objetivo', 'modalidad', 'nivel')
+    list_filter = ('activo', 'area', 'publico_objetivo', 'modalidad', 'nivel')
     list_editable = ('activo', 'orden')
     search_fields = ('titulo', 'tematica', 'descripcion')
     prepopulated_fields = {'slug': ('titulo',)}
@@ -58,7 +58,7 @@ class TallerAdmin(ImagenPreviewMixin, admin.ModelAdmin):
             'titulo', 'slug', 'tematica', 'descripcion',
         )}),
         ('Dirigido a', {'fields': (
-            'publico_objetivo', 'modalidad', 'nivel', 'duracion',
+            'area', 'publico_objetivo', 'modalidad', 'nivel', 'duracion',
         )}),
         ('Temario', {'fields': ('puntos_clave',),
                      'description': 'JSON: una lista de 3 ideas clave, por ejemplo '

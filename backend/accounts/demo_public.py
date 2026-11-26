@@ -67,7 +67,7 @@ PROYECTOS = (
         ],
         'imagen_static': 'images/landing/banner-asesoria.jpg',
         'imagen_alt': 'Sala de reuniones con documentación técnica sobre la mesa',
-        'orden': 3,
+        'orden': 5,
     },
     {
         'slug': 'estudio-suelos-vivienda-rural',
@@ -130,7 +130,7 @@ PROYECTOS = (
         'imagen_static': 'images/landing/reportes-manos.jpg',
         'imagen_alt': 'Persona revisando indicadores y reportes impresos',
         'destacado': True,
-        'orden': 5,
+        'orden': 3,
     },
     {
         'slug': 'alfabetizacion-digital-mayores',
@@ -151,29 +151,57 @@ PROYECTOS = (
         ],
         'imagen_static': 'images/landing/proceso-revision.jpg',
         'imagen_alt': 'Grupo de personas en una sesión de capacitación',
+        'orden': 7,
+    },
+    {
+        'slug': 'patologia-estructural-sede-comunitaria',
+        'titulo': 'Patología estructural en una sede comunitaria',
+        'linea': 'civil',
+        'organizacion': 'Junta de Acción Comunal El Espinal',
+        'anio': 2026,
+        'resumen': 'Diagnóstico de fisuras, humedad y vulnerabilidad antes de intervenir.',
+        'reto': 'La sede presentaba fisuras y humedad, y la comunidad no sabía si '
+                'el edificio era seguro para seguir usándolo.',
+        'solucion': 'Inspección visual, levantamiento de lesiones, análisis de '
+                    'causas probables y recomendaciones priorizadas por riesgo.',
+        'resultados': 'Un informe claro para decidir la intervención y evitar '
+                      'reparaciones cosméticas que ocultaran el problema.',
+        'metricas': [
+            {'label': 'Lesiones identificadas', 'valor': '11'},
+            {'label': 'Acciones priorizadas', 'valor': '3'},
+        ],
+        'imagen_static': 'images/landing/area-civil.jpg',
+        'imagen_alt': 'Revisión estructural de una edificación comunitaria',
+        'destacado': True,
         'orden': 6,
     },
     {
-        'slug': 'validacion-tecnica-emprendimiento-juvenil',
-        'titulo': 'Validación técnica de un producto digital juvenil',
-        'linea': 'innovacion_ia',
-        'organizacion': 'Colectivo Juvenil Ibagué',
+        'slug': 'topografia-drenaje-vial-rural',
+        'titulo': 'Topografía y drenaje vial en zona rural del Tolima',
+        'linea': 'civil',
+        'organizacion': 'Juntas Veredales del Tolima',
         'anio': 2026,
-        'resumen': 'De la idea al alcance técnico: qué construir primero y con qué riesgos.',
-        'reto': 'El equipo tenía una idea de aplicación, pero no sabía si era '
-                'técnicamente viable ni por dónde empezar.',
-        'solucion': 'Sesión de diagnóstico, definición de alcance mínimo y '
-                    'prototipo de flujo con criterios de validación.',
-        'resultados': 'Plan de producto priorizado y decisión informada antes de '
-                      'invertir en desarrollo.',
+        'resumen': 'Levantamiento topográfico y diseño de drenaje para una vía terciaria.',
+        'reto': 'La vía se inundaba en temporada de lluvias y no existía un '
+                'levantamiento confiable del trazado.',
+        'solucion': 'Levantamiento topográfico, perfil longitudinal, análisis de '
+                    'escorrentía y diseño de obras de drenaje.',
+        'resultados': 'Planos y memoria de cálculo para priorizar las obras con '
+                      'la comunidad y la administración local.',
         'metricas': [
-            {'label': 'Flujos validados', 'valor': '3'},
-            {'label': 'Semanas de diagnóstico', 'valor': '2'},
+            {'label': 'Kilómetros levantados', 'valor': '4,2'},
+            {'label': 'Obras de drenaje', 'valor': '7'},
         ],
-        'imagen_static': 'images/landing/hero-equipo.jpg',
-        'imagen_alt': 'Jóvenes trabajando en el diseño de un producto digital',
-        'orden': 7,
+        'imagen_static': 'images/landing/banner-campo.jpg',
+        'imagen_alt': 'Trabajo de campo topográfico en una vía rural',
+        'orden': 8,
     },
+)
+
+# Proyectos sembrados en versiones anteriores que ya no forman parte del set
+# vigente. Se despublican (no se borran) para conservar el historial.
+PROYECTOS_RETIRADOS = (
+    'validacion-tecnica-emprendimiento-juvenil',
 )
 
 # ---------------------------------------------------------------------------
@@ -187,6 +215,7 @@ TALLERES = (
         'descripcion': 'Recorrido práctico por casos de uso reales: redacción de '
                        'informes, análisis de encuestas y atención de consultas '
                        'frecuentes, con criterios de uso responsable.',
+        'area': 'sistemas',
         'publico_objetivo': 'fundaciones',
         'duracion': '2 sesiones de 90 minutos',
         'modalidad': 'hibrida',
@@ -201,12 +230,34 @@ TALLERES = (
         'orden': 1,
     },
     {
+        'slug': 'autoconstruccion-segura-vivienda',
+        'titulo': 'Autoconstrucción segura y prevención de fallas en vivienda',
+        'tematica': 'Decisiones básicas de estructura, materiales y drenaje para construir o ampliar sin riesgo.',
+        'descripcion': 'Taller para comunidad y maestros de obra: lectura de planos '
+                       'básicos, buenas prácticas de cimentación, control de humedad '
+                       'y señales de alerta estructural.',
+        'area': 'civil',
+        'publico_objetivo': 'pymes',
+        'duracion': '2 sesiones de 3 horas',
+        'modalidad': 'presencial',
+        'nivel': 'basico',
+        'puntos_clave': [
+            'Lectura de planos y cimentación básica.',
+            'Materiales y control de humedad.',
+            'Señales de alerta estructural.',
+        ],
+        'imagen_static': 'images/landing/area-civil.jpg',
+        'imagen_alt': 'Maestros de obra revisando planos de vivienda',
+        'orden': 2,
+    },
+    {
         'slug': 'herramientas-digitales-emprendedores',
         'titulo': 'Herramientas digitales para emprendedores jóvenes',
         'tematica': 'Organiza tu operación, tus clientes y tus finanzas con herramientas accesibles.',
         'descripcion': 'Taller de productividad y gestión: hojas de cálculo, '
                        'gestión de clientes, presencia digital básica y respaldos '
                        'seguros para un emprendimiento.',
+        'area': 'sistemas',
         'publico_objetivo': 'jovenes',
         'duracion': '1 sesión de 3 horas',
         'modalidad': 'presencial',
@@ -218,7 +269,28 @@ TALLERES = (
         ],
         'imagen_static': 'images/landing/hero-equipo.jpg',
         'imagen_alt': 'Jóvenes trabajando con herramientas digitales',
-        'orden': 2,
+        'orden': 3,
+    },
+    {
+        'slug': 'cosecha-aguas-lluvias-saneamiento',
+        'titulo': 'Cosecha de aguas lluvias y saneamiento básico comunitario',
+        'tematica': 'Captación, almacenamiento y tratamiento básico del agua en sedes y juntas veredales.',
+        'descripcion': 'Taller para juntas veredales y fundaciones: diseño simple '
+                       'de captación de aguas lluvias, filtros, mantenimiento y '
+                       'criterios de saneamiento básico.',
+        'area': 'civil',
+        'publico_objetivo': 'fundaciones',
+        'duracion': '2 sesiones de 2 horas',
+        'modalidad': 'presencial',
+        'nivel': 'basico',
+        'puntos_clave': [
+            'Captación y almacenamiento de agua.',
+            'Filtros y tratamiento básico.',
+            'Mantenimiento y saneamiento comunitario.',
+        ],
+        'imagen_static': 'images/landing/banner-campo.jpg',
+        'imagen_alt': 'Estructura comunitaria de captación de aguas lluvias',
+        'orden': 4,
     },
     {
         'slug': 'alfabetizacion-digital-adultos-mayores',
@@ -227,6 +299,7 @@ TALLERES = (
         'descripcion': 'Sesiones guiadas para personas mayores y pensionados: '
                        'correo, trámites, videollamadas, contraseñas seguras y '
                        'cómo reconocer intentos de fraude.',
+        'area': 'sistemas',
         'publico_objetivo': 'adultos_mayores',
         'duracion': '4 sesiones de 2 horas',
         'modalidad': 'presencial',
@@ -238,28 +311,35 @@ TALLERES = (
         ],
         'imagen_static': 'images/landing/proceso-revision.jpg',
         'imagen_alt': 'Personas mayores en un taller de herramientas digitales',
-        'orden': 3,
+        'orden': 5,
     },
     {
-        'slug': 'gestion-tecnologica-pymes',
-        'titulo': 'Gestión tecnológica para pymes y comunidad',
-        'tematica': 'Prioriza inversión tecnológica, riesgos y continuidad del negocio.',
-        'descripcion': 'Taller para equipos directivos: inventario de activos '
-                       'digitales, respaldos, accesos, proveedores y plan de '
-                       'continuidad ante incidentes.',
-        'publico_objetivo': 'pymes',
-        'duracion': '1 sesión de 4 horas',
-        'modalidad': 'virtual',
-        'nivel': 'intermedio',
+        'slug': 'mantenimiento-preventivo-hogar',
+        'titulo': 'Mantenimiento preventivo del hogar y detección de humedad o grietas',
+        'tematica': 'Revisa tu vivienda a tiempo: humedad, grietas y mantenimiento sin obras costosas.',
+        'descripcion': 'Taller para propietarios y personas mayores: recorrido de '
+                       'autodiagnóstico, señales de humedad y grietas, y rutinas '
+                       'sencillas de mantenimiento preventivo.',
+        'area': 'civil',
+        'publico_objetivo': 'adultos_mayores',
+        'duracion': '1 sesión de 2 horas',
+        'modalidad': 'presencial',
+        'nivel': 'basico',
         'puntos_clave': [
-            'Inventario de activos digitales.',
-            'Respaldos, accesos y proveedores.',
-            'Plan de continuidad ante incidentes.',
+            'Señales de humedad y grietas.',
+            'Autodiagnóstico y priorización.',
+            'Rutinas de mantenimiento preventivo.',
         ],
-        'imagen_static': 'images/landing/reportes-manos.jpg',
-        'imagen_alt': 'Directivos revisando indicadores de gestión tecnológica',
-        'orden': 4,
+        'imagen_static': 'images/landing/banner-asesoria.jpg',
+        'imagen_alt': 'Persona mayor revisando el estado de su vivienda',
+        'orden': 6,
     },
+)
+
+# Talleres de iteraciones anteriores que salen del set vigente. Se desactivan
+# (no se borran) para conservar solicitudes e historial asociados.
+TALLERES_RETIRADOS = (
+    'gestion-tecnologica-pymes',
 )
 
 # ---------------------------------------------------------------------------
@@ -308,20 +388,42 @@ def seed_public_content(password):
     nuevos = {'proyectos': 0, 'talleres': 0, 'clientes': 0, 'solicitudes': 0}
 
     for datos in PROYECTOS:
-        _, creado = ProyectoPortafolio.objects.get_or_create(
+        proyecto, creado = ProyectoPortafolio.objects.get_or_create(
             slug=datos['slug'], defaults=datos)
+        # Solo se sincroniza el orden editorial del set demo (no el contenido
+        # que el docente haya podido editar en /admin/).
+        if not creado and proyecto.orden != datos['orden']:
+            proyecto.orden = datos['orden']
+            proyecto.save(update_fields=['orden'])
         nuevos['proyectos'] += 1 if creado else 0
+
+    # Los proyectos retirados se despublican, no se borran.
+    ProyectoPortafolio.objects.filter(
+        slug__in=PROYECTOS_RETIRADOS).update(publicado=False)
 
     talleres = {}
     for datos in TALLERES:
         taller, creado = Taller.objects.get_or_create(slug=datos['slug'], defaults=datos)
-        # Backfill no destructivo: completa el temario solo si quedó vacío
-        # (los talleres sembrados antes de existir `puntos_clave`).
-        if not creado and not taller.puntos_clave and datos.get('puntos_clave'):
-            taller.puntos_clave = datos['puntos_clave']
-            taller.save(update_fields=['puntos_clave', 'actualizado_en'])
+        if not creado:
+            # Backfill no destructivo: completa temario/área/orden si faltan,
+            # sin sobrescribir títulos ni descripciones editadas.
+            cambios = []
+            if not taller.puntos_clave and datos.get('puntos_clave'):
+                taller.puntos_clave = datos['puntos_clave']
+                cambios.append('puntos_clave')
+            if taller.area != datos['area']:
+                taller.area = datos['area']
+                cambios.append('area')
+            if taller.orden != datos['orden']:
+                taller.orden = datos['orden']
+                cambios.append('orden')
+            if cambios:
+                taller.save(update_fields=cambios + ['actualizado_en'])
         talleres[datos['slug']] = taller
         nuevos['talleres'] += 1 if creado else 0
+
+    # Los talleres retirados se desactivan, no se borran.
+    Taller.objects.filter(slug__in=TALLERES_RETIRADOS).update(activo=False)
 
     for email, nombre, apellido, empresa_datos in CLIENTES:
         _, creado = _ensure_cliente(email, nombre, apellido, empresa_datos, password)

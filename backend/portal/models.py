@@ -9,6 +9,8 @@ from django.db import models
 from django.templatetags.static import static
 from django.utils.text import slugify
 
+from accounts.models import Area
+
 
 class LineaPortafolio(models.TextChoices):
     SISTEMAS = 'sistemas', 'Ingeniería de Sistemas'
@@ -135,6 +137,9 @@ class Taller(ImagenMixta):
     descripcion = models.TextField(help_text='Contenido y alcance del taller.')
     publico_objetivo = models.CharField(
         max_length=30, choices=Publico.choices, default=Publico.COMUNIDAD)
+    area = models.CharField(
+        max_length=20, choices=Area.choices, default=Area.SISTEMAS,
+        help_text='Carrera que lidera el taller: equilibra Sistemas y Civil.')
     duracion = models.CharField(
         max_length=80, blank=True, help_text='Por ejemplo: 2 sesiones de 90 minutos.')
     modalidad = models.CharField(
