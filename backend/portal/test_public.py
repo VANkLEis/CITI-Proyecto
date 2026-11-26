@@ -488,12 +488,12 @@ class SeedDemoDataTests(TestCase):
         from portal.models import ProyectoPortafolio, Taller
 
         call_command('seed_demo_data', stdout=StringIO())
-        proyectos = ProyectoPortafolio.objects.count()
-        talleres = Taller.objects.count()
+        proyectos = ProyectoPortafolio.objects.filter(publicado=True).count()
+        talleres = Taller.objects.filter(activo=True).count()
         solicitudes = SolicitudPublica.objects.count()
 
-        self.assertGreaterEqual(proyectos, 6)
-        self.assertGreaterEqual(talleres, 4)
+        self.assertEqual(proyectos, 8)
+        self.assertEqual(talleres, 6)
         self.assertGreaterEqual(solicitudes, 4)
 
         estados = set(SolicitudPublica.objects.filter(
@@ -503,8 +503,9 @@ class SeedDemoDataTests(TestCase):
         self.assertIn(SolicitudPublica.Estado.APROBADA, estados)
 
         call_command('seed_demo_data', stdout=StringIO())
-        self.assertEqual(ProyectoPortafolio.objects.count(), proyectos)
-        self.assertEqual(Taller.objects.count(), talleres)
+        self.assertEqual(
+            ProyectoPortafolio.objects.filter(publicado=True).count(), proyectos)
+        self.assertEqual(Taller.objects.filter(activo=True).count(), talleres)
         self.assertEqual(SolicitudPublica.objects.count(), solicitudes)
 
     def test_seed_bloqueado_en_produccion(self):
@@ -525,7 +526,7 @@ class SeedDemoDataTests(TestCase):
 
         call_command('seed_demo_data', stdout=StringIO())
         talleres = list(Taller.objects.filter(activo=True))
-        self.assertEqual(len(talleres), 4)
+        self.assertEqual(len(talleres), 6)
         for taller in talleres:
             self.assertEqual(len(taller.puntos_clave_validos), 3, taller.slug)
 
@@ -536,7 +537,21 @@ class SeedDemoDataTests(TestCase):
         call_command('seed_demo_data', stdout=StringIO())
         primero.refresh_from_db()
         self.assertEqual(len(primero.puntos_clave_validos), 3)
-        self.assertEqual(Taller.objects.count(), 4)
+        self.assertEqual(Taller.objects.filter(activo=True).count(), 6)
+
+    def test_seed_equilibrado_sistemas_civil(self):
+        from io import StringIO
+
+        from django.core.management import call_command
+
+        call_command('seed_demo_data', stdout=StringIO())
+        self.assertEqual(
+            ProyectoPortafolio.objects.filter(publicado=True, linea='civil').count(), 4)
+        self.assertEqual(
+            ProyectoPortafolio.objects.filter(publicado=True)
+            .exclude(linea='civil').count(), 4)
+        self.assertEqual(Taller.objects.filter(activo=True, area='civil').count(), 3)
+        self.assertEqual(Taller.objects.filter(activo=True, area='sistemas').count(), 3)
 
 
 class TarjetasPublicasTests(TestCase):
@@ -550,8 +565,13 @@ class TarjetasPublicasTests(TestCase):
         cls.taller = Taller.objects.create(
             titulo='Taller con temario', tematica='Bajada del taller.',
             descripcion='Descripción larga.', publico_objetivo='fundaciones',
-            duracion='2 sesiones', nivel='basico',
+            area='sistemas', duracion='2 sesiones', nivel='basico',
             puntos_clave=['Punto uno', 'Punto dos', 'Punto tres'])
+        cls.taller_civil = Taller.objects.create(
+            titulo='Taller civil de prueba', tematica='Obra y vivienda.',
+            descripcion='Descripción larga.', publico_objetivo='pymes',
+            area='civil', duracion='1 sesión', nivel='basico',
+            puntos_clave=['Punto A', 'Punto B', 'Punto C'])
 
     def test_tarjeta_portafolio_usa_contenedor_uniforme(self):
         r = self.client.get(reverse('portal:portafolio'))
@@ -569,10 +589,27 @@ class TarjetasPublicasTests(TestCase):
         r = self.client.get(reverse('portal:talleres'))
         self.assertContains(r, f'?taller={self.taller.slug}')
 
+    def test_talleres_muestran_ambas_carreras(self):
+        r = self.client.get(reverse('portal:talleres'))
+        self.assertContains(r, 'Ingeniería de Sistemas')
+        self.assertContains(r, 'Ingeniería Civil')
+
     def test_landing_muestra_alcance_y_ejemplos(self):
         r = self.client.get('/')
         for texto in ('Ruta 1', 'Ruta 2', 'Incluye', 'No incluye',
-                      'Así se ve en la práctica', 'Pensionados y adultos mayores'):
+                      'Así se ve en la práctica',
+                      'Fisuras y aguas lluvias en una sede comunitaria',
+                      'Charla de IA para una fundación',
+                      'Emprendimiento juvenil: validar antes de desarrollar',
+                      'Vivienda, pymes y adultos mayores'):
+            self.assertContains(r, texto)
+
+    def test_landing_ejemplos_incluyen_ambas_carreras(self):
+        r = self.client.get('/')
+        for texto in ('Ingeniería Civil · Proyección social',
+                      'Ingeniería de Sistemas · Capacitación',
+                      'Ingeniería de Sistemas · Diagnóstico',
+                      'Civil + Sistemas · Talleres'):
             self.assertContains(r, texto)
 
 

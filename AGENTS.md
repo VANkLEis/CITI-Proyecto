@@ -4,7 +4,7 @@
 - `backend/` is the real Django project: `config` + apps `accounts`, `scheduling`, `portal`.
 - Root `accounts/`, `portal/`, `scheduling/` are unused default-app stubs. Never edit them.
 - Root `app/`, `dashboards/`, `plantillas/`, `docs/`, and top-level `*.html` are a static prototype/spec. Django renders templates from `backend/templates` and serves `backend/static` + root `assets/` (see `STATICFILES_DIRS`). Editing root `app/js` does not change the running site.
-- Current size: 3 apps, 11 models, 39 routes, 160 tests. All three apps have models/migrations; `portal` also has `admin.py`.
+- Current size: 3 apps, 11 models, 39 routes, 163 tests. All three apps have models/migrations; `portal` also has `admin.py`.
 
 ## Commands
 Run from `backend/` with the **root** venv (Django 5.2.18, matches `requirements.txt`):
@@ -19,7 +19,7 @@ Run from `backend/` with the **root** venv (Django 5.2.18, matches `requirements
 ..\venv\Scripts\python.exe manage.py test portal.tests.RoleAccessMatrixTests  # single class
 ```
 - Three venvs exist; only the root one works: `venv/` = Django 5.2.18 (matches the `<6` pin), `.venv/` = Django 6.1.2 (violates it), `backend/venv/` = no Django installed. Picking the wrong interpreter is the easiest way to get confusing failures here.
-- Tests live in **two** files: `backend/portal/tests.py` (107 legacy) and `backend/portal/test_public.py` (53 public/triage/seed). `accounts` and `scheduling` have no `tests.py`. They use an isolated test DB - the real `db.sqlite3` is untouched.
+- Tests live in **two** files: `backend/portal/tests.py` (107 legacy) and `backend/portal/test_public.py` (56 public/triage/seed). `accounts` and `scheduling` have no `tests.py`. They use an isolated test DB - the real `db.sqlite3` is untouched.
 - No lint/format config. Match existing style: single quotes, function-based views, Spanish user-facing text.
 - `runserver --noreload` does NOT reload Python after editing views/models/settings (templates DO reload in DEBUG). Restart after every code change before browser validation, and confirm only one process holds the port — a stale second server caused wrong renders twice in Fase 03.
 
@@ -63,7 +63,8 @@ Run from `backend/` with the **root** venv (Django 5.2.18, matches `requirements
 - Public videos are decorative: `<video autoplay muted loop playsinline preload="metadata" poster="…">` over an `<img>` fallback; a missing MP4 is expected (posters are real landing images). Don't remove the fallback.
 - `ProyectoPortafolio` / `Taller` (in `portal/models.py`) are editable in `/admin/`; `imagen_static` is the fallback path under `static/` when no image was uploaded.
 - Card media must stay inside a fixed `aspect-ratio` box with the `<img>` absolutely positioned (`position:absolute; inset:0; object-fit:cover; object-position:center top`). `area-sistemas.jpg` and `proceso-revision.jpg` are **portrait**; if the image returns to normal flow it stretches the whole grid row (regression seen in the portfolio grid).
-- `Taller.puntos_clave` is a JSON list of up to 3 strings (rendered as the card syllabus); `Taller.grupo_publico(_label)` maps the 5 stored `publico_objetivo` codes to the 4 filter groups (`GRUPOS_PUBLICO`, where `pymes_comunidad` = `pymes` + `comunidad`).
+- `Taller.puntos_clave` is a JSON list of up to 3 strings (rendered as the card syllabus); `Taller.area` (`sistemas`/`civil`) keeps the 50/50 balance visible in cards and admin; `Taller.grupo_publico(_label)` maps the 5 stored `publico_objetivo` codes to the 4 filter groups (`GRUPOS_PUBLICO`, where `pymes_comunidad` = `pymes` + `comunidad`).
+- The demo set is intentionally balanced: 8 published projects (4 `civil`, 4 others, alternating `orden`) and 6 active workshops (3 `sistemas`, 3 `civil`, alternating `orden`). `PROYECTOS_RETIRADOS` / `TALLERES_RETIRADOS` unpublish/deactivate old demo slugs instead of deleting them (`validacion-tecnica-emprendimiento-juvenil`, `gestion-tecnologica-pymes`).
 - `SolicitudPublica.madurez` (`idea`/`proceso`/`requerimientos`) is optional by design (`blank=True, default=''`); legacy rows show "No indicado". `linea_sugerida` reproduces `linea_para(tipo_necesidad)` and `accion_sugerida` is the triage guide shown in the "Diagnóstico de Filtro Sugerido" card.
 
 ## Demo data
