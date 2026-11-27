@@ -51,7 +51,7 @@ docker compose down -v              # detener y BORRAR base + media
 docker compose up -d --build        # reconstruir tras cambiar código
 ```
 
-Variables opcionales: copiar `.env.docker.example` a `.env` (puerto,
+Variables opcionales: copiar `docs/demo/env.docker.example` a `.env` (puerto,
 contraseña demo, workers). El puerto también se cambia con `PORT=8080`.
 
 ---
