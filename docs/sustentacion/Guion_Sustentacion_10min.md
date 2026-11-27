@@ -5,7 +5,7 @@
 **Expositores:** Santiago Cubillos Arana y Juan José Tique  
 **Duración:** 9:00 de voz + 0:30 de transiciones = **9:30 en reloj** (colchón de 0:30 hasta el límite de 10:00)  
 **Reparto:** Santiago 5:05 · Juan José 3:55  
-**Soporte:** `CITI_Sustentacion_Final.pptx` (13 diapositivas + R1–R3 de respaldo)
+**Soporte:** [`CITI_Sustentacion_Final.pptx`](../presentacion/CITI_Sustentacion_Final.pptx) (13 diapositivas + R1-R3 de respaldo)
 
 ---
 

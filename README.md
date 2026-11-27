@@ -14,15 +14,29 @@ Django 5.2 · SQLite/PostgreSQL · Gunicorn + WhiteNoise · Docker Compose.
 
 ---
 
-## Arranque rápido con Docker (recomendado para la exposición)
+## Inicio rápido
 
-Requisito: Docker Desktop instalado y en ejecución.
+### Opción A · Windows, un doble clic
+
+1. Abre **Docker Desktop** y espera a que el motor esté activo.
+2. Ejecuta **`iniciar_citi.bat`** en la raíz del proyecto.
+3. El script construye la imagen, levanta PostgreSQL 16, siembra los datos demo
+   y abre **<http://localhost:8000>**.
+
+### Opción B · Manual
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
-Luego abrir <http://localhost:8000>.
+Luego abre **<http://localhost:8000>**.
+
+### Opción C · Punto de entrada visual
+
+Abre **`index.html`** con doble clic. La página comprueba con
+`fetch('http://localhost:8000/cuenta/login/', { mode: 'no-cors' })` si el
+servidor está activo; si responde, abre la plataforma directamente. Si no,
+muestra los tres pasos de arranque, la arquitectura MVT y las credenciales.
 
 Qué hace el contenedor al arrancar (`entrypoint.sh`):
 
@@ -41,7 +55,7 @@ docker compose exec web python manage.py seed_demo_data   # recargar sin borrar
 docker compose exec web python manage.py test             # suite completa
 docker compose down                 # detener (conserva datos)
 docker compose down -v              # detener y BORRAR base + media
-docker compose up --build           # reconstruir tras cambiar código
+docker compose up -d --build        # reconstruir tras cambiar código
 ```
 
 Variables opcionales: copiar `.env.docker.example` a `.env` (puerto,
@@ -49,27 +63,96 @@ contraseña demo, workers). El puerto también se cambia con `PORT=8080`.
 
 ---
 
+## Estructura del proyecto
+
+La raíz solo tiene tres carpetas de contenido: `backend/`, `docs/` y `tools/`.
+Los entornos virtuales, cachés, medios y estáticos recolectados quedan fuera del
+paquete de entrega.
+
+```text
+CITI-Proyecto/
+├─ index.html                    Punto de entrada visual (detector de servidor)
+├─ iniciar_citi.bat              Arranque rápido en Windows
+├─ Dockerfile
+├─ docker-compose.yml
+├─ entrypoint.sh
+├─ requirements.txt
+├─ README.md · AGENTS.md
+├─ backend/                      Único proyecto Django (patrón MVT)
+│  ├─ manage.py
+│  ├─ config/                    settings.py · urls.py · wsgi.py
+│  ├─ accounts/                  Usuarios, empresas, perfiles, seed
+│  ├─ scheduling/                Franjas, citas, eventos, solicitudes públicas
+│  ├─ portal/                    Vistas públicas, paneles, triage, indicadores
+│  ├─ templates/                 landing.html, paneles y partials
+│  └─ static/                    CSS, JS, imágenes, videos y fuentes locales
+├─ docs/
+│  ├─ demo/                      Credenciales, datos y guion de demostración
+│  ├─ presentacion/              Entregables finales de la sustentación
+│  ├─ sustentacion/              Diagramas, fuentes, evidencias y scripts
+│  ├─ prototipo/                 Archivo histórico del prototipo Hi-Fi
+│  └─ audit/                     Auditoría técnica de referencia
+└─ tools/                        Generación reproducible de imágenes y videos
+```
+
+> `docs/prototipo/` conserva la maqueta visual anterior como evidencia. No es
+> la plataforma real, no usa el backend y no se copia a la imagen Docker.
+
+---
+
+## Arquitectura MVT (Model · View · Template)
+
+El proyecto sigue el patrón **MVT de Django** dentro de `backend/`. No hay una
+SPA separada ni apps duplicadas en la raíz: los modelos, las vistas, las URLs y
+las plantillas viven en un único proyecto.
+
+| Capa | Responsabilidad | Archivos principales |
+|---|---|---|
+| **Model** | Entidades, relaciones, validaciones y reglas de datos | `backend/accounts/models.py` · `backend/scheduling/models.py` · `backend/portal/models.py` |
+| **View** | Control de la petición, permisos, consultas y respuesta | `backend/portal/views_public.py` · `backend/portal/views.py` · `backend/portal/views_solicitudes.py` · `backend/accounts/views.py` |
+| **Template** | HTML con herencia, partials y contexto | `backend/templates/portal/landing.html` · `backend/templates/portal/public_base.html` · `backend/templates/dashboard_base.html` |
+| **Router** | Mapa de URLs y despacho | `backend/config/urls.py` · `backend/portal/urls.py` |
+| **Config** | Settings, WSGI y estáticos | `backend/config/settings.py` · `backend/config/wsgi.py` |
+
+### Flujo de una petición a la portada
+
+```text
+GET /
+  └─ backend/config/urls.py          include('portal.urls')
+      └─ backend/portal/urls.py      path('', views_public.landing, name='landing')
+          └─ backend/portal/views_public.py
+              ├─ backend/portal/models.py            ProyectoPortafolio · Taller
+              └─ backend/templates/portal/landing.html   respuesta HTML
+```
+
+`backend/templates/portal/landing.html` es la vista principal de inicio. Hereda
+de `public_base.html`, recibe los proyectos y talleres publicados desde la vista
+y renderiza el HTML final. Las plantillas de los paneles heredan de
+`dashboard_base.html`.
+
+---
+
 ## Credenciales de demostración
 
 Contraseña única: **`CITIPass2026*`** (configurable con `CITI_DEMO_PASSWORD`).
 
-| Rol | Correo | Acceso |
+| Rol | Correo | Portal |
 |---|---|---|
 | Director CITI | `director@citi.ucc.edu.co` | `/cuenta/login/?rol=director` |
 | Coordinador Sistemas | `coordinador@citi.ucc.edu.co` | `/cuenta/login/?rol=coordinador` |
-| Coordinador Civil | `coordinador.civil@citi.ucc.edu.co` | `/cuenta/login/?rol=coordinador` |
 | Docente Sistemas | `docente@citi.ucc.edu.co` | `/cuenta/login/?rol=docente` |
-| Docente Civil | `docente.civil@citi.ucc.edu.co` | `/cuenta/login/?rol=docente` |
 | Estudiante tutora | `estudiante@citi.ucc.edu.co` | `/cuenta/login/?rol=estudiante` |
-| Estudiante tutor Civil | `estudiante.civil@citi.ucc.edu.co` | `/cuenta/login/?rol=estudiante` |
 | Cliente / Empresa | `cliente@empresatolima.co` | `/cuenta/login/?rol=cliente` |
-| Fundación (cliente) | `fundacion@citi.ucc.edu.co` | `/cuenta/login/?rol=cliente` |
-| Emprendimiento (cliente) | `emprendimiento@citi.ucc.edu.co` | `/cuenta/login/?rol=cliente` |
-| Pyme (cliente) | `pyme@citi.ucc.edu.co` | `/cuenta/login/?rol=cliente` |
+
+Variantes del set demo, misma contraseña:
+`coordinador.civil@citi.ucc.edu.co`, `docente.civil@citi.ucc.edu.co`,
+`estudiante.civil@citi.ucc.edu.co`, `fundacion@citi.ucc.edu.co`,
+`emprendimiento@citi.ucc.edu.co` y `pyme@citi.ucc.edu.co`.
 
 El login es **por rol**: si la cuenta no coincide con el portal elegido, el
 sistema lo indica. Detalle completo en
-[`docs/demo/CUENTAS_DE_PRUEBA.md`](docs/demo/CUENTAS_DE_PRUEBA.md).
+[`docs/demo/CUENTAS_DE_PRUEBA.md`](docs/demo/CUENTAS_DE_PRUEBA.md) y guion en
+[`docs/demo/GUIA_DEMOSTRACION.md`](docs/demo/GUIA_DEMOSTRACION.md).
 
 ---
 
@@ -151,36 +234,36 @@ Volver y medios únicos.
 
 ---
 
-## Estructura
+## Contenido público y medios
 
-```text
-backend/            Proyecto Django real (config + accounts + scheduling + portal)
-  accounts/         Usuarios, empresas, perfiles y seed de demostración
-  scheduling/       Franjas, citas, eventos, interacciones y solicitudes públicas
-  portal/           Vistas públicas, paneles privados, triage e indicadores
-  templates/        Plantillas (público, paneles, partials)
-  static/           CSS/JS/imágenes/videos
-assets/             Assets institucionales adicionales (STATICFILES_DIRS)
-docs/demo/          Credenciales, datos y guion de demostración
-tools/              Generación reproducible de imágenes y videos (no runtime)
-Dockerfile · docker-compose.yml · entrypoint.sh
-```
+- 8 proyectos publicados (4 Civil y 4 entre Sistemas/IA/Impacto) y 6 talleres
+  activos (3 Sistemas y 3 Civil).
+- 17 imágenes únicas en `backend/static/images/landing/`, 3 videos Ken Burns en
+  `backend/static/videos/`, FullCalendar 6.1.15 y Open Sans locales.
+- Cero CDNs en la aplicación: los recursos se sirven desde `backend/static/`.
+- Créditos y licencias de las imágenes:
+  [`docs/demo/CREDITOS_IMAGENES.md`](docs/demo/CREDITOS_IMAGENES.md) (interno).
 
-Los directorios `accounts/`, `portal/`, `scheduling/`, `app/`, `dashboards/`,
-`plantillas/` y los `*.html` de la raíz son **prototipo estático**: no los usa
-Django.
+La portada usa `<video>` con `poster` y una imagen de respaldo. Los 3 MP4 están
+incluidos y se generaron con efecto Ken Burns desde los pósters locales. Siguen
+siendo reemplazables: si se eliminan, se ve el poster y la imagen de respaldo.
+Especificaciones y regeneración en
+[`backend/static/videos/README.md`](backend/static/videos/README.md) y
+[`tools/README.md`](tools/README.md).
 
 ---
 
-## Videos de la portada
+## Documentación
 
-La portada usa `<video>` con `poster` y una imagen de respaldo. Los 3 MP4
-(`backend/static/videos/hero-citi.mp4`, `progreso-ingenieria.mp4`,
-`resultados-impacto.mp4`) están incluidos y se generaron con efecto Ken Burns
-desde los pósters locales. Siguen siendo reemplazables: si se eliminan, se ve el
-poster y la imagen de respaldo. Especificaciones y regeneración en
-[`backend/static/videos/README.md`](backend/static/videos/README.md) y
-[`tools/README.md`](tools/README.md).
+| Documento | Contenido |
+|---|---|
+| [`docs/demo/GUIA_DEMOSTRACION.md`](docs/demo/GUIA_DEMOSTRACION.md) | Guion de la demo y contingencias |
+| [`docs/demo/CUENTAS_DE_PRUEBA.md`](docs/demo/CUENTAS_DE_PRUEBA.md) | Credenciales y portales |
+| [`docs/demo/CONTENIDO_PUBLICO.md`](docs/demo/CONTENIDO_PUBLICO.md) | Portafolio, talleres e imágenes |
+| [`docs/demo/VARIABLES_ENTORNO.md`](docs/demo/VARIABLES_ENTORNO.md) | Variables y despliegue |
+| [`docs/presentacion/`](docs/presentacion/) | Entregables finales (PDF/PPTX/DOCX) |
+| [`docs/sustentacion/`](docs/sustentacion/) | Diagramas, fuentes y evidencias |
+| [`docs/audit/`](docs/audit/) | Auditoría técnica de referencia |
 
 ---
 
@@ -194,6 +277,7 @@ poster y la imagen de respaldo. Especificaciones y regeneración en
 | Quiero empezar de cero | `docker compose down -v && docker compose up --build` |
 | Error de línea `\r` al ejecutar `entrypoint.sh` | `.gitattributes` fuerza `eol=lf` para `*.sh`; si se editó en Windows, volver a clonar o convertir a LF |
 | Login rechaza la cuenta | El portal elegido no coincide con el rol de la cuenta |
+| `index.html` no detecta el servidor | Algunos navegadores bloquean `fetch` desde `file://`; usa el botón **Abrir CITI ahora** o `iniciar_citi.bat` |
 
 ---
 

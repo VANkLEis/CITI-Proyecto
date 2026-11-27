@@ -1,4 +1,4 @@
-# Contexto de build de Docker: solo se copian backend/ y assets/.
+# Contexto de build de Docker: solo se copian backend/, requirements.txt y entrypoint.sh.
 .git/
 .gitignore
 .gitattributes
@@ -14,7 +14,6 @@ backend/media/
 backend/.cache/
 docs/
 tools/
-Presentacion final/
 .playwright-mcp/
 *.log
 .env

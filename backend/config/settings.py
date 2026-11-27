@@ -4,7 +4,6 @@ from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-PROJECT_ROOT = BASE_DIR.parent
 
 try:  # Carga .env local si existe (B-3); NO sustituye variables del shell.
     from dotenv import load_dotenv
@@ -143,7 +142,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    PROJECT_ROOT / 'assets',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 

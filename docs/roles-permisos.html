@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CITI — Roles y credenciales</title>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../app/css/styles.css">
+  <link rel="stylesheet" href="../backend/static/css/fonts.css">
+  <link rel="stylesheet" href="prototipo/app/css/styles.css">
   <style>
     body { background: var(--bg); }
     .doc-header { background: var(--ucc); color: white; padding: 2rem; text-align: center; border-bottom: 4px solid var(--verde); }
@@ -43,7 +43,7 @@
   <p style="margin-top:1rem;font-size:0.85rem;color:var(--muted)">Resumen de contraseñas: Director <code>director2026</code> · Coordinador <code>coord2026</code> · Docente <code>docente2026</code> · Estudiante <code>estud2026</code> · Cliente <code>cliente2026</code></p>
   <div id="rolesDetail"></div>
 </div>
-<script src="../app/js/data.js"></script>
+<script src="prototipo/app/js/data.js"></script>
 <script>
   document.getElementById('rolesDetail').innerHTML = '<h2>Detalle por rol</h2>' + Object.values(CITI_DATA.roles).map(r => {
     const p = CITI_DATA.permissions[r.id];

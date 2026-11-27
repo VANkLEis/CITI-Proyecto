@@ -16,10 +16,9 @@ RUN apt-get update \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# `assets/` existe en la raíz del repositorio y settings.py lo usa como
-# STATICFILES_DIRS. Si se elimina del proyecto, hay que quitar también este COPY.
+# Solo se copia el proyecto Django real. Los estáticos institucionales viven
+# dentro de backend/static/ (no hay carpeta assets/ en la raíz).
 COPY backend/ ./backend/
-COPY assets/ ./assets/
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 

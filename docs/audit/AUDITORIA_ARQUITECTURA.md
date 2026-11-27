@@ -1,5 +1,11 @@
 # AUDITORÍA DE ARQUITECTURA — CITI
 
+> **Nota de vigencia (2026-11-27):** este documento conserva el diagnóstico del
+> estado anterior a las fases de corrección. El prototipo estático ya no vive en
+> la raíz (se archivó en `docs/prototipo/`), las apps stub `accounts/`, `portal/`
+> y `scheduling/` fueron eliminadas, los medios están vendorizados y la suite
+> actual es **195/195**. La fuente de verdad es `backend/` y el `README.md`.
+
 ## 1. Arquitectura real reconstruida
 
 El proyecto es un **Django monolítico de plantillas** (sin DRF, sin SPA) con tres apps propias, más una capa de **prototipo estático** en la raíz que convive con el backend pero no forma parte de él.

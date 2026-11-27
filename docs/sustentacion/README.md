@@ -1,19 +1,23 @@
 # Sustentación final · CITI UCC
 
 Artefactos de la entrega de **Arquitectura y Modelamiento de Software** (noviembre de 2026).
-El sistema implementado vive en `backend/`; esta carpeta contiene la documentación y la presentación.
+El sistema implementado vive en `backend/`; esta carpeta conserva las fuentes,
+diagramas y evidencias, mientras que los entregables finales están en
+[`../presentacion/`](../presentacion/).
 
 ## Entregables
 
+El paquete final vive en [`../presentacion/`](../presentacion/) para evitar copias duplicadas:
+
 | Archivo | Contenido |
 |---|---|
-| `CITI_Sustentacion_Final.pptx` | 13 diapositivas principales + R1–R3 de respaldo, 16:9, notas del expositor |
-| `CITI_Sustentacion_Final.pdf` | Exportación fiel de la presentación (16 páginas) |
-| `Guion_Sustentacion_10min.docx` | Guion palabra por palabra, cronograma 9:00 + 0:30, demo y banco de preguntas |
-| `Documentacion_Arquitectura_CITI_UCC.docx` | Documento maestro: portada, TOC, índices, 13 capítulos, ADRs, ISO 25010 y anexos |
-| `Documentacion_Arquitectura_CITI_UCC.pdf` | Exportación del documento maestro (53 páginas) |
+| [`CITI_Sustentacion_Final.pptx`](../presentacion/CITI_Sustentacion_Final.pptx) | 13 diapositivas principales + R1–R3 de respaldo, 16:9, notas del expositor |
+| [`CITI_Sustentacion_Final.pdf`](../presentacion/CITI_Sustentacion_Final.pdf) | Exportación fiel de la presentación (16 páginas) |
+| [`Guion_Sustentacion_10min.docx`](../presentacion/Guion_Sustentacion_10min.docx) | Guion palabra por palabra, cronograma 9:00 + 0:30, demo y banco de preguntas |
+| [`Documentacion_Arquitectura_CITI_UCC.docx`](../presentacion/Documentacion_Arquitectura_CITI_UCC.docx) | Documento maestro: portada, TOC, índices, 13 capítulos, ADRs, ISO 25010 y anexos |
+| [`Documentacion_Arquitectura_CITI_UCC.pdf`](../presentacion/Documentacion_Arquitectura_CITI_UCC.pdf) | Exportación del documento maestro (53 páginas) |
 
-También están disponibles `Guion_Sustentacion_10min.pdf` y el material de apoyo en `diagramas/`, `fuentes/`, `evidencias/` y `scripts/`.
+Esta carpeta conserva el material de apoyo (`diagramas/`, `fuentes/`, `evidencias/`, `scripts/`) y la versión [`Guion_Sustentacion_10min.pdf`](Guion_Sustentacion_10min.pdf).
 
 ## Contenido de apoyo
 
@@ -26,7 +30,7 @@ También están disponibles `Guion_Sustentacion_10min.pdf` y el material de apoy
 
 - `manage.py check`: 0 issues.
 - `manage.py makemigrations --check --dry-run`: sin cambios.
-- `manage.py test`: **107/107 OK** (base de pruebas aislada).
+- `manage.py test`: **195/195 OK** (base de pruebas aislada).
 - Sin modificaciones en la lógica de negocio, modelos ni vistas de `backend/`.
 
 ## Reproducción
