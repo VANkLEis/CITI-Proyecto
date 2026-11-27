@@ -145,7 +145,7 @@ mismo criterio vía `_mapa_aprobacion_citas`); sin correos personales.
 
 ## 9. Organigrama eliminado (9) — sin reemplazo
 
-- `landing.html`: removidos la tarjeta `#quienes-somos .org-card`, el modal
+- `index.html` (antes `landing.html`): removidos la tarjeta `#quienes-somos .org-card`, el modal
   `#orgModal` y TODO su JavaScript (`orgAmpliarBtn`/`orgScrollImg`); la sección
   queda solo con el texto institucional (sin imagen, diagrama ni tarjetas de
   estructura).
@@ -218,7 +218,7 @@ Modificados: `scheduling/models.py`, `scheduling/trazabilidad.py`,
 `scheduling/admin.py`, `scheduling/views.py`, `portal/views.py`,
 `portal/forms.py`, `portal/urls.py`, `portal/indicadores.py`,
 `accounts/demo_seed.py`, `accounts/management/commands/seed_demo.py`,
-`templates/base.html` (cache-busting), `portal/landing.html`,
+`templates/base.html` (cache-busting), `portal/index.html`,
 `dashboard_cliente.html`, los 5 dashboards + `trazabilidad.html` +
 `docente_caso_detalle.html` + `coordinador_asignar.html` + 4 partials de
 detalle, `static/css/styles.css` (aditivo + remoción dirigida de `.org-*`).

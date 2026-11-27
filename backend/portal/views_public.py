@@ -58,7 +58,7 @@ def landing(request):
                      if request.user.is_authenticated and getattr(request.user, 'role', None)
                      else None),
     }
-    return render(request, 'portal/landing.html', contexto)
+    return render(request, 'portal/index.html', contexto)
 
 
 def portafolio_list(request):

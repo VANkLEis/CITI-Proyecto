@@ -31,13 +31,6 @@ docker compose up -d --build
 
 Luego abre **<http://localhost:8000>**.
 
-### Opción C · Punto de entrada visual
-
-Abre **`index.html`** con doble clic. La página comprueba con
-`fetch('http://localhost:8000/cuenta/login/', { mode: 'no-cors' })` si el
-servidor está activo; si responde, abre la plataforma directamente. Si no,
-muestra los tres pasos de arranque, la arquitectura MVT y las credenciales.
-
 Qué hace el contenedor al arrancar (`entrypoint.sh`):
 
 1. `manage.py migrate` sobre PostgreSQL 16.
@@ -71,7 +64,6 @@ paquete de entrega.
 
 ```text
 CITI-Proyecto/
-├─ index.html                    Punto de entrada visual (detector de servidor)
 ├─ iniciar_citi.bat              Arranque rápido en Windows
 ├─ Dockerfile
 ├─ docker-compose.yml
@@ -84,7 +76,7 @@ CITI-Proyecto/
 │  ├─ accounts/                  Usuarios, empresas, perfiles, seed
 │  ├─ scheduling/                Franjas, citas, eventos, solicitudes públicas
 │  ├─ portal/                    Vistas públicas, paneles, triage, indicadores
-│  ├─ templates/                 landing.html, paneles y partials
+│  ├─ templates/                 portal/index.html, paneles y partials
 │  └─ static/                    CSS, JS, imágenes, videos y fuentes locales
 ├─ docs/
 │  ├─ demo/                      Credenciales, datos y guion de demostración
@@ -108,10 +100,10 @@ las plantillas viven en un único proyecto.
 
 | Capa | Responsabilidad | Archivos principales |
 |---|---|---|
-| **Model** | Entidades, relaciones, validaciones y reglas de datos | `backend/accounts/models.py` · `backend/scheduling/models.py` · `backend/portal/models.py` |
-| **View** | Control de la petición, permisos, consultas y respuesta | `backend/portal/views_public.py` · `backend/portal/views.py` · `backend/portal/views_solicitudes.py` · `backend/accounts/views.py` |
-| **Template** | HTML con herencia, partials y contexto | `backend/templates/portal/landing.html` · `backend/templates/portal/public_base.html` · `backend/templates/dashboard_base.html` |
-| **Router** | Mapa de URLs y despacho | `backend/config/urls.py` · `backend/portal/urls.py` |
+| **Enrutador** | Punto de entrada y despacho de URLs | `backend/config/urls.py` · `backend/portal/urls.py` |
+| **Models** | Entidades, relaciones, validaciones y reglas de datos | `backend/accounts/models.py` · `backend/portal/models.py` · `backend/scheduling/models.py` |
+| **Views** | Control de la petición, permisos, consultas y respuesta | `backend/accounts/views.py` · `backend/portal/views.py` · `backend/portal/views_public.py` · `backend/scheduling/views.py` |
+| **Templates** | HTML con herencia, partials y contexto | `backend/templates/portal/index.html` (portada principal) · `backend/templates/base.html` · `backend/templates/dashboard_base.html` |
 | **Config** | Settings, WSGI y estáticos | `backend/config/settings.py` · `backend/config/wsgi.py` |
 
 ### Flujo de una petición a la portada
@@ -122,12 +114,12 @@ GET /
       └─ backend/portal/urls.py      path('', views_public.landing, name='landing')
           └─ backend/portal/views_public.py
               ├─ backend/portal/models.py            ProyectoPortafolio · Taller
-              └─ backend/templates/portal/landing.html   respuesta HTML
+              └─ backend/templates/portal/index.html   respuesta HTML
 ```
 
-`backend/templates/portal/landing.html` es la vista principal de inicio. Hereda
-de `public_base.html`, recibe los proyectos y talleres publicados desde la vista
-y renderiza el HTML final. Las plantillas de los paneles heredan de
+`backend/templates/portal/index.html` es la portada principal. Hereda de
+`public_base.html`, recibe los proyectos y talleres publicados desde la vista y
+renderiza el HTML final. Las plantillas de los paneles heredan de
 `dashboard_base.html`.
 
 ---
@@ -277,7 +269,7 @@ Especificaciones y regeneración en
 | Quiero empezar de cero | `docker compose down -v && docker compose up --build` |
 | Error de línea `\r` al ejecutar `entrypoint.sh` | `.gitattributes` fuerza `eol=lf` para `*.sh`; si se editó en Windows, volver a clonar o convertir a LF |
 | Login rechaza la cuenta | El portal elegido no coincide con el rol de la cuenta |
-| `index.html` no detecta el servidor | Algunos navegadores bloquean `fetch` desde `file://`; usa el botón **Abrir CITI ahora** o `iniciar_citi.bat` |
+| El navegador no abre la plataforma | Ejecuta `iniciar_citi.bat` o abre manualmente <http://localhost:8000> |
 
 ---
 

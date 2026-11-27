@@ -95,6 +95,7 @@ class PublicasBaseTests(TestCase):
     def test_landing_publica_muestra_ctas_y_videos(self):
         r = self.client.get('/')
         self.assertEqual(r.status_code, 200)
+        self.assertTemplateUsed(r, 'portal/index.html')
         self.assertContains(r, 'Ingeniería real para resolver')
         self.assertContains(r, 'los retos de tu empresa o comunidad')
         self.assertContains(r, 'Cuéntanos qué necesitas y agenda tu cita')

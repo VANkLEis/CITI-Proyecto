@@ -2,7 +2,7 @@
 
 ## Qué cambió
 
-**Landing (`backend/templates/portal/landing.html`, reescrita):**
+**Portada (`backend/templates/portal/index.html`, antes `landing.html`):**
 
 | Sección | Contenido | Fuente de verdad |
 |---|---|---|
@@ -40,7 +40,7 @@ Verificado con navegador real (Playwright MCP) en 1440, 820 y 390: sin desbordam
 
 ## Archivos tocados (Módulo A)
 
-- `backend/templates/portal/landing.html` (reescrito)
+- `backend/templates/portal/index.html` (antes `landing.html`)
 - `backend/templates/base.html` (cache-busting)
 - `backend/static/css/styles.css` (bloques nuevos; sin tocar reglas existentes)
 - `backend/static/images/landing/*` (7 archivos nuevos + descartes eliminados)
