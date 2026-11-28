@@ -20,7 +20,7 @@ DIAG = BASE / "diagramas"
 EVID = BASE / "evidencias"
 LEGACY = EVID / "legacy"
 OUT = BASE / "CITI_Sustentacion_Final.pptx"
-LOGO = ROOT / "backend" / "static" / "images" / "logo_ucc.png"
+LOGO = ROOT / "backend" / "static" / "images" / "logo-ucc.png"
 
 NAVY = RGBColor(0x13, 0x27, 0x40)
 TEAL = RGBColor(0x00, 0xAC, 0xC9)

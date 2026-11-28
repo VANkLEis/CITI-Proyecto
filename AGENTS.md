@@ -35,7 +35,7 @@ Run from `backend/` with the **root** venv (Django 5.2.18, matches `requirements
 - `DATABASES` priority: `DATABASE_URL` with `postgres://`/`postgresql://` → `POSTGRES_*` when `POSTGRES_HOST` exists → SQLite local. PostgreSQL uses `CONN_MAX_AGE=60`.
 - `/media/` is served by `runserver` only when `DEBUG=True`; with `CITI_SERVE_MEDIA=1` (Docker demo) `config/urls.py` adds an explicit `serve` route. Never enable that in real production.
 - `CITI_USE_WHITENOISE=1` (default when `IS_PRODUCTION`) inserts `WhiteNoiseMiddleware` and switches `STORAGES['staticfiles']` to `CompressedManifestStaticFilesStorage`. `collectstatic` writes the manifest to `backend/staticfiles/` (gitignored); a missing static reference fails instead of becoming a silent 404.
-- Static asset names are case-sensitive in Linux/Render. The canonical logo/favicon is `backend/static/images/logo_ucc.png` (lowercase); templates must use `{% static 'images/logo_ucc.png' %}` exactly. Never reintroduce `Logo_ucc.png`.
+- Static asset names are case-sensitive in Linux/Render. The canonical files are `backend/static/images/logo-ucc.png` and `backend/static/images/favicon-ucc.png` (lowercase); templates use `{% static 'images/logo-ucc.png' %}` for the logo and `{% static 'images/favicon-ucc.png' %}` for the favicon. Never reintroduce `logo_ucc.png`/`Logo_ucc.png`.
 - Locale `es-co` / `America/Bogota` with `USE_TZ=True` — build datetimes with `timezone.now()`, never naive `datetime`.
 
 ## Security and navigation
