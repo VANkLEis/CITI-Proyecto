@@ -24,7 +24,7 @@ JS. El `<link>` antiguo a `index.global.min.css` era un 404 y se retiró.
 
 - Lee `tools/public_images.json` (fuente exacta, licencia y autor).
 - Valida HTTP 200, MIME de imagen y dimensiones mínimas.
-- Recorta a 1600×1000 (tarjetas) o 1920×1080/1600×900 (pósters).
+- Recorta las 17 imágenes a 1600×1000 y las guarda como JPEG calidad 88.
 - Escribe `tools/public_images.lock.json` y `docs/demo/CREDITOS_IMAGENES.md`.
 - No usa búsquedas en vivo: la descarga es reproducible.
 

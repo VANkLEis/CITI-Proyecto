@@ -231,8 +231,9 @@ Volver y medios únicos.
 
 - 8 proyectos publicados (4 Civil y 4 entre Sistemas/IA/Impacto) y 6 talleres
   activos (3 Sistemas y 3 Civil).
-- 17 imágenes únicas en `backend/static/images/landing/`, 3 videos Ken Burns en
-  `backend/static/videos/`, FullCalendar 6.1.15 y Open Sans locales.
+- 17 imágenes únicas en `backend/static/images/landing/` (1600×1000, JPEG 88),
+  3 videos Ken Burns en `backend/static/videos/`, FullCalendar 6.1.15 y Open
+  Sans locales.
 - Cero CDNs en la aplicación: los recursos se sirven desde `backend/static/`.
 - Créditos y licencias de las imágenes:
   [`docs/demo/CREDITOS_IMAGENES.md`](docs/demo/CREDITOS_IMAGENES.md) (interno).

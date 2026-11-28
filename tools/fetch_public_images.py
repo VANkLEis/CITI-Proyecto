@@ -60,7 +60,7 @@ def optimize(raw, target, poster=False):
         centering=centering)
     buffer = io.BytesIO()
     image.save(
-        buffer, format='JPEG', quality=85 if poster else 82,
+        buffer, format='JPEG', quality=88,
         optimize=True, progressive=True)
     return buffer.getvalue(), image.size
 

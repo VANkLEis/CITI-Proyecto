@@ -3,189 +3,240 @@
     {
       "filename": "proyecto-trazabilidad-ong.jpg",
       "slot": "proyecto:trazabilidad-casos-fundacion",
-      "theme": "ONG y gestión de casos",
-      "alt": "Profesionales de una fundación revisando casos y documentos en una mesa de trabajo",
-      "target": [1600, 1000],
+      "theme": "Desarrollo de software y trazabilidad",
+      "alt": "Primer plano de código fuente en la pantalla de un computador de desarrollo",
+      "target": [
+        1600,
+        1000
+      ],
       "license": "CC0 1.0",
-      "author": "Library of Congress / Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/6320754/carolyn-schefelman-social-worker-intern",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvbG9jMjAyMDczMzYyMy1pbWFnZS5qcGc.jpg"
+      "author": "Markus Spiske",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Code_on_computer_monitor_(Unsplash).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Code_on_computer_monitor_%28Unsplash%29.jpg/3840px-Code_on_computer_monitor_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "proyecto-ciberseguridad-pyme.jpg",
       "slot": "proyecto:diagnostico-seguridad-pyme",
-      "theme": "Ciberseguridad y redes",
-      "alt": "Rack de servidores y cableado de red en un centro de datos",
-      "target": [1600, 1000],
-      "license": "CC0 1.0",
-      "author": "Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/5913365/image-lights-public-domain-technology",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHgxMTM2MTY5LWltYWdlLWt3dndhYThlLmpwZw.jpg"
+      "theme": "Ciberseguridad e infraestructura",
+      "alt": "Rack de servidores con cableado azul en un centro de datos",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 3.0",
+      "author": "BalticServers.com",
+      "source_url": "https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/5/5d/BalticServers_data_center.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
     },
     {
       "filename": "proyecto-suelos-geotecnia.jpg",
       "slot": "proyecto:estudio-suelos-vivienda-rural",
       "theme": "Estudio de suelos y geotecnia",
-      "alt": "Equipo de perforación para un estudio geotécnico de suelos",
-      "target": [1600, 1000],
-      "license": "CC BY-SA 2.0",
-      "author": "TCExplorer",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Borehole_drilling,_Croft_Quarry_-_geograph.org.uk_-_7558628.jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Borehole_drilling%2C_Croft_Quarry_-_geograph.org.uk_-_7558628.jpg/1920px-Borehole_drilling%2C_Croft_Quarry_-_geograph.org.uk_-_7558628.jpg"
+      "alt": "Ingenieros revisando muestras de suelo en una caja de testigos geotécnicos",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "Public domain",
+      "author": "U.S. Army Corps of Engineers Savannah District",
+      "source_url": "https://commons.wikimedia.org/wiki/File:2012_USACE_Geotechnical_Conference_(7804057666).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/2012_USACE_Geotechnical_Conference_%287804057666%29.jpg/3840px-2012_USACE_Geotechnical_Conference_%287804057666%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "proyecto-red-hidraulica.jpg",
       "slot": "proyecto:optimizacion-red-agua",
-      "theme": "Red hidráulica y válvulas",
-      "alt": "Válvulas y tuberías de una red de distribución de agua",
-      "target": [1600, 1000],
-      "license": "CC0 1.0",
-      "author": "Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/5915775/image-public-domain-plant-camera",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvbnMyMTg0MC1pbWFnZS1rd3Z3bWVrbC5qcGc.jpg"
+      "theme": "Red hidráulica y agua potable",
+      "alt": "Tuberías y válvulas de una planta de tratamiento de agua",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "Pavel Hrdlička (Packa)",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Grit_tanks_and_air_pipes,_Prague_Central_Wastewater_Treatment_4581.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Grit_tanks_and_air_pipes%2C_Prague_Central_Wastewater_Treatment_4581.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
     },
     {
       "filename": "proyecto-asistente-ia.jpg",
       "slot": "proyecto:asistente-ia-atencion",
-      "theme": "Atención de usuarios y IA",
-      "alt": "Puestos de atención con computadores en un centro de servicios",
-      "target": [1600, 1000],
-      "license": "CC BY 2.0",
-      "author": "Carlos Ebert",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Call_center_(8301477546).jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Call_center_%288301477546%29.jpg/1920px-Call_center_%288301477546%29.jpg"
+      "theme": "Análisis de datos e inteligencia artificial",
+      "alt": "Equipo técnico frente a monitores de control y análisis de datos",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 4.0",
+      "author": "Jacqueline Ramseyer Orrell/SLAC National Accelerator Laboratory",
+      "source_url": "https://commons.wikimedia.org/wiki/File:First_Photons_in_the_Rubin_control_room_at_SLAC_(rubin-control-room-a).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/First_Photons_in_the_Rubin_control_room_at_SLAC_%28rubin-control-room-a%29.jpg/3840px-First_Photons_in_the_Rubin_control_room_at_SLAC_%28rubin-control-room-a%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "proyecto-alfabetizacion-digital.jpg",
       "slot": "proyecto:alfabetizacion-digital-mayores",
-      "theme": "Alfabetización digital de personas mayores",
-      "alt": "Persona mayor usando un computador portátil",
-      "target": [1600, 1000],
-      "license": "CC BY-SA 3.0",
-      "author": "Davidpar",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Elderly_people_editing_Catalan_Wikipedia_01.JPG",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/Elderly_people_editing_Catalan_Wikipedia_01.JPG/1920px-Elderly_people_editing_Catalan_Wikipedia_01.JPG"
+      "theme": "Capacitación tecnológica",
+      "alt": "Estudiantes practicando en computadores dentro de un laboratorio",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "Pmk2k7",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Computer_Lab_student.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Computer_Lab_student.jpg/3840px-Computer_Lab_student.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "proyecto-patologia-estructural.jpg",
       "slot": "proyecto:patologia-estructural-sede-comunitaria",
-      "theme": "Patología estructural y vulnerabilidad",
-      "alt": "Vivienda antigua con grietas y humedad visibles en su fachada",
-      "target": [1600, 1000],
-      "license": "CC0 1.0",
-      "author": "Dilip Modhavadiya / WordPress Photos",
-      "source_url": "https://wordpress.org/photos/photo/2876a9c0c1/",
-      "download_url": "https://pd.w.org/2026/09/2876a9c0c1fb31561.29701077-2048x1536.jpg"
+      "theme": "Estructuras de concreto y acero",
+      "alt": "Edificio en construcción con grúa torre y estructura de concreto",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "PortlandAppraisalBlog",
+      "source_url": "https://commons.wikimedia.org/wiki/File:HollywoodHUB_under_construction_with_tower_crane_at_Hollywood_Transit_Center,_Portland,_Oregon_(January_2026).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/HollywoodHUB_under_construction_with_tower_crane_at_Hollywood_Transit_Center%2C_Portland%2C_Oregon_%28January_2026%29.jpg/3840px-HollywoodHUB_under_construction_with_tower_crane_at_Hollywood_Transit_Center%2C_Portland%2C_Oregon_%28January_2026%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "proyecto-topografia-drenaje.jpg",
       "slot": "proyecto:topografia-drenaje-vial-rural",
       "theme": "Topografía y drenaje vial",
-      "alt": "Topógrafos con estación total en una vía rural",
-      "target": [1600, 1000],
+      "alt": "Topógrafo operando una estación total a orilla de una vía",
+      "target": [
+        1600,
+        1000
+      ],
       "license": "CC BY-SA 4.0",
-      "author": "Indrajit Das",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Surveying_with_total_station_01.jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Surveying_with_total_station_01.jpg/1920px-Surveying_with_total_station_01.jpg"
+      "author": "FBenjr123",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Highway_Calumpit_railway_station_construction_sites_06.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Highway_Calumpit_railway_station_construction_sites_06.jpg/3840px-Highway_Calumpit_railway_station_construction_sites_06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "taller-ia-fundaciones.jpg",
       "slot": "taller:ia-aplicada-fundaciones-ong",
       "theme": "Taller de IA para fundaciones",
-      "alt": "Participantes en un taller de capacitación con pantalla y proyector",
-      "target": [1600, 1000],
-      "license": "CC0 1.0",
-      "author": "Bureau of Educational and Cultural Affairs / Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/6200683/photo-image-public-domain-people-circle",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvZmw0MDU1OTEwMTIxMy1pbWFnZS1renhqZjE1YS5qcGc.jpg"
+      "alt": "Taller de capacitación digital con proyector y participantes",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 4.0",
+      "author": "Mr Eric",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Digital_Literacy_Class.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Digital_Literacy_Class.jpg/3840px-Digital_Literacy_Class.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "taller-autoconstruccion.jpg",
       "slot": "taller:autoconstruccion-segura-vivienda",
       "theme": "Autoconstrucción segura",
-      "alt": "Maestro de obra revisando planos de construcción",
-      "target": [1600, 1000],
-      "license": "CC0 1.0",
-      "author": "Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/5928302/photo-image-public-domain-person-construction",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvYnMxNDUxLWltYWdlLWt3dnltbDI5LmpwZw.jpg"
+      "alt": "Albañil colocando bloques de concreto en una obra",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "Okhaifo",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Bricklayer_at_work.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Bricklayer_at_work.jpg/3840px-Bricklayer_at_work.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "taller-emprendimiento-digital.jpg",
       "slot": "taller:herramientas-digitales-emprendedores",
       "theme": "Herramientas digitales para emprendedores",
-      "alt": "Equipo joven trabajando con portátiles alrededor de una mesa",
-      "target": [1600, 1000],
-      "license": "CC0 1.0",
-      "author": "Startup Stock Photos",
-      "source_url": "https://stocksnap.io/photo/team-meeting-VQXYE2ZEHC",
-      "download_url": "https://cdn.stocksnap.io/img-thumbs/960w/VQXYE2ZEHC.jpg"
+      "alt": "Participantes trabajando con portátiles en un taller de tecnología",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "Claudia.Garad",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Coding-Workshop-Sunday-Commons-II.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Coding-Workshop-Sunday-Commons-II.jpg/3840px-Coding-Workshop-Sunday-Commons-II.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "taller-aguas-lluvias.jpg",
       "slot": "taller:cosecha-aguas-lluvias-saneamiento",
       "theme": "Cosecha de aguas lluvias",
-      "alt": "Tanque comunitario de almacenamiento de aguas lluvias",
-      "target": [1600, 1000],
-      "license": "Public domain",
-      "author": "Spiritualfade",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Rainwater_harvesting_tank,_India.jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Rainwater_harvesting_tank%2C_India.jpg/1920px-Rainwater_harvesting_tank%2C_India.jpg"
+      "alt": "Tanque de almacenamiento de aguas lluvias instalado junto a una vivienda",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 2.0",
+      "author": "SuSanA Secretariat",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Rainwater_harvesting_tank_(5981896147).jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Rainwater_harvesting_tank_%285981896147%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
     },
     {
       "filename": "taller-adultos-mayores-digital.jpg",
       "slot": "taller:alfabetizacion-digital-adultos-mayores",
       "theme": "Trámites digitales para adultos mayores",
-      "alt": "Persona mayor usando un portátil en su casa",
-      "target": [1600, 1000],
+      "alt": "Persona mayor usando un computador portátil en su casa",
+      "target": [
+        1600,
+        1000
+      ],
       "license": "CC BY 2.0",
-      "author": "Nenad Stojkovic",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Elderly_woman_sitting_in_an_armchair_and_holding_her_glasses_while_typing_on_a_laptop._(51531777613).jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Elderly_woman_sitting_in_an_armchair_and_holding_her_glasses_while_typing_on_a_laptop._%2851531777613%29.jpg/1920px-Elderly_woman_sitting_in_an_armchair_and_holding_her_glasses_while_typing_on_a_laptop._%2851531777613%29.jpg"
+      "author": "Shixart1985",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Senior_woman_using_laptop_at_home.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Senior_woman_using_laptop_at_home.jpg/3840px-Senior_woman_using_laptop_at_home.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "taller-mantenimiento-hogar.jpg",
       "slot": "taller:mantenimiento-preventivo-hogar",
       "theme": "Mantenimiento preventivo del hogar",
-      "alt": "Grieta en el muro de una vivienda como señal de mantenimiento",
-      "target": [1600, 1000],
-      "license": "CC BY-SA 4.0",
-      "author": "Almanta",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Cracked_wall_03.jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Cracked_wall_03.jpg/1920px-Cracked_wall_03.jpg"
+      "alt": "Trabajadores reparando el techo de una vivienda",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "Public domain",
+      "author": "Win Henderson",
+      "source_url": "https://commons.wikimedia.org/wiki/File:FEMA_-_44364_-_Roof_repair_workers_in_Oklahoma.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/FEMA_-_44364_-_Roof_repair_workers_in_Oklahoma.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
     },
     {
       "filename": "hero-citi-poster.jpg",
       "slot": "poster:hero",
-      "theme": "Equipo de ingeniería en laboratorio",
-      "alt": "Estudiantes de ingeniería trabajando en un laboratorio de fabricación",
-      "target": [1920, 1080],
+      "theme": "Laboratorio de ingeniería",
+      "alt": "Estudiantes de ingeniería trabajando con herramientas en un laboratorio",
+      "target": [
+        1600,
+        1000
+      ],
       "license": "CC BY 2.0",
       "author": "UC Davis College of Engineering",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Engineering_Fabrication_Laboratory_(Student_Shop)_(11422728555).jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Engineering_Fabrication_Laboratory_%28Student_Shop%29_%2811422728555%29.jpg/1920px-Engineering_Fabrication_Laboratory_%28Student_Shop%29_%2811422728555%29.jpg"
+      "source_url": "https://commons.wikimedia.org/wiki/File:Engineering_Fabrication_Laboratory_(Student_Shop)_(11422730545).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Engineering_Fabrication_Laboratory_%28Student_Shop%29_%2811422730545%29.jpg/3840px-Engineering_Fabrication_Laboratory_%28Student_Shop%29_%2811422730545%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "progreso-ingenieria-poster.jpg",
       "slot": "poster:proceso",
-      "theme": "Planos y documentación técnica",
-      "alt": "Planos y documentos técnicos de ingeniería sobre una mesa",
-      "target": [1600, 900],
-      "license": "CC0 1.0",
-      "author": "Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/5946602/free-public-domain-cc0-photo",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHg3MDE4NzUtaW1hZ2Uta3d5b3JtZ2QuanBn.jpg"
+      "theme": "Revisión de planos y documentación técnica",
+      "alt": "Ingenieros revisando planos y documentos técnicos sobre una mesa",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 2.0",
+      "author": "Oregon Department of Transportation",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Reviewing_plans_together_(49095979546).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Reviewing_plans_together_%2849095979546%29.jpg/3840px-Reviewing_plans_together_%2849095979546%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     },
     {
       "filename": "resultados-impacto-poster.jpg",
       "slot": "poster:resultados",
-      "theme": "Encuentro comunitario de resultados",
-      "alt": "Encuentro comunitario para presentar resultados de un proyecto",
-      "target": [1600, 900],
-      "license": "CC BY 4.0",
-      "author": "RubinObs/NOIRLab/SLAC/DOE/NSF/AURA",
-      "source_url": "https://commons.wikimedia.org/wiki/File:2025_Rubin_Community_Workshop_(IMG_0356-CC).jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/2025_Rubin_Community_Workshop_%28IMG_0356-CC%29.jpg/1920px-2025_Rubin_Community_Workshop_%28IMG_0356-CC%29.jpg"
+      "theme": "Trabajo colaborativo universitario",
+      "alt": "Estudiantes colaborando en el montaje de una estructura durante una actividad de ingeniería",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 2.0",
+      "author": "Oregon Department of Transportation",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Teamwork_to_build_a_tower_(52835244740).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Teamwork_to_build_a_tower_%2852835244740%29.jpg/3840px-Teamwork_to_build_a_tower_%2852835244740%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
     }
   ]
 }

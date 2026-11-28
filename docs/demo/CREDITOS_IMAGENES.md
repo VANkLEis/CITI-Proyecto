@@ -7,23 +7,23 @@ CDNs ni URLs externas en runtime. El manifiesto reproducible está en
 
 | Archivo | Tema | Autor | Licencia | Fuente |
 |---|---|---|---|---|
-| `proyecto-trazabilidad-ong.jpg` | ONG y gestión de casos | Library of Congress / Rawpixel | CC0 1.0 | [ver original](<https://www.rawpixel.com/image/6320754/carolyn-schefelman-social-worker-intern>) |
-| `proyecto-ciberseguridad-pyme.jpg` | Ciberseguridad y redes | Rawpixel | CC0 1.0 | [ver original](<https://www.rawpixel.com/image/5913365/image-lights-public-domain-technology>) |
-| `proyecto-suelos-geotecnia.jpg` | Estudio de suelos y geotecnia | TCExplorer | CC BY-SA 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Borehole_drilling,_Croft_Quarry_-_geograph.org.uk_-_7558628.jpg>) |
-| `proyecto-red-hidraulica.jpg` | Red hidráulica y válvulas | Rawpixel | CC0 1.0 | [ver original](<https://www.rawpixel.com/image/5915775/image-public-domain-plant-camera>) |
-| `proyecto-asistente-ia.jpg` | Atención de usuarios y IA | Carlos Ebert | CC BY 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Call_center_(8301477546).jpg>) |
-| `proyecto-alfabetizacion-digital.jpg` | Alfabetización digital de personas mayores | Davidpar | CC BY-SA 3.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Elderly_people_editing_Catalan_Wikipedia_01.JPG>) |
-| `proyecto-patologia-estructural.jpg` | Patología estructural y vulnerabilidad | Dilip Modhavadiya / WordPress Photos | CC0 1.0 | [ver original](<https://wordpress.org/photos/photo/2876a9c0c1/>) |
-| `proyecto-topografia-drenaje.jpg` | Topografía y drenaje vial | Indrajit Das | CC BY-SA 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Surveying_with_total_station_01.jpg>) |
-| `taller-ia-fundaciones.jpg` | Taller de IA para fundaciones | Bureau of Educational and Cultural Affairs / Rawpixel | CC0 1.0 | [ver original](<https://www.rawpixel.com/image/6200683/photo-image-public-domain-people-circle>) |
-| `taller-autoconstruccion.jpg` | Autoconstrucción segura | Rawpixel | CC0 1.0 | [ver original](<https://www.rawpixel.com/image/5928302/photo-image-public-domain-person-construction>) |
-| `taller-emprendimiento-digital.jpg` | Herramientas digitales para emprendedores | Startup Stock Photos | CC0 1.0 | [ver original](<https://stocksnap.io/photo/team-meeting-VQXYE2ZEHC>) |
-| `taller-aguas-lluvias.jpg` | Cosecha de aguas lluvias | Spiritualfade | Public domain | [ver original](<https://commons.wikimedia.org/wiki/File:Rainwater_harvesting_tank,_India.jpg>) |
-| `taller-adultos-mayores-digital.jpg` | Trámites digitales para adultos mayores | Nenad Stojkovic | CC BY 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Elderly_woman_sitting_in_an_armchair_and_holding_her_glasses_while_typing_on_a_laptop._(51531777613).jpg>) |
-| `taller-mantenimiento-hogar.jpg` | Mantenimiento preventivo del hogar | Almanta | CC BY-SA 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Cracked_wall_03.jpg>) |
-| `hero-citi-poster.jpg` | Equipo de ingeniería en laboratorio | UC Davis College of Engineering | CC BY 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Engineering_Fabrication_Laboratory_(Student_Shop)_(11422728555).jpg>) |
-| `progreso-ingenieria-poster.jpg` | Planos y documentación técnica | Rawpixel | CC0 1.0 | [ver original](<https://www.rawpixel.com/image/5946602/free-public-domain-cc0-photo>) |
-| `resultados-impacto-poster.jpg` | Encuentro comunitario de resultados | RubinObs/NOIRLab/SLAC/DOE/NSF/AURA | CC BY 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:2025_Rubin_Community_Workshop_(IMG_0356-CC).jpg>) |
+| `proyecto-trazabilidad-ong.jpg` | Desarrollo de software y trazabilidad | Markus Spiske | CC0 1.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Code_on_computer_monitor_(Unsplash).jpg>) |
+| `proyecto-ciberseguridad-pyme.jpg` | Ciberseguridad e infraestructura | BalticServers.com | CC BY-SA 3.0 | [ver original](<https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg>) |
+| `proyecto-suelos-geotecnia.jpg` | Estudio de suelos y geotecnia | U.S. Army Corps of Engineers Savannah District | Public domain | [ver original](<https://commons.wikimedia.org/wiki/File:2012_USACE_Geotechnical_Conference_(7804057666).jpg>) |
+| `proyecto-red-hidraulica.jpg` | Red hidráulica y agua potable | Pavel Hrdlička (Packa) | CC BY-SA 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Grit_tanks_and_air_pipes,_Prague_Central_Wastewater_Treatment_4581.jpg>) |
+| `proyecto-asistente-ia.jpg` | Análisis de datos e inteligencia artificial | Jacqueline Ramseyer Orrell/SLAC National Accelerator Laboratory | CC BY 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:First_Photons_in_the_Rubin_control_room_at_SLAC_(rubin-control-room-a).jpg>) |
+| `proyecto-alfabetizacion-digital.jpg` | Capacitación tecnológica | Pmk2k7 | CC BY-SA 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Computer_Lab_student.jpg>) |
+| `proyecto-patologia-estructural.jpg` | Estructuras de concreto y acero | PortlandAppraisalBlog | CC BY-SA 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:HollywoodHUB_under_construction_with_tower_crane_at_Hollywood_Transit_Center,_Portland,_Oregon_(January_2026).jpg>) |
+| `proyecto-topografia-drenaje.jpg` | Topografía y drenaje vial | FBenjr123 | CC BY-SA 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Highway_Calumpit_railway_station_construction_sites_06.jpg>) |
+| `taller-ia-fundaciones.jpg` | Taller de IA para fundaciones | Mr Eric | CC BY 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Digital_Literacy_Class.jpg>) |
+| `taller-autoconstruccion.jpg` | Autoconstrucción segura | Okhaifo | CC BY-SA 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Bricklayer_at_work.jpg>) |
+| `taller-emprendimiento-digital.jpg` | Herramientas digitales para emprendedores | Claudia.Garad | CC BY-SA 4.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Coding-Workshop-Sunday-Commons-II.jpg>) |
+| `taller-aguas-lluvias.jpg` | Cosecha de aguas lluvias | SuSanA Secretariat | CC BY 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Rainwater_harvesting_tank_(5981896147).jpg>) |
+| `taller-adultos-mayores-digital.jpg` | Trámites digitales para adultos mayores | Shixart1985 | CC BY 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Senior_woman_using_laptop_at_home.jpg>) |
+| `taller-mantenimiento-hogar.jpg` | Mantenimiento preventivo del hogar | Win Henderson | Public domain | [ver original](<https://commons.wikimedia.org/wiki/File:FEMA_-_44364_-_Roof_repair_workers_in_Oklahoma.jpg>) |
+| `hero-citi-poster.jpg` | Laboratorio de ingeniería | UC Davis College of Engineering | CC BY 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Engineering_Fabrication_Laboratory_(Student_Shop)_(11422730545).jpg>) |
+| `progreso-ingenieria-poster.jpg` | Revisión de planos y documentación técnica | Oregon Department of Transportation | CC BY 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Reviewing_plans_together_(49095979546).jpg>) |
+| `resultados-impacto-poster.jpg` | Trabajo colaborativo universitario | Oregon Department of Transportation | CC BY 2.0 | [ver original](<https://commons.wikimedia.org/wiki/File:Teamwork_to_build_a_tower_(52835244740).jpg>) |
 
 ## Notas de licencia
 

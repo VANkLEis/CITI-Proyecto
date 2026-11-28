@@ -3,359 +3,359 @@
     {
       "filename": "proyecto-trazabilidad-ong.jpg",
       "slot": "proyecto:trazabilidad-casos-fundacion",
-      "theme": "ONG y gestión de casos",
-      "alt": "Profesionales de una fundación revisando casos y documentos en una mesa de trabajo",
+      "theme": "Desarrollo de software y trazabilidad",
+      "alt": "Primer plano de código fuente en la pantalla de un computador de desarrollo",
       "target": [
         1600,
         1000
       ],
       "license": "CC0 1.0",
-      "author": "Library of Congress / Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/6320754/carolyn-schefelman-social-worker-intern",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvbG9jMjAyMDczMzYyMy1pbWFnZS5qcGc.jpg",
+      "author": "Markus Spiske",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Code_on_computer_monitor_(Unsplash).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Code_on_computer_monitor_%28Unsplash%29.jpg/3840px-Code_on_computer_monitor_%28Unsplash%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
       "output": "images/landing/proyecto-trazabilidad-ong.jpg",
       "output_size": [
         1600,
         1000
       ],
-      "source_sha256": "fef3421fb508100c56353956461007e0d992f098dbc163b522ff75603a88b837",
-      "output_sha256": "82093e536c7c9cbbd1cf797bb9a8a39dda653ca82543131b60d4c42786a31345"
+      "source_sha256": "cd0e227519c0c165ac1ad2ee5f9a6745b9beee2db84b8d93d9999bd08d58a5e8",
+      "output_sha256": "9804da5bcae01ccd40d407abd620d865470288aa530d3923fb985c19b880d9ea"
     },
     {
       "filename": "proyecto-ciberseguridad-pyme.jpg",
       "slot": "proyecto:diagnostico-seguridad-pyme",
-      "theme": "Ciberseguridad y redes",
-      "alt": "Rack de servidores y cableado de red en un centro de datos",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC0 1.0",
-      "author": "Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/5913365/image-lights-public-domain-technology",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHgxMTM2MTY5LWltYWdlLWt3dndhYThlLmpwZw.jpg",
-      "output": "images/landing/proyecto-ciberseguridad-pyme.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "75f7c0c8b0a10ef2147cc90513542ac18b3ab567f9fa1306bac83b824b9a46aa",
-      "output_sha256": "6e444140c89076133682ed97e725ce85a29bde63f7607df0c4fe8958e13a2c4b"
-    },
-    {
-      "filename": "proyecto-suelos-geotecnia.jpg",
-      "slot": "proyecto:estudio-suelos-vivienda-rural",
-      "theme": "Estudio de suelos y geotecnia",
-      "alt": "Equipo de perforación para un estudio geotécnico de suelos",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC BY-SA 2.0",
-      "author": "TCExplorer",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Borehole_drilling,_Croft_Quarry_-_geograph.org.uk_-_7558628.jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Borehole_drilling%2C_Croft_Quarry_-_geograph.org.uk_-_7558628.jpg/1920px-Borehole_drilling%2C_Croft_Quarry_-_geograph.org.uk_-_7558628.jpg",
-      "output": "images/landing/proyecto-suelos-geotecnia.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "334210d5271fbfdd765a1af9d0872306054cfb1f9c6489b7c6a0bb3674ce959e",
-      "output_sha256": "178e435a43cc1da2f5b1aa7c941572b4276c035500e0d84a3d6d459e09cd2217"
-    },
-    {
-      "filename": "proyecto-red-hidraulica.jpg",
-      "slot": "proyecto:optimizacion-red-agua",
-      "theme": "Red hidráulica y válvulas",
-      "alt": "Válvulas y tuberías de una red de distribución de agua",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC0 1.0",
-      "author": "Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/5915775/image-public-domain-plant-camera",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvbnMyMTg0MC1pbWFnZS1rd3Z3bWVrbC5qcGc.jpg",
-      "output": "images/landing/proyecto-red-hidraulica.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "0edbd55b8944f6792c572f1a75d6997a98fed8cbafabd64bad08830278ef04b5",
-      "output_sha256": "eb444fe6349c94e16db2fb653b33401571ddbddf256f58205b6871f78daec455"
-    },
-    {
-      "filename": "proyecto-asistente-ia.jpg",
-      "slot": "proyecto:asistente-ia-atencion",
-      "theme": "Atención de usuarios y IA",
-      "alt": "Puestos de atención con computadores en un centro de servicios",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC BY 2.0",
-      "author": "Carlos Ebert",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Call_center_(8301477546).jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Call_center_%288301477546%29.jpg/1920px-Call_center_%288301477546%29.jpg",
-      "output": "images/landing/proyecto-asistente-ia.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "709f1994ea645b92a63e552a943be33aa238204fbe267ee3ce912faf1379070e",
-      "output_sha256": "595df36dd0a01bdc11bb2012485c292148fc582a39b796fd134a1f980a12dbe5"
-    },
-    {
-      "filename": "proyecto-alfabetizacion-digital.jpg",
-      "slot": "proyecto:alfabetizacion-digital-mayores",
-      "theme": "Alfabetización digital de personas mayores",
-      "alt": "Persona mayor usando un computador portátil",
+      "theme": "Ciberseguridad e infraestructura",
+      "alt": "Rack de servidores con cableado azul en un centro de datos",
       "target": [
         1600,
         1000
       ],
       "license": "CC BY-SA 3.0",
-      "author": "Davidpar",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Elderly_people_editing_Catalan_Wikipedia_01.JPG",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/Elderly_people_editing_Catalan_Wikipedia_01.JPG/1920px-Elderly_people_editing_Catalan_Wikipedia_01.JPG",
-      "output": "images/landing/proyecto-alfabetizacion-digital.jpg",
+      "author": "BalticServers.com",
+      "source_url": "https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/5/5d/BalticServers_data_center.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "output": "images/landing/proyecto-ciberseguridad-pyme.jpg",
       "output_size": [
         1600,
         1000
       ],
-      "source_sha256": "56d5fb7f1cbff15c1e9add6db4e997343404db9e4476b235395e6f4a374df9f2",
-      "output_sha256": "e7f122da4e4713539514b92700699d2390896874abb787108b0e5f637e7096b5"
+      "source_sha256": "7bb78d0c45d6f2dd98adf4c79eb084612a9fc5f251d5040eff8a7720eeb4d0bd",
+      "output_sha256": "79148ab22b2e7cf47b5cad2cdc058db624a189a91db070ac04d30091de2bc59b"
     },
     {
-      "filename": "proyecto-patologia-estructural.jpg",
-      "slot": "proyecto:patologia-estructural-sede-comunitaria",
-      "theme": "Patología estructural y vulnerabilidad",
-      "alt": "Vivienda antigua con grietas y humedad visibles en su fachada",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC0 1.0",
-      "author": "Dilip Modhavadiya / WordPress Photos",
-      "source_url": "https://wordpress.org/photos/photo/2876a9c0c1/",
-      "download_url": "https://pd.w.org/2026/09/2876a9c0c1fb31561.29701077-2048x1536.jpg",
-      "output": "images/landing/proyecto-patologia-estructural.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "1ed12457f4ec8302519ff30ef2ae4e566cecec43ffed531262c9a88e36ce8bdb",
-      "output_sha256": "3a7c771c5bed5a54cbc85849c628e2e0f942472bb8655ccda6b6df4def1454f6"
-    },
-    {
-      "filename": "proyecto-topografia-drenaje.jpg",
-      "slot": "proyecto:topografia-drenaje-vial-rural",
-      "theme": "Topografía y drenaje vial",
-      "alt": "Topógrafos con estación total en una vía rural",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC BY-SA 4.0",
-      "author": "Indrajit Das",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Surveying_with_total_station_01.jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Surveying_with_total_station_01.jpg/1920px-Surveying_with_total_station_01.jpg",
-      "output": "images/landing/proyecto-topografia-drenaje.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "0b3d1be09f7baa6f47ea21f9bcbf9708bc927b18c385f07e0a5626e4cb716457",
-      "output_sha256": "8364329c55e7e0ccbf85af3af3d788e25838fc51cc2e057b013bece112701114"
-    },
-    {
-      "filename": "taller-ia-fundaciones.jpg",
-      "slot": "taller:ia-aplicada-fundaciones-ong",
-      "theme": "Taller de IA para fundaciones",
-      "alt": "Participantes en un taller de capacitación con pantalla y proyector",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC0 1.0",
-      "author": "Bureau of Educational and Cultural Affairs / Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/6200683/photo-image-public-domain-people-circle",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvZmw0MDU1OTEwMTIxMy1pbWFnZS1renhqZjE1YS5qcGc.jpg",
-      "output": "images/landing/taller-ia-fundaciones.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "00db9274b628ee8114702b3306d6aa2586b8ea333932be0201969bc1d06628b9",
-      "output_sha256": "10e8411708e2b09a2a7723f860fb6397392ae8149ec0b717370f677db8386163"
-    },
-    {
-      "filename": "taller-autoconstruccion.jpg",
-      "slot": "taller:autoconstruccion-segura-vivienda",
-      "theme": "Autoconstrucción segura",
-      "alt": "Maestro de obra revisando planos de construcción",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC0 1.0",
-      "author": "Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/5928302/photo-image-public-domain-person-construction",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvYnMxNDUxLWltYWdlLWt3dnltbDI5LmpwZw.jpg",
-      "output": "images/landing/taller-autoconstruccion.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "dfa7392f3cd6679f5b90b2b3043ad2259d37be79a7dc2d122ead38ab293b899c",
-      "output_sha256": "4e28559d36e8d9e578e11e5c63647bb1fccc33b46815cce550e8f79fe774129a"
-    },
-    {
-      "filename": "taller-emprendimiento-digital.jpg",
-      "slot": "taller:herramientas-digitales-emprendedores",
-      "theme": "Herramientas digitales para emprendedores",
-      "alt": "Equipo joven trabajando con portátiles alrededor de una mesa",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC0 1.0",
-      "author": "Startup Stock Photos",
-      "source_url": "https://stocksnap.io/photo/team-meeting-VQXYE2ZEHC",
-      "download_url": "https://cdn.stocksnap.io/img-thumbs/960w/VQXYE2ZEHC.jpg",
-      "output": "images/landing/taller-emprendimiento-digital.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "24aaf8430f05a1acf8fcee1ea6b052d158d2e92dcceb4cdb589c05c8f6692567",
-      "output_sha256": "c13432111dbac65beebe8bcc9eeab30f4696ca19b1edd2c77761ae72c3a3b1e0"
-    },
-    {
-      "filename": "taller-aguas-lluvias.jpg",
-      "slot": "taller:cosecha-aguas-lluvias-saneamiento",
-      "theme": "Cosecha de aguas lluvias",
-      "alt": "Tanque comunitario de almacenamiento de aguas lluvias",
+      "filename": "proyecto-suelos-geotecnia.jpg",
+      "slot": "proyecto:estudio-suelos-vivienda-rural",
+      "theme": "Estudio de suelos y geotecnia",
+      "alt": "Ingenieros revisando muestras de suelo en una caja de testigos geotécnicos",
       "target": [
         1600,
         1000
       ],
       "license": "Public domain",
-      "author": "Spiritualfade",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Rainwater_harvesting_tank,_India.jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Rainwater_harvesting_tank%2C_India.jpg/1920px-Rainwater_harvesting_tank%2C_India.jpg",
-      "output": "images/landing/taller-aguas-lluvias.jpg",
+      "author": "U.S. Army Corps of Engineers Savannah District",
+      "source_url": "https://commons.wikimedia.org/wiki/File:2012_USACE_Geotechnical_Conference_(7804057666).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/2012_USACE_Geotechnical_Conference_%287804057666%29.jpg/3840px-2012_USACE_Geotechnical_Conference_%287804057666%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/proyecto-suelos-geotecnia.jpg",
       "output_size": [
         1600,
         1000
       ],
-      "source_sha256": "4b6bf54731fcc65dd118221e82bffe3fd7c2bd0cbba7e64d722945cf7aae33d6",
-      "output_sha256": "0e8374dc10cd7be1ba29b0bddd60df17602203d425ee7a55e6e42a4a527f3b37"
+      "source_sha256": "b1e49e1e4f41dfdc0d8db2cab742b6d1d227456ff532fde3b9efb4e50b53d3c7",
+      "output_sha256": "9c0104a4015d7b86eb5bd24583ff6d70a369bb7d95d81b259fef76b7fefaa770"
     },
     {
-      "filename": "taller-adultos-mayores-digital.jpg",
-      "slot": "taller:alfabetizacion-digital-adultos-mayores",
-      "theme": "Trámites digitales para adultos mayores",
-      "alt": "Persona mayor usando un portátil en su casa",
-      "target": [
-        1600,
-        1000
-      ],
-      "license": "CC BY 2.0",
-      "author": "Nenad Stojkovic",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Elderly_woman_sitting_in_an_armchair_and_holding_her_glasses_while_typing_on_a_laptop._(51531777613).jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Elderly_woman_sitting_in_an_armchair_and_holding_her_glasses_while_typing_on_a_laptop._%2851531777613%29.jpg/1920px-Elderly_woman_sitting_in_an_armchair_and_holding_her_glasses_while_typing_on_a_laptop._%2851531777613%29.jpg",
-      "output": "images/landing/taller-adultos-mayores-digital.jpg",
-      "output_size": [
-        1600,
-        1000
-      ],
-      "source_sha256": "683b3b0cce723a45b5051bdb486da1ec95d9f118aaccc44963c071d02922ae08",
-      "output_sha256": "acc54d41b8c227aa4cce8db9b28ce65918aabef5b1b1dc45a6e03d64d382fb4f"
-    },
-    {
-      "filename": "taller-mantenimiento-hogar.jpg",
-      "slot": "taller:mantenimiento-preventivo-hogar",
-      "theme": "Mantenimiento preventivo del hogar",
-      "alt": "Grieta en el muro de una vivienda como señal de mantenimiento",
+      "filename": "proyecto-red-hidraulica.jpg",
+      "slot": "proyecto:optimizacion-red-agua",
+      "theme": "Red hidráulica y agua potable",
+      "alt": "Tuberías y válvulas de una planta de tratamiento de agua",
       "target": [
         1600,
         1000
       ],
       "license": "CC BY-SA 4.0",
-      "author": "Almanta",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Cracked_wall_03.jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Cracked_wall_03.jpg/1920px-Cracked_wall_03.jpg",
+      "author": "Pavel Hrdlička (Packa)",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Grit_tanks_and_air_pipes,_Prague_Central_Wastewater_Treatment_4581.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Grit_tanks_and_air_pipes%2C_Prague_Central_Wastewater_Treatment_4581.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "output": "images/landing/proyecto-red-hidraulica.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "9386cb799c15c92504e23ee9f7c619bc70fcf2229db4b08326b526ba992429d1",
+      "output_sha256": "6f7dbcc1161597efc0060205162c0ea7ac80651fa033b59649466a77ef6f2804"
+    },
+    {
+      "filename": "proyecto-asistente-ia.jpg",
+      "slot": "proyecto:asistente-ia-atencion",
+      "theme": "Análisis de datos e inteligencia artificial",
+      "alt": "Equipo técnico frente a monitores de control y análisis de datos",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 4.0",
+      "author": "Jacqueline Ramseyer Orrell/SLAC National Accelerator Laboratory",
+      "source_url": "https://commons.wikimedia.org/wiki/File:First_Photons_in_the_Rubin_control_room_at_SLAC_(rubin-control-room-a).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/First_Photons_in_the_Rubin_control_room_at_SLAC_%28rubin-control-room-a%29.jpg/3840px-First_Photons_in_the_Rubin_control_room_at_SLAC_%28rubin-control-room-a%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/proyecto-asistente-ia.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "0e7beca15e099bf2fbffecb9c7051d0123c6e71235d157838d1bc1fd4830cf6f",
+      "output_sha256": "abad6cd9cad5de7121701ca915e8b6a1c1538f6c537d12d065941872b079dc6f"
+    },
+    {
+      "filename": "proyecto-alfabetizacion-digital.jpg",
+      "slot": "proyecto:alfabetizacion-digital-mayores",
+      "theme": "Capacitación tecnológica",
+      "alt": "Estudiantes practicando en computadores dentro de un laboratorio",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "Pmk2k7",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Computer_Lab_student.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Computer_Lab_student.jpg/3840px-Computer_Lab_student.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/proyecto-alfabetizacion-digital.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "66fe8134cb70e2e32d595e048725033050396d3770cdd993e61e04eff5047d2f",
+      "output_sha256": "d79482e3bb759a139c8d400740147ecfd6fc16cfb2da20775a5093a5f6bba86a"
+    },
+    {
+      "filename": "proyecto-patologia-estructural.jpg",
+      "slot": "proyecto:patologia-estructural-sede-comunitaria",
+      "theme": "Estructuras de concreto y acero",
+      "alt": "Edificio en construcción con grúa torre y estructura de concreto",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "PortlandAppraisalBlog",
+      "source_url": "https://commons.wikimedia.org/wiki/File:HollywoodHUB_under_construction_with_tower_crane_at_Hollywood_Transit_Center,_Portland,_Oregon_(January_2026).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/HollywoodHUB_under_construction_with_tower_crane_at_Hollywood_Transit_Center%2C_Portland%2C_Oregon_%28January_2026%29.jpg/3840px-HollywoodHUB_under_construction_with_tower_crane_at_Hollywood_Transit_Center%2C_Portland%2C_Oregon_%28January_2026%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/proyecto-patologia-estructural.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "704ca1ef662e9425964f18da6bf2a1923eafdc2a4b19469696801af687695df8",
+      "output_sha256": "8fc4e5ecbed7429304dc10e36fde3e50838414206889281e441b367bf3b7f0e3"
+    },
+    {
+      "filename": "proyecto-topografia-drenaje.jpg",
+      "slot": "proyecto:topografia-drenaje-vial-rural",
+      "theme": "Topografía y drenaje vial",
+      "alt": "Topógrafo operando una estación total a orilla de una vía",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "FBenjr123",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Highway_Calumpit_railway_station_construction_sites_06.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Highway_Calumpit_railway_station_construction_sites_06.jpg/3840px-Highway_Calumpit_railway_station_construction_sites_06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/proyecto-topografia-drenaje.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "1b63356067e1990ee2b4ba81890a53ccec910a899a43b8f58bf86a380a899d81",
+      "output_sha256": "06456f0b91c8fbfac428c5573fe93d742e7facb738fc7b0f3876ac588282c88c"
+    },
+    {
+      "filename": "taller-ia-fundaciones.jpg",
+      "slot": "taller:ia-aplicada-fundaciones-ong",
+      "theme": "Taller de IA para fundaciones",
+      "alt": "Taller de capacitación digital con proyector y participantes",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 4.0",
+      "author": "Mr Eric",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Digital_Literacy_Class.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Digital_Literacy_Class.jpg/3840px-Digital_Literacy_Class.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/taller-ia-fundaciones.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "305b3dda61f39d70ddb6f36f7beef9427a2af28ce143f514cbfadfe2837ad887",
+      "output_sha256": "b675696db7b6c0eb6d2646fa386fcae4d82d2bcf54b7d9a1e7d58d8483fb99ae"
+    },
+    {
+      "filename": "taller-autoconstruccion.jpg",
+      "slot": "taller:autoconstruccion-segura-vivienda",
+      "theme": "Autoconstrucción segura",
+      "alt": "Albañil colocando bloques de concreto en una obra",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "Okhaifo",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Bricklayer_at_work.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Bricklayer_at_work.jpg/3840px-Bricklayer_at_work.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/taller-autoconstruccion.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "935fa9eb44d0a1187187246afe69bfdce96df746adc7fd0d7bb22b26761b673c",
+      "output_sha256": "fb3e4f2cd2200e26ee48de4baf36929de3e06d706f8eed3962a52292ea2058cc"
+    },
+    {
+      "filename": "taller-emprendimiento-digital.jpg",
+      "slot": "taller:herramientas-digitales-emprendedores",
+      "theme": "Herramientas digitales para emprendedores",
+      "alt": "Participantes trabajando con portátiles en un taller de tecnología",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY-SA 4.0",
+      "author": "Claudia.Garad",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Coding-Workshop-Sunday-Commons-II.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Coding-Workshop-Sunday-Commons-II.jpg/3840px-Coding-Workshop-Sunday-Commons-II.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/taller-emprendimiento-digital.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "8a5730d59c7a648c8976a6876445297cb3f5b3ec12bc3b1792f406687db13b3a",
+      "output_sha256": "045b9a108bcaf410967e9586f8d359dbc309d8d73bf18767305a564631ce2c47"
+    },
+    {
+      "filename": "taller-aguas-lluvias.jpg",
+      "slot": "taller:cosecha-aguas-lluvias-saneamiento",
+      "theme": "Cosecha de aguas lluvias",
+      "alt": "Tanque de almacenamiento de aguas lluvias instalado junto a una vivienda",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 2.0",
+      "author": "SuSanA Secretariat",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Rainwater_harvesting_tank_(5981896147).jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Rainwater_harvesting_tank_%285981896147%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "output": "images/landing/taller-aguas-lluvias.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "7421c83020dccef1948354d6098c11ad66491109ae8cb0f6f3dae1187243cb93",
+      "output_sha256": "4a1accc878babd8e4ac137969356fc3ee99aae60adae28ebc59e9b77a0ca7f0c"
+    },
+    {
+      "filename": "taller-adultos-mayores-digital.jpg",
+      "slot": "taller:alfabetizacion-digital-adultos-mayores",
+      "theme": "Trámites digitales para adultos mayores",
+      "alt": "Persona mayor usando un computador portátil en su casa",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "CC BY 2.0",
+      "author": "Shixart1985",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Senior_woman_using_laptop_at_home.jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Senior_woman_using_laptop_at_home.jpg/3840px-Senior_woman_using_laptop_at_home.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "output": "images/landing/taller-adultos-mayores-digital.jpg",
+      "output_size": [
+        1600,
+        1000
+      ],
+      "source_sha256": "6135d632bb93447a8267cee8796162440ab54f7d4f0803f3b0dce72880542800",
+      "output_sha256": "fd380bf26bc9172e8f33b96d7d621bb9a832af91df52f20821eb8ad1b31eb1d1"
+    },
+    {
+      "filename": "taller-mantenimiento-hogar.jpg",
+      "slot": "taller:mantenimiento-preventivo-hogar",
+      "theme": "Mantenimiento preventivo del hogar",
+      "alt": "Trabajadores reparando el techo de una vivienda",
+      "target": [
+        1600,
+        1000
+      ],
+      "license": "Public domain",
+      "author": "Win Henderson",
+      "source_url": "https://commons.wikimedia.org/wiki/File:FEMA_-_44364_-_Roof_repair_workers_in_Oklahoma.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/FEMA_-_44364_-_Roof_repair_workers_in_Oklahoma.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
       "output": "images/landing/taller-mantenimiento-hogar.jpg",
       "output_size": [
         1600,
         1000
       ],
-      "source_sha256": "09d756efc232cd6940355573c5250755c99cc3db25918c1dca38339cdcc66906",
-      "output_sha256": "bcaeb8315a4462761cfbcc1a629fed2dc0973a6fb2ac6afef334c050c8a9933f"
+      "source_sha256": "19fa0133b60601b188dc040a4de543b94edad448351e0663817ea70af81ccf94",
+      "output_sha256": "ddc02beaf7b1cd30c9a74af1e14c70a1f01700e3bdbefe13b585e91c79d476f9"
     },
     {
       "filename": "hero-citi-poster.jpg",
       "slot": "poster:hero",
-      "theme": "Equipo de ingeniería en laboratorio",
-      "alt": "Estudiantes de ingeniería trabajando en un laboratorio de fabricación",
+      "theme": "Laboratorio de ingeniería",
+      "alt": "Estudiantes de ingeniería trabajando con herramientas en un laboratorio",
       "target": [
-        1920,
-        1080
+        1600,
+        1000
       ],
       "license": "CC BY 2.0",
       "author": "UC Davis College of Engineering",
-      "source_url": "https://commons.wikimedia.org/wiki/File:Engineering_Fabrication_Laboratory_(Student_Shop)_(11422728555).jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Engineering_Fabrication_Laboratory_%28Student_Shop%29_%2811422728555%29.jpg/1920px-Engineering_Fabrication_Laboratory_%28Student_Shop%29_%2811422728555%29.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Engineering_Fabrication_Laboratory_(Student_Shop)_(11422730545).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Engineering_Fabrication_Laboratory_%28Student_Shop%29_%2811422730545%29.jpg/3840px-Engineering_Fabrication_Laboratory_%28Student_Shop%29_%2811422730545%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
       "output": "images/landing/hero-citi-poster.jpg",
       "output_size": [
-        1920,
-        1080
+        1600,
+        1000
       ],
-      "source_sha256": "15aeccd7390cd0b1b16153a3443561c5dc51df6986ef2eb0a386b6ba535abc0d",
-      "output_sha256": "81e5429b69d7a550395e7349403e1dc7e9d1591aec225289e6b15d2bb48d7fe5"
+      "source_sha256": "2627b6cfdd2b4d8dba0215518721cd2ab488a0be20350dbc57bd178015091117",
+      "output_sha256": "22795dc6da85d200c36b5bc057ee35bca0b44a7b6fb73c7f117bd7e9fb63f5ed"
     },
     {
       "filename": "progreso-ingenieria-poster.jpg",
       "slot": "poster:proceso",
-      "theme": "Planos y documentación técnica",
-      "alt": "Planos y documentos técnicos de ingeniería sobre una mesa",
+      "theme": "Revisión de planos y documentación técnica",
+      "alt": "Ingenieros revisando planos y documentos técnicos sobre una mesa",
       "target": [
         1600,
-        900
+        1000
       ],
-      "license": "CC0 1.0",
-      "author": "Rawpixel",
-      "source_url": "https://www.rawpixel.com/image/5946602/free-public-domain-cc0-photo",
-      "download_url": "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHg3MDE4NzUtaW1hZ2Uta3d5b3JtZ2QuanBn.jpg",
+      "license": "CC BY 2.0",
+      "author": "Oregon Department of Transportation",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Reviewing_plans_together_(49095979546).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Reviewing_plans_together_%2849095979546%29.jpg/3840px-Reviewing_plans_together_%2849095979546%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
       "output": "images/landing/progreso-ingenieria-poster.jpg",
       "output_size": [
         1600,
-        900
+        1000
       ],
-      "source_sha256": "67fbcba683e51c98939d2aa129c6dec804adf31d165a2ac6606354bcad2914b0",
-      "output_sha256": "eb1e06356b987495913d325c098cb6fd79887ca32f19d14b3c9281171fe5e323"
+      "source_sha256": "801154cac25112d4c11cfa815e250d5eb50404c5cdbd0ac1286c8b9a8dd2f49e",
+      "output_sha256": "c63d41c50c9c4e3abb76eadd244025eba9cb270a9fbe6c009c28c047d4b1dd8d"
     },
     {
       "filename": "resultados-impacto-poster.jpg",
       "slot": "poster:resultados",
-      "theme": "Encuentro comunitario de resultados",
-      "alt": "Encuentro comunitario para presentar resultados de un proyecto",
+      "theme": "Trabajo colaborativo universitario",
+      "alt": "Estudiantes colaborando en el montaje de una estructura durante una actividad de ingeniería",
       "target": [
         1600,
-        900
+        1000
       ],
-      "license": "CC BY 4.0",
-      "author": "RubinObs/NOIRLab/SLAC/DOE/NSF/AURA",
-      "source_url": "https://commons.wikimedia.org/wiki/File:2025_Rubin_Community_Workshop_(IMG_0356-CC).jpg",
-      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/2025_Rubin_Community_Workshop_%28IMG_0356-CC%29.jpg/1920px-2025_Rubin_Community_Workshop_%28IMG_0356-CC%29.jpg",
+      "license": "CC BY 2.0",
+      "author": "Oregon Department of Transportation",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Teamwork_to_build_a_tower_(52835244740).jpg",
+      "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Teamwork_to_build_a_tower_%2852835244740%29.jpg/3840px-Teamwork_to_build_a_tower_%2852835244740%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
       "output": "images/landing/resultados-impacto-poster.jpg",
       "output_size": [
         1600,
-        900
+        1000
       ],
-      "source_sha256": "5de5d517eb029844879b2f19ab3f54eca75584ea09ed76699516d5385771599d",
-      "output_sha256": "87efb7362d2921cf47a4372052b1aa6ba1c8e505bdd629969d5584cf4a2c7ff0"
+      "source_sha256": "80bb093f7e566a2847efe3604e6d6ac19e15ddda910ae2f1e1b6a027d56c196b",
+      "output_sha256": "92c9f44defa18218af2ce87618acefceb58868287367d0d9e90c8c498080e510"
     }
   ]
 }
