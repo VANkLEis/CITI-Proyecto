@@ -24,15 +24,13 @@ RUN chmod +x /app/entrypoint.sh
 
 WORKDIR /app/backend
 
-# Demo: sin DEBUG, estáticos por WhiteNoise y media servido por Django.
-# IS_PRODUCTION sigue dependiendo solo de DJANGO_ENV (ver config/settings.py),
-# por eso el seed funciona con DJANGO_DEBUG=0.
+# Demo local: sin DEBUG, estáticos por WhiteNoise y media servido por Django.
+# Render puede activar IS_PRODUCTION y el puerto dinámico por variables de
+# entorno; collectstatic se ejecuta en entrypoint.sh (también en Render).
 ENV DJANGO_ENV=desarrollo \
     DJANGO_DEBUG=0 \
     CITI_USE_WHITENOISE=1 \
     CITI_SERVE_MEDIA=1
-
-RUN python manage.py collectstatic --noinput
 
 RUN useradd -m -u 1000 citi \
     && mkdir -p /app/backend/media /app/backend/staticfiles \

@@ -1,0 +1,27 @@
+# Render Blueprint — CITI UCC
+# Importar desde Render Dashboard > New > Blueprint.
+# Ambos recursos usan plan free para evitar cobros.
+
+databases:
+  - name: citi-db
+    plan: free
+    databaseName: citi
+    user: citi
+
+services:
+  - type: web
+    name: citi-portal
+    runtime: docker
+    plan: free
+    healthCheckPath: /cuenta/login/
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: citi-db
+          property: connectionString
+      - key: IS_PRODUCTION
+        value: "True"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHONUNBUFFERED
+        value: "1"

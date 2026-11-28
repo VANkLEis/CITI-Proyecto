@@ -67,6 +67,7 @@ CITI-Proyecto/
 ├─ iniciar_citi.bat              Arranque rápido en Windows
 ├─ Dockerfile
 ├─ docker-compose.yml
+├─ render.yaml                   Blueprint de Render (free)
 ├─ entrypoint.sh
 ├─ requirements.txt
 ├─ README.md · AGENTS.md
@@ -219,7 +220,7 @@ cd backend
 ..\venv\Scripts\python.exe manage.py test
 ```
 
-195 pruebas: matriz de roles, reservas, estados, IDOR, registro, seed,
+200 pruebas: matriz de roles, reservas, estados, IDOR, registro, seed,
 trazabilidad, indicadores, seguimiento, interacciones, aprobaciones, la zona
 pública + triage (`backend/portal/test_public.py`), seguridad de sesión, botón
 Volver y medios únicos.
@@ -277,6 +278,34 @@ Especificaciones y regeneración en
 
 Este paquete es una **demostración académica**. Las cuentas, la contraseña
 compartida, `CITI_SERVE_MEDIA` y la clave de Django por defecto son válidas solo
-para local. Para un despliegue real: `DJANGO_ENV=produccion`,
-`DJANGO_SECRET_KEY` y `DJANGO_ALLOWED_HOSTS` propios, HTTPS, y servir estáticos y
-medios con Nginx u otro servidor (ver `docs/demo/VARIABLES_ENTORNO.md`).
+para local. Para un despliegue real: `IS_PRODUCTION=True` (o
+`DJANGO_ENV=produccion`), `SECRET_KEY` o `DJANGO_SECRET_KEY`, hosts propios,
+HTTPS, y servir estáticos y medios con Nginx u otro servidor
+(ver `docs/demo/VARIABLES_ENTORNO.md`).
+
+---
+
+## Despliegue en Render
+
+El repositorio incluye `render.yaml`, un Blueprint con **plan free** para evitar
+cobros:
+
+- `citi-db`: PostgreSQL gratuito.
+- `citi-portal`: servicio web Docker gratuito, con health check en
+  `/cuenta/login/`.
+- `DATABASE_URL` se inyecta desde `citi-db`; `RENDER_EXTERNAL_HOSTNAME` lo
+  agrega Render automáticamente a `ALLOWED_HOSTS` y `CSRF_TRUSTED_ORIGINS`.
+- `IS_PRODUCTION=True` activa HTTPS, cookies seguras, HSTS y el proxy
+  `X-Forwarded-Proto`; `SECRET_KEY` se genera automáticamente.
+
+Pasos:
+
+1. Sube el repositorio a GitHub.
+2. En Render, entra a **New → Blueprint** y conecta el repositorio.
+3. Render detecta `render.yaml` y crea `citi-db` y `citi-portal` en plan free.
+4. Espera el build y el health check; abre la URL
+   `https://citi-portal.onrender.com`.
+
+> El plan free de Render puede tardar en despertar tras inactividad. El seed de
+> demostración se omite automáticamente cuando `IS_PRODUCTION=True`; la base de
+> producción solo recibe migraciones y datos reales.

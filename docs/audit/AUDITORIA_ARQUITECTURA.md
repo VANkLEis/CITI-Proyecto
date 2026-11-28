@@ -4,7 +4,7 @@
 > estado anterior a las fases de corrección. El prototipo estático ya no vive en
 > la raíz (se archivó en `docs/prototipo/`), las apps stub `accounts/`, `portal/`
 > y `scheduling/` fueron eliminadas, los medios están vendorizados y la suite
-> actual es **195/195**. La fuente de verdad es `backend/` y el `README.md`.
+> actual es **200/200**. La fuente de verdad es `backend/` y el `README.md`.
 
 ## 1. Arquitectura real reconstruida
 

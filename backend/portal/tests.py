@@ -1,5 +1,6 @@
 from datetime import datetime, time, timedelta
 from decimal import Decimal
+from pathlib import Path
 import tempfile
 
 from django.conf import settings
@@ -7,11 +8,12 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
 from accounts.models import Area, CustomUser, Empresa, Role, StudentType
+from config import settings as project_settings
 from portal import indicadores
 from scheduling.models import CitaAsesoria, CitaEvento, FranjaHoraria
 
@@ -1634,6 +1636,49 @@ class LogoutRedirectTests(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.request['PATH_INFO'], reverse('accounts:login'))
         self.assertNotContains(r, 'Sesión cerrada.')
+
+
+class RenderProductionSettingsTests(SimpleTestCase):
+    """Configuración de Render: URL de BD, host automático y proxy HTTPS."""
+
+    def test_parse_database_url_completa(self):
+        config = project_settings._parse_database_url(
+            'postgresql://citi:p%40ss@db.example.com:5433/citi_db')
+        self.assertEqual(config['ENGINE'], 'django.db.backends.postgresql')
+        self.assertEqual(config['NAME'], 'citi_db')
+        self.assertEqual(config['USER'], 'citi')
+        self.assertEqual(config['PASSWORD'], 'p@ss')
+        self.assertEqual(config['HOST'], 'db.example.com')
+        self.assertEqual(config['PORT'], 5433)
+        self.assertEqual(config['CONN_MAX_AGE'], 60)
+
+    def test_parse_database_url_postgres_y_puerto_por_defecto(self):
+        config = project_settings._parse_database_url(
+            'postgres://citi:secret@db/citi_db')
+        self.assertEqual(config['HOST'], 'db')
+        self.assertEqual(config['PORT'], 5432)
+        self.assertEqual(config['CONN_MAX_AGE'], 60)
+
+    def test_render_hostname_se_suma_a_hosts_y_csrf(self):
+        hosts = project_settings._build_allowed_hosts(
+            'localhost,example.com', 'citi-portal.onrender.com')
+        origins = project_settings._build_csrf_origins(
+            'https://example.com', 'citi-portal.onrender.com')
+        self.assertIn('citi-portal.onrender.com', hosts)
+        self.assertIn('https://citi-portal.onrender.com', origins)
+        self.assertIn('https://example.com', origins)
+        self.assertEqual(len(origins), len(set(origins)))
+
+    def test_proxy_security_solo_en_produccion(self):
+        header, forwarded = project_settings._proxy_security(True)
+        self.assertEqual(header, ('HTTP_X_FORWARDED_PROTO', 'https'))
+        self.assertTrue(forwarded)
+        header, forwarded = project_settings._proxy_security(False)
+        self.assertIsNone(header)
+        self.assertFalse(forwarded)
+
+    def test_cache_de_login_tiene_directorio(self):
+        self.assertTrue(Path(project_settings.CITI_CACHE_DIR).is_dir())
 
 
 class BackNavigationTests(TestCase):

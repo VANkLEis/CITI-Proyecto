@@ -9,17 +9,21 @@ automáticamente (python-dotenv); la fuente de ejemplo es
 | Modo | Cómo se activa | Comportamiento |
 |---|---|---|
 | **desarrollo/demo** (default) | Sin `DJANGO_ENV`, o `DJANGO_ENV=desarrollo` | `DEBUG=1` por defecto; `SECRET_KEY` de fallback para desarrollo; `/media/` servido por `runserver`; `seed_demo` disponible |
-| **producción** | `DJANGO_ENV=produccion` | `DEBUG` forzado a `0`; **falla el arranque** si falta `DJANGO_SECRET_KEY` o `DJANGO_ALLOWED_HOSTS`; cookies `Secure`, SSL redirect, HSTS; `seed_demo` rechazado |
+| **producción** | `DJANGO_ENV=produccion` o `IS_PRODUCTION=True` | `DEBUG` forzado a `0`; **falla el arranque** si falta `DJANGO_SECRET_KEY`/`SECRET_KEY` o hosts (`DJANGO_ALLOWED_HOSTS`/`RENDER_EXTERNAL_HOSTNAME`); cookies `Secure`, SSL redirect, HSTS y proxy `X-Forwarded-Proto`; `seed_demo` rechazado |
 
 ## Variables reconocidas
 
 | Variable | Default | Descripción |
 |---|---|---|
 | `DJANGO_ENV` | `desarrollo` | `desarrollo` \| `produccion` (también acepta `production`/`prod`) |
+| `IS_PRODUCTION` | — | `True`/`1` activa producción aunque `DJANGO_ENV=desarrollo` (lo usa Render) |
 | `DJANGO_DEBUG` | `1` (0 en producción) | `1`/`0`. En producción se rechaza `1` |
-| `DJANGO_SECRET_KEY` | fallback de desarrollo | **Obligatoria en producción.** Generar: `python -c "from django.core.management.utils import get_random_secret_key as g; print(g())"` |
-| `DJANGO_ALLOWED_HOSTS` | `127.0.0.1,localhost` | **Obligatoria en producción.** Lista separada por comas |
-| `DATABASE_URL` | — (SQLite) | Si empieza con `postgres://` / `postgresql://` usa PostgreSQL; cualquier otro esquema mantiene SQLite silenciosamente |
+| `DJANGO_SECRET_KEY` / `SECRET_KEY` | fallback de desarrollo | **Obligatoria en producción.** Render genera `SECRET_KEY`; también se acepta el nombre histórico. Generar: `python -c "from django.core.management.utils import get_random_secret_key as g; print(g())"` |
+| `DJANGO_ALLOWED_HOSTS` | `127.0.0.1,localhost` | Lista separada por comas. En producción se exige esta variable o `RENDER_EXTERNAL_HOSTNAME` |
+| `RENDER_EXTERNAL_HOSTNAME` | — | La inyecta Render; se agrega a `ALLOWED_HOSTS` y como `https://…` a `CSRF_TRUSTED_ORIGINS` |
+| `CSRF_TRUSTED_ORIGINS` | — | Orígenes extra separados por comas; se suman al host de Render |
+| `DATABASE_URL` | — (SQLite) | `postgres://` / `postgresql://` usa PostgreSQL con `CONN_MAX_AGE=60`; cualquier otro esquema mantiene SQLite |
+| `POSTGRES_DB/USER/PASSWORD/HOST/PORT` | — | Respaldo PostgreSQL cuando no hay `DATABASE_URL` y existe `POSTGRES_HOST` |
 | `DJANGO_HSTS_SECONDS` | `31536000` | HSTS en modo producción (`0` para desactivar) |
 | `CITI_DEMO_PASSWORD` | `CITIPass2026*` | Contraseña que asigna `seed_demo` a las cuentas locales de prueba. **Solo para datos de demostración locales** |
 | `CITI_LOGIN_MAX_ATTEMPTS` | `6` | Fallos consecutivos por correo+IP antes de bloquear el login |
@@ -30,22 +34,24 @@ automáticamente (python-dotenv); la fuente de ejemplo es
 | `CITI_MIN_PROMEDIO_TUTOR` | `4.0` | Promedio mínimo para tutor |
 | `CITI_USE_WHITENOISE` | `0` | `1` sirve estáticos desde Gunicorn (imagen Docker). No altera `runserver` |
 | `CITI_SERVE_MEDIA` | `0` | `1` sirve `/media/` sin `DEBUG`. **Solo demo en contenedor**; en producción usan Nginx/S3 |
-| `CITI_SEED_ON_START` | `1` (solo `entrypoint.sh`) | `1` migra y siembra datos demo al arrancar el contenedor; `0` no toca la base |
-| `PORT` | `8000` | Puerto publicado por `docker compose` |
+| `CITI_SEED_ON_START` | `1` (solo `entrypoint.sh`) | `1` migra, recolecta estáticos y siembra datos demo al arrancar el contenedor; `0` no siembra |
+| `CITI_DB_WAIT_SECONDS` | `60` | Segundos que `entrypoint.sh` espera a PostgreSQL (por `DATABASE_URL` o `POSTGRES_HOST`) |
+| `PORT` | `8000` | Puerto de Gunicorn; Render lo inyecta automáticamente |
 | `GUNICORN_WORKERS` | `3` | Workers de Gunicorn en el contenedor |
 
-> **`IS_PRODUCTION` se calcula únicamente con `DJANGO_ENV`**, nunca con
-> `DJANGO_DEBUG`. Por eso `DJANGO_ENV=desarrollo` + `DJANGO_DEBUG=0` es un modo
-> válido para la demo en Docker: apaga el modo debug pero mantiene habilitado
-> `seed_demo_data`.
+> **`IS_PRODUCTION`** se activa con `DJANGO_ENV=produccion` **o** con
+> `IS_PRODUCTION=True` (Render), nunca con `DJANGO_DEBUG`. Por eso
+> `DJANGO_ENV=desarrollo` + `DJANGO_DEBUG=0` es un modo válido para la demo en
+> Docker: apaga el modo debug pero mantiene habilitado `seed_demo_data`.
 
 ## Comprobaciones de seguridad del modo producción
 
-Aplicadas por `config/settings.py` cuando `DJANGO_ENV=produccion`:
+Aplicadas por `config/settings.py` cuando `IS_PRODUCTION` es verdadero:
 `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`, `SECURE_SSL_REDIRECT`,
 `SECURE_HSTS_SECONDS`/`INCLUDE_SUBDOMAINS`, `SECURE_CONTENT_TYPE_NOSNIFF`,
 `SECURE_REFERRER_POLICY=same-origin`, `X_FRAME_OPTIONS=DENY`.
-Detrás de reverse-proxy HTTPS, descomentar `SECURE_PROXY_SSL_HEADER` en settings.
+También se configura `SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO',
+'https')` y `USE_X_FORWARDED_HOST = True` para evitar bucles detrás de Render.
 
 ## Ejemplos
 
@@ -66,6 +72,15 @@ docker compose up --build
 ```
 Compose fija `DJANGO_ENV=desarrollo` y `DJANGO_DEBUG=0`: la app no muestra
 páginas de error detalladas, pero el seed sigue habilitado. Ver `README.md`.
+
+### Render (Blueprint gratuito)
+```text
+render.yaml crea citi-db (PostgreSQL free) y citi-portal (Docker free).
+DATABASE_URL se inyecta desde citi-db.
+IS_PRODUCTION=True, SECRET_KEY generada y PYTHONUNBUFFERED=1.
+RENDER_EXTERNAL_HOSTNAME lo agrega Render automáticamente.
+```
+Pasos en `README.md` → **Despliegue en Render**.
 
 ### Producción académica local con DEBUG apagado (recomendado al exponer en LAN)
 ```powershell
