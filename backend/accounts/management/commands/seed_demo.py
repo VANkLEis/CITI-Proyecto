@@ -1,12 +1,11 @@
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from accounts import demo_seed
 
 
 class Command(BaseCommand):
     help = (
-        'Crea el conjunto de datos de DEMOSTRACIÓN local del CITI (usuarios, '
+        'Crea el conjunto de datos de demostración del CITI (usuarios, '
         'franjas futuras y solicitudes en todos los estados). Idempotente: '
         'puede re-ejecutarse sin duplicar registros. No elimina datos.'
     )
@@ -19,13 +18,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        # B-4: el seed no corre solo y está bloqueado en producción.
-        if getattr(settings, 'IS_PRODUCTION', False):
-            raise CommandError(
-                'seed_demo no puede ejecutarse con DJANGO_ENV=produccion. '
-                'Las cuentas de demostración solo existen en entornos locales.'
-            )
-
         demo_seed.ensure_demo_users()
         if options['solo_usuarios']:
             self.stdout.write(self.style.SUCCESS(

@@ -25,3 +25,7 @@ services:
         generateValue: true
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: CITI_SEED_ON_START
+        value: "1"
+      - key: CITI_DEMO_PASSWORD
+        value: "CITIPass2026*"

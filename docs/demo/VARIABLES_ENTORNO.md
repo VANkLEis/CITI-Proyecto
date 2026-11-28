@@ -9,7 +9,7 @@ automáticamente (python-dotenv); la fuente de ejemplo es
 | Modo | Cómo se activa | Comportamiento |
 |---|---|---|
 | **desarrollo/demo** (default) | Sin `DJANGO_ENV`, o `DJANGO_ENV=desarrollo` | `DEBUG=1` por defecto; `SECRET_KEY` de fallback para desarrollo; `/media/` servido por `runserver`; `seed_demo` disponible |
-| **producción** | `DJANGO_ENV=produccion` o `IS_PRODUCTION=True` | `DEBUG` forzado a `0`; **falla el arranque** si falta `DJANGO_SECRET_KEY`/`SECRET_KEY` o hosts (`DJANGO_ALLOWED_HOSTS`/`RENDER_EXTERNAL_HOSTNAME`); cookies `Secure`, SSL redirect, HSTS y proxy `X-Forwarded-Proto`; `seed_demo` rechazado |
+| **producción** | `DJANGO_ENV=produccion` o `IS_PRODUCTION=True` | `DEBUG` forzado a `0`; **falla el arranque** si falta `DJANGO_SECRET_KEY`/`SECRET_KEY` o hosts (`DJANGO_ALLOWED_HOSTS`/`RENDER_EXTERNAL_HOSTNAME`); cookies `Secure`, SSL redirect, HSTS y proxy `X-Forwarded-Proto`; el entrypoint ejecuta el seed demo salvo `CITI_SEED_ON_START=0` |
 
 ## Variables reconocidas
 
@@ -25,7 +25,7 @@ automáticamente (python-dotenv); la fuente de ejemplo es
 | `DATABASE_URL` | — (SQLite) | `postgres://` / `postgresql://` usa PostgreSQL con `CONN_MAX_AGE=60`; cualquier otro esquema mantiene SQLite |
 | `POSTGRES_DB/USER/PASSWORD/HOST/PORT` | — | Respaldo PostgreSQL cuando no hay `DATABASE_URL` y existe `POSTGRES_HOST` |
 | `DJANGO_HSTS_SECONDS` | `31536000` | HSTS en modo producción (`0` para desactivar) |
-| `CITI_DEMO_PASSWORD` | `CITIPass2026*` | Contraseña que asigna `seed_demo` a las cuentas locales de prueba. **Solo para datos de demostración locales** |
+| `CITI_DEMO_PASSWORD` | `CITIPass2026*` | Contraseña que asigna el seed a las cuentas demo; se restablece en cada arranque. En Render queda fijada a `CITIPass2026*` por el Blueprint |
 | `CITI_LOGIN_MAX_ATTEMPTS` | `6` | Fallos consecutivos por correo+IP antes de bloquear el login |
 | `CITI_LOGIN_LOCK_SECONDS` | `300` | Duración del bloqueo temporal de login (5 min) |
 | `CITI_CACHE_DIR` | `backend/.cache` | Directorio de `FileBasedCache`; en Docker se crea solo y no requiere volumen |
@@ -34,15 +34,16 @@ automáticamente (python-dotenv); la fuente de ejemplo es
 | `CITI_MIN_PROMEDIO_TUTOR` | `4.0` | Promedio mínimo para tutor |
 | `CITI_USE_WHITENOISE` | `0` (1 en producción) | `1` sirve estáticos desde Gunicorn con `CompressedManifestStaticFilesStorage`; en producción se activa por defecto |
 | `CITI_SERVE_MEDIA` | `0` | `1` sirve `/media/` sin `DEBUG`. **Solo demo en contenedor**; en producción usan Nginx/S3 |
-| `CITI_SEED_ON_START` | `1` (solo `entrypoint.sh`) | `1` migra, recolecta estáticos y siembra datos demo al arrancar el contenedor; `0` no siembra |
+| `CITI_SEED_ON_START` | `1` (solo `entrypoint.sh`) | `1` migra, recolecta estáticos y ejecuta `seed_demo_data` al arrancar; si el seed falla, el contenedor no arranca. `0` omite el seed |
 | `CITI_DB_WAIT_SECONDS` | `60` | Segundos que `entrypoint.sh` espera a PostgreSQL (por `DATABASE_URL` o `POSTGRES_HOST`) |
 | `PORT` | `8000` | Puerto de Gunicorn; Render lo inyecta automáticamente |
 | `GUNICORN_WORKERS` | `3` | Workers de Gunicorn en el contenedor |
 
 > **`IS_PRODUCTION`** se activa con `DJANGO_ENV=produccion` **o** con
-> `IS_PRODUCTION=True` (Render), nunca con `DJANGO_DEBUG`. Por eso
-> `DJANGO_ENV=desarrollo` + `DJANGO_DEBUG=0` es un modo válido para la demo en
-> Docker: apaga el modo debug pero mantiene habilitado `seed_demo_data`.
+> `IS_PRODUCTION=True` (Render), nunca con `DJANGO_DEBUG`. El seed demo ya no
+> está bloqueado en producción: el entrypoint lo ejecuta para dejar las cuentas
+> de la demo académica activas. Para una producción real, usar
+> `CITI_SEED_ON_START=0` y credenciales propias.
 
 ## Comprobaciones de seguridad del modo producción
 

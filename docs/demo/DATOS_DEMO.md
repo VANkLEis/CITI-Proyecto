@@ -84,9 +84,9 @@ Franjas futuras       -> 40; todas con inicio > ahora en tz Bogota
 Cupos: cada franja del plan ocupa 1 de 2 -> sigue habiendo cupo disponible
 ```
 
-Cobertura automatizada de estas invariantes: `SeedDemoTests` (42 pruebas en
-`backend/portal/tests.py`) — idempotencia, promoción de tutor por umbrales,
-reubicación tras vencimiento, bloqueo en producción.
+Cobertura automatizada de estas invariantes: suite de `backend/portal/tests.py`
+— idempotencia, promoción de tutor por umbrales, reubicación tras vencimiento y
+login de los 5 roles en producción (`backend/accounts/tests.py`).
 
 ## Reinicio recomendado el día de la demo
 

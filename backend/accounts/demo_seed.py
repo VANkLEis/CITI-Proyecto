@@ -7,7 +7,8 @@ Diseño:
 - NO DESTRUCTIVO: no elimina datos existentes; únicamente archiva (desactiva)
   franjas vencidas y cancela con nota de bitácora las solicitudes activas
   heredadas sobre franjas terminadas.
-- Las cuentas demo son locales de prueba; nunca usar en producción.
+- Las cuentas demo se usan en la demo académica local y en el arranque de
+  Render; no deben usarse en una producción real.
 """
 
 import os
@@ -16,7 +17,9 @@ from decimal import Decimal
 
 from django.utils import timezone
 
-from accounts.models import Area, CustomUser, Empresa, Role, StudentType
+from accounts.models import (
+    Area, CustomUser, Empresa, PerfilEstudiante, Role, StudentType,
+)
 from scheduling.models import (
     CitaAsesoria, CitaEvento, CitaInteraccion, FranjaHoraria, NotaBitacora,
 )
@@ -90,6 +93,15 @@ DEMO_USERS = (
         'empresa_razon_social': 'Empresa Tolima Demo',
         'empresa_nit': '900123456',
     },
+    {
+        # Alias de acceso directo documentado para la demo de 5 roles.
+        'email': 'cliente@empresa.com',
+        'role': Role.CLIENTE,
+        'first_name': 'Cliente',
+        'last_name': 'Demo',
+        'empresa_razon_social': 'Empresa Tolima Demo',
+        'empresa_nit': '900123456',
+    },
 )
 
 
@@ -98,53 +110,64 @@ def _director_id():
     return d.pk if d else None
 
 
+def _empresa_demo(spec):
+    razon_social = spec.get('empresa_razon_social', 'Empresa demo')
+    nit = spec.get('empresa_nit', '')
+    empresa = Empresa.objects.filter(razon_social=razon_social, nit=nit).first()
+    if empresa is None:
+        empresa = Empresa.objects.create(razon_social=razon_social, nit=nit)
+    return empresa
+
+
 def ensure_demo_users():
-    """Crea (o completa) las cuentas demo y sus perfiles. Idempotente."""
+    """Crea/actualiza las cuentas demo, siempre activas y con la clave demo.
+
+    No usa update_or_create para poder pasar por `set_password()`: la clave
+    queda hasheada y se restablece en cada arranque. También corrige el rol,
+    área, empresa y perfil académico de las cuentas existentes.
+    """
     for spec in DEMO_USERS:
         email = spec['email'].lower()
         user = CustomUser.objects.filter(email=email).first()
         if user is None:
-            extra = {
-                'first_name': spec['first_name'],
-                'last_name': spec['last_name'],
-                'role': spec['role'],
-            }
-            if spec['role'] == Role.CLIENTE:
-                empresa = Empresa.objects.create(
-                    razon_social=spec.get('empresa_razon_social', 'Empresa demo'),
-                    nit=spec.get('empresa_nit', ''),
-                )
-                extra['empresa'] = empresa
-            else:
-                if 'area' in spec:
-                    extra['area'] = spec['area']
-                if spec['role'] == Role.ESTUDIANTE:
-                    extra['student_type'] = spec.get('student_type', StudentType.CONSULTOR)
-            if spec.get('is_staff'):
-                extra['is_staff'] = True
-            user = CustomUser.objects.create_user(email=email, password=DEMO_PASSWORD, **extra)
+            user = CustomUser(email=email)
+
+        user.email = email
+        user.first_name = spec['first_name']
+        user.last_name = spec['last_name']
+        user.role = spec['role']
+        user.area = spec.get('area') or None
+        user.is_active = True
+        user.is_staff = bool(spec.get('is_staff'))
+        user.is_superuser = False
+        user.empresa = (
+            _empresa_demo(spec) if spec['role'] == Role.CLIENTE else None
+        )
+        user.student_type = (
+            spec.get('student_type', StudentType.CONSULTOR)
+            if spec['role'] == Role.ESTUDIANTE else None
+        )
+        user.set_password(DEMO_PASSWORD)
+        user.save(skip_validation=True)
 
         # Director demo con acceso a /admin/ (la demo muestra indicadores + admin).
         if spec['role'] == Role.DIRECTOR:
-            if not user.is_staff:
-                user.is_staff = True
-                user.save(update_fields=['is_staff'], skip_validation=True)
             _dar_permisos_admin_citi(user)
 
-        # Perfil académico coherente: solo se SUBE si está por debajo del plan
-        # (nunca degrada ediciones manuales del usuario).
+        # Perfil académico coherente: se sube al plan y se recalcula el flag de
+        # tutor; nunca se degradan valores superiores editados en admin.
         perfil_spec = spec.get('perfil')
         if perfil_spec:
-            perfil = user.perfil_estudiante
-            if (
-                perfil.semestre < perfil_spec['semestre']
-                or perfil.creditos_aprobados < perfil_spec['creditos_aprobados']
-                or perfil.promedio_general < perfil_spec['promedio_general']
-            ):
-                perfil.semestre = perfil_spec['semestre']
-                perfil.creditos_aprobados = perfil_spec['creditos_aprobados']
-                perfil.promedio_general = perfil_spec['promedio_general']
+            perfil, _ = PerfilEstudiante.objects.get_or_create(usuario=user)
+            changed = False
+            for field, value in perfil_spec.items():
+                if getattr(perfil, field) != value:
+                    setattr(perfil, field, value)
+                    changed = True
+            if changed:
                 perfil.save()  # save() promueve a tutor si cumple umbrales
+            else:
+                perfil.actualizar_autorizacion_tutor()
 
 
 def _dar_permisos_admin_citi(user):

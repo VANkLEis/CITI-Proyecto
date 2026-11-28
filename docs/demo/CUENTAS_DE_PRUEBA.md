@@ -1,10 +1,11 @@
-# Cuentas de prueba — CITI (solo entorno local de desarrollo)
+# Cuentas de prueba — CITI (demo académica local y Render)
 
-Credenciales de **demostración académica local** creadas por
-`manage.py seed_demo` o `manage.py seed_demo_data` (equivalentes: el segundo es
-el que invoca el entrypoint de Docker). **No usar en despliegues reales**; si el
-sistema se expone fuera del portátil, cambiar o desactivar estas cuentas (ver
-`VARIABLES_ENTORNO.md`).
+Credenciales de **demostración académica** creadas por `manage.py seed_demo` o
+`manage.py seed_demo_data` (el segundo es el que invoca el entrypoint de
+Docker/Render). El seed corre en cada arranque y **restablece la contraseña** y
+el estado activo de estas cuentas. **No usar en producción real**; para una
+exposición pública, cambiar `CITI_DEMO_PASSWORD` o desactivar el seed con
+`CITI_SEED_ON_START=0` (ver `VARIABLES_ENTORNO.md`).
 
 Contraseña única (sobrepornible con `CITI_DEMO_PASSWORD`):
 
@@ -23,7 +24,8 @@ CITIPass2026*
 | Docente Civil | `docente.civil@citi.ucc.edu.co` | `?rol=docente` | Idem |
 | Estudiante tutora (Sistemas) | `estudiante@citi.ucc.edu.co` | `?rol=estudiante` | Perfil real: 9° semestre, 150 créditos, promedio 4,50 → promotora a tutora automática |
 | Estudiante tutor (Civil) | `estudiante.civil@citi.ucc.edu.co` | `?rol=estudiante` | Perfil: 10° semestre, 168 créditos, promedio 4,30 |
-| Cliente / Empresa | `cliente@empresatolima.co` | `?rol=cliente` | Empresa: *Empresa Tolima Demo* NIT 900123456. Dueño de todas las solicitudes del set demo |
+| Cliente / Empresa | `cliente@empresa.com` | `?rol=cliente` | Alias directo de la demo; Empresa: *Empresa Tolima Demo* NIT 900123456 |
+| Cliente del set histórico | `cliente@empresatolima.co` | `?rol=cliente` | Misma empresa y contraseña; dueño de las citas y solicitudes del set demo |
 
 Clientes adicionales del set público (Fase 05, misma contraseña única). Sirven
 para demostrar que una solicitud pública se vincula a un cliente existente:

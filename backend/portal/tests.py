@@ -511,13 +511,22 @@ class SeedDemoTests(TestCase):
                                        subespecialidad='web')
         self.assertEqual(web.estado, CitaAsesoria.Estado.SOLICITADA)
 
-    def test_comando_bloqueado_en_produccion(self):
+    def test_comando_funciona_en_produccion(self):
         from django.core.management import call_command
-        from django.core.management.base import CommandError
 
         with self.settings(IS_PRODUCTION=True):
-            with self.assertRaises(CommandError):
-                call_command('seed_demo')
+            call_command('seed_demo', '--solo-usuarios')
+
+        for email in (
+            'director@citi.ucc.edu.co',
+            'coordinador@citi.ucc.edu.co',
+            'docente@citi.ucc.edu.co',
+            'estudiante@citi.ucc.edu.co',
+            'cliente@empresa.com',
+        ):
+            user = CustomUser.objects.get(email=email)
+            self.assertTrue(user.is_active, email)
+            self.assertTrue(user.check_password('CITIPass2026*'), email)
 
 
 class RegresionesAuditTests(TestCase):

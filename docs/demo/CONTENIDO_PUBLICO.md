@@ -67,4 +67,5 @@ Bases de Datos y lista para elegir franja, docente y tutor.
 | `manage.py seed_demo_data` | Igual, con resumen del contenido público. Es el que ejecuta Docker |
 | `manage.py seed_demo_data --solo-usuarios` | Solo cuentas demo (sin contenido ni citas) |
 
-Ambos están bloqueados con `DJANGO_ENV=produccion`.
+Ambos se ejecutan también en el arranque de Render; el entrypoint usa
+`seed_demo_data` para dejar las cuentas y el contenido demo disponibles.

@@ -531,15 +531,25 @@ class SeedDemoDataTests(TestCase):
         self.assertEqual(Taller.objects.filter(activo=True).count(), talleres)
         self.assertEqual(SolicitudPublica.objects.count(), solicitudes)
 
-    def test_seed_bloqueado_en_produccion(self):
+    def test_seed_funciona_en_produccion(self):
         from io import StringIO
 
         from django.core.management import call_command
-        from django.core.management.base import CommandError
 
         with self.settings(IS_PRODUCTION=True):
-            with self.assertRaises(CommandError):
-                call_command('seed_demo_data', stdout=StringIO())
+            call_command(
+                'seed_demo_data', '--solo-usuarios', stdout=StringIO())
+
+        for email in (
+            'director@citi.ucc.edu.co',
+            'coordinador@citi.ucc.edu.co',
+            'docente@citi.ucc.edu.co',
+            'estudiante@citi.ucc.edu.co',
+            'cliente@empresa.com',
+        ):
+            user = CustomUser.objects.get(email=email)
+            self.assertTrue(user.is_active, email)
+            self.assertTrue(user.check_password('CITIPass2026*'), email)
 
     def test_seed_completa_puntos_clave_y_no_duplica(self):
         from io import StringIO

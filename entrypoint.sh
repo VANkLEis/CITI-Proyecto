@@ -50,10 +50,10 @@ echo "[entrypoint] Recolectando estáticos..."
 python manage.py collectstatic --noinput
 
 if [ "${CITI_SEED_ON_START:-1}" = "1" ]; then
-  echo "[entrypoint] Cargando datos de demostración (idempotente)..."
-  if ! python manage.py seed_demo_data; then
-    echo "[entrypoint] ADVERTENCIA: seed_demo_data falló; la app arranca sin datos demo." >&2
-  fi
+  echo "[entrypoint] Cargando/verificando datos de demostración..."
+  # Fatal a propósito: si el seed falla, es preferible no arrancar con logins
+  # rotos. El comando es idempotente y restablece las 5 cuentas demo.
+  python manage.py seed_demo_data
 else
   echo "[entrypoint] CITI_SEED_ON_START=0: se omite el seed."
 fi

@@ -135,7 +135,10 @@ Contraseña única: **`CITIPass2026*`** (configurable con `CITI_DEMO_PASSWORD`).
 | Coordinador Sistemas | `coordinador@citi.ucc.edu.co` | `/cuenta/login/?rol=coordinador` |
 | Docente Sistemas | `docente@citi.ucc.edu.co` | `/cuenta/login/?rol=docente` |
 | Estudiante tutora | `estudiante@citi.ucc.edu.co` | `/cuenta/login/?rol=estudiante` |
-| Cliente / Empresa | `cliente@empresatolima.co` | `/cuenta/login/?rol=cliente` |
+| Cliente / Empresa | `cliente@empresa.com` | `/cuenta/login/?rol=cliente` |
+
+`cliente@empresatolima.co` sigue existiendo como dueño histórico de las citas y
+solicitudes del set demo, con el mismo rol y contraseña.
 
 Variantes del set demo, misma contraseña:
 `coordinador.civil@citi.ucc.edu.co`, `docente.civil@citi.ucc.edu.co`,
@@ -220,7 +223,7 @@ cd backend
 ..\venv\Scripts\python.exe manage.py test
 ```
 
-200 pruebas: matriz de roles, reservas, estados, IDOR, registro, seed,
+201 pruebas: matriz de roles, reservas, estados, IDOR, registro, seed,
 trazabilidad, indicadores, seguimiento, interacciones, aprobaciones, la zona
 pública + triage (`backend/portal/test_public.py`), seguridad de sesión, botón
 Volver y medios únicos.
@@ -298,6 +301,9 @@ cobros:
   agrega Render automáticamente a `ALLOWED_HOSTS` y `CSRF_TRUSTED_ORIGINS`.
 - `IS_PRODUCTION=True` activa HTTPS, cookies seguras, HSTS y el proxy
   `X-Forwarded-Proto`; `SECRET_KEY` se genera automáticamente.
+- `CITI_SEED_ON_START=1` y `CITI_DEMO_PASSWORD=CITIPass2026*` están fijados en
+  el Blueprint: el entrypoint migra, recolecta estáticos y ejecuta el seed en
+  cada arranque.
 
 Pasos:
 
@@ -307,6 +313,7 @@ Pasos:
 4. Espera el build y el health check; abre la URL
    `https://citi-portal.onrender.com`.
 
-> El plan free de Render puede tardar en despertar tras inactividad. El seed de
-> demostración se omite automáticamente cuando `IS_PRODUCTION=True`; la base de
-> producción solo recibe migraciones y datos reales.
+> El plan free de Render puede tardar en despertar tras inactividad. El seed se
+> ejecuta en cada arranque y restablece las cuentas demo activas con
+> `CITIPass2026*`. Para una producción real, desactivar el seed con
+> `CITI_SEED_ON_START=0` y cambiar o eliminar las cuentas demo.

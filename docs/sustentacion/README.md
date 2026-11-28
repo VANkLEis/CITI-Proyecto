@@ -30,7 +30,7 @@ Esta carpeta conserva el material de apoyo (`diagramas/`, `fuentes/`, `evidencia
 
 - `manage.py check`: 0 issues.
 - `manage.py makemigrations --check --dry-run`: sin cambios.
-- `manage.py test`: **200/200 OK** (base de pruebas aislada).
+- `manage.py test`: **201/201 OK** (base de pruebas aislada).
 - Sin modificaciones en la lógica de negocio, modelos ni vistas de `backend/`.
 
 ## Reproducción

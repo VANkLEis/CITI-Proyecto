@@ -1,5 +1,4 @@
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from accounts import demo_seed
 from portal.models import ProyectoPortafolio, Taller
@@ -9,8 +8,7 @@ class Command(BaseCommand):
     help = (
         'Carga el conjunto completo de demostración: usuarios de los 5 roles, '
         'franjas, citas, portafolio, talleres y solicitudes públicas. '
-        'Idempotente y bloqueado con DJANGO_ENV=produccion. '
-        'Es el comando que ejecuta el entrypoint de Docker.'
+        'Idempotente; se ejecuta en el entrypoint de Docker/Render.'
     )
 
     def add_arguments(self, parser):
@@ -20,17 +18,19 @@ class Command(BaseCommand):
             help='Crear/actualizar únicamente las cuentas demo y sus perfiles.',
         )
 
-    def handle(self, *args, **options):
-        if getattr(settings, 'IS_PRODUCTION', False):
-            raise CommandError(
-                'seed_demo_data no puede ejecutarse con DJANGO_ENV=produccion. '
-                'Los datos de demostración solo existen en entornos locales.'
-            )
+    def _print_accounts(self):
+        self.stdout.write(
+            '  Cuentas demo (contraseña: CITI_DEMO_PASSWORD, '
+            'default CITIPass2026*):')
+        for spec in demo_seed.DEMO_USERS:
+            self.stdout.write(f"    {spec['role']}: {spec['email']}")
 
+    def handle(self, *args, **options):
         if options['solo_usuarios']:
             demo_seed.ensure_demo_users()
             self.stdout.write(self.style.SUCCESS(
                 f'Usuarios demo verificados ({len(demo_seed.DEMO_USERS)} cuentas).'))
+            self._print_accounts()
             return
 
         resumen = demo_seed.seed_all()
@@ -51,6 +51,7 @@ class Command(BaseCommand):
             'proyectos y '
             f'{Taller.objects.filter(activo=True).count()} talleres.'
         )
+        self._print_accounts()
         self.stdout.write(
             '  Credenciales y guion: docs/demo/CUENTAS_DE_PRUEBA.md '
             'y docs/demo/GUIA_DEMOSTRACION.md'
