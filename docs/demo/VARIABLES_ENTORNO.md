@@ -32,7 +32,7 @@ automáticamente (python-dotenv); la fuente de ejemplo es
 | `CITI_MIN_SEMESTRE_TUTOR` | `8` | Semestre mínimo para tutor |
 | `CITI_MIN_CREDITOS_TUTOR` | `130` | Créditos mínimos para tutor |
 | `CITI_MIN_PROMEDIO_TUTOR` | `4.0` | Promedio mínimo para tutor |
-| `CITI_USE_WHITENOISE` | `0` | `1` sirve estáticos desde Gunicorn (imagen Docker). No altera `runserver` |
+| `CITI_USE_WHITENOISE` | `0` (1 en producción) | `1` sirve estáticos desde Gunicorn con `CompressedManifestStaticFilesStorage`; en producción se activa por defecto |
 | `CITI_SERVE_MEDIA` | `0` | `1` sirve `/media/` sin `DEBUG`. **Solo demo en contenedor**; en producción usan Nginx/S3 |
 | `CITI_SEED_ON_START` | `1` (solo `entrypoint.sh`) | `1` migra, recolecta estáticos y siembra datos demo al arrancar el contenedor; `0` no siembra |
 | `CITI_DB_WAIT_SECONDS` | `60` | Segundos que `entrypoint.sh` espera a PostgreSQL (por `DATABASE_URL` o `POSTGRES_HOST`) |

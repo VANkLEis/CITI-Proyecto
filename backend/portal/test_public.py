@@ -10,6 +10,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.contrib.staticfiles import finders
+from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -98,14 +99,18 @@ class PublicasBaseTests(TestCase):
         self.assertTemplateUsed(r, 'portal/index.html')
         self.assertContains(r, 'Ingeniería real para resolver')
         self.assertContains(r, 'los retos de tu empresa o comunidad')
+        self.assertContains(r, static('images/logo_ucc.png'))
+        self.assertNotContains(r, 'Logo_ucc.png')
         self.assertContains(r, 'Cuéntanos qué necesitas y agenda tu cita')
         self.assertContains(r, 'Portal académico')
-        self.assertContains(r, 'hero-citi.mp4')
-        self.assertContains(r, 'progreso-ingenieria.mp4')
-        self.assertContains(r, 'resultados-impacto.mp4')
-        self.assertContains(r, 'hero-citi-poster.jpg')
-        self.assertContains(r, 'progreso-ingenieria-poster.jpg')
-        self.assertContains(r, 'resultados-impacto-poster.jpg')
+        for name in ('hero-citi.mp4', 'progreso-ingenieria.mp4', 'resultados-impacto.mp4'):
+            self.assertContains(r, static(f'videos/{name}'))
+        for name in (
+            'hero-citi-poster.jpg',
+            'progreso-ingenieria-poster.jpg',
+            'resultados-impacto-poster.jpg',
+        ):
+            self.assertContains(r, static(f'images/landing/{name}'))
         self.assertContains(r, 'id="modalidades"')
 
     def test_landing_sin_copy_asistencialista(self):
@@ -823,16 +828,25 @@ class MediaPublicaTests(TestCase):
         html = r.content.decode('utf-8')
         posters = re.findall(r'poster="([^"]+)"', html)
         self.assertEqual(len(posters), 3)
-        normalized = [
-            url[len(settings.STATIC_URL):] if url.startswith(settings.STATIC_URL)
-            else url.lstrip('/')
-            for url in posters
-        ]
-        self.assertEqual(len(set(normalized)), 3)
+        self.assertEqual(len(set(posters)), 3)
+
+        poster_names = {
+            'hero-citi-poster.jpg',
+            'progreso-ingenieria-poster.jpg',
+            'resultados-impacto-poster.jpg',
+        }
+        poster_paths = {
+            f'images/landing/{name}' for name in poster_names
+        }
+        self.assertEqual(
+            set(posters),
+            {static(path) for path in poster_paths},
+        )
+
         cards = {p['imagen_static'] for p in PROYECTOS}
         cards |= {t['imagen_static'] for t in TALLERES}
-        self.assertFalse(cards & set(normalized))
-        for path in normalized:
+        self.assertFalse(cards & poster_paths)
+        for path in poster_paths:
             self.assertIsNotNone(finders.find(path), path)
             with Image.open(Path(settings.BASE_DIR) / 'static' / path) as image:
                 self.assertGreaterEqual(image.width, 1600, path)

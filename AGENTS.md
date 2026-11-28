@@ -34,7 +34,8 @@ Run from `backend/` with the **root** venv (Django 5.2.18, matches `requirements
 - Other env vars: `DATABASE_URL`, `POSTGRES_DB/USER/PASSWORD/HOST/PORT`, `IS_PRODUCTION`, `SECRET_KEY`, `RENDER_EXTERNAL_HOSTNAME`, `CSRF_TRUSTED_ORIGINS`, `CITI_DEMO_PASSWORD`, `DJANGO_HSTS_SECONDS`, `CITI_MIN_SEMESTRE_TUTOR` (8), `CITI_MIN_CREDITOS_TUTOR` (130), `CITI_MIN_PROMEDIO_TUTOR` (4.0), `CITI_LOGIN_MAX_ATTEMPTS` (6), `CITI_LOGIN_LOCK_SECONDS` (300), `CITI_CACHE_DIR`, plus container-only `CITI_USE_WHITENOISE`, `CITI_SERVE_MEDIA`, `CITI_SEED_ON_START`, `CITI_DB_WAIT_SECONDS`, `PORT`, `GUNICORN_WORKERS`. Details: `docs/demo/VARIABLES_ENTORNO.md`.
 - `DATABASES` priority: `DATABASE_URL` with `postgres://`/`postgresql://` → `POSTGRES_*` when `POSTGRES_HOST` exists → SQLite local. PostgreSQL uses `CONN_MAX_AGE=60`.
 - `/media/` is served by `runserver` only when `DEBUG=True`; with `CITI_SERVE_MEDIA=1` (Docker demo) `config/urls.py` adds an explicit `serve` route. Never enable that in real production.
-- `CITI_USE_WHITENOISE=1` inserts `WhiteNoiseMiddleware` and switches `STORAGES['staticfiles']` to `CompressedStaticFilesStorage`. `collectstatic` writes to `backend/staticfiles/` (gitignored).
+- `CITI_USE_WHITENOISE=1` (default when `IS_PRODUCTION`) inserts `WhiteNoiseMiddleware` and switches `STORAGES['staticfiles']` to `CompressedManifestStaticFilesStorage`. `collectstatic` writes the manifest to `backend/staticfiles/` (gitignored); a missing static reference fails instead of becoming a silent 404.
+- Static asset names are case-sensitive in Linux/Render. The canonical logo/favicon is `backend/static/images/logo_ucc.png` (lowercase); templates must use `{% static 'images/logo_ucc.png' %}` exactly. Never reintroduce `Logo_ucc.png`.
 - Locale `es-co` / `America/Bogota` with `USE_TZ=True` — build datetimes with `timezone.now()`, never naive `datetime`.
 
 ## Security and navigation

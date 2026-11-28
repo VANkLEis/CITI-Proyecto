@@ -121,9 +121,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# WhiteNoise sirve los estáticos desde Gunicorn (imagen Docker). Es opcional
-# para no alterar el runserver local ni la suite de pruebas.
-CITI_USE_WHITENOISE = os.environ.get('CITI_USE_WHITENOISE', '0') == '1'
+# WhiteNoise sirve los estáticos desde Gunicorn (imagen Docker/Render). Se
+# activa por defecto en producción y sigue siendo opcional en local/tests.
+CITI_USE_WHITENOISE = os.environ.get(
+    'CITI_USE_WHITENOISE', '1' if IS_PRODUCTION else '0') == '1'
 if CITI_USE_WHITENOISE:
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
@@ -224,13 +225,12 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 if CITI_USE_WHITENOISE:
-    # CompressedStaticFilesStorage (sin manifest) comprime pero no exige que
-    # cada archivo referenciado exista: evita romper el arranque por un asset
-    # faltante y mantiene el comportamiento tolerante del proyecto.
+    # Manifest + compresión: las plantillas reciben URLs con hash y un asset
+    # faltante falla en collectstatic en vez de producir un 404 silencioso.
     STORAGES = {
         'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
         'staticfiles': {
-            'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
         },
     }
 

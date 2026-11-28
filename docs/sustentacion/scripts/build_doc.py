@@ -27,7 +27,7 @@ from docx_kit import FONT, GRAY, NAVY, TEAL, WHITE, Kit, _field, _shade
 ROOT = Path(__file__).resolve().parents[3]
 BASE = ROOT / "docs" / "sustentacion"
 OUT = BASE / "Documentacion_Arquitectura_CITI_UCC.docx"
-LOGO = ROOT / "backend" / "static" / "images" / "Logo_ucc.png"
+LOGO = ROOT / "backend" / "static" / "images" / "logo_ucc.png"
 
 
 def cover(doc):

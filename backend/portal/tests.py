@@ -8,6 +8,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
+from django.templatetags.static import static
 from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
@@ -1735,7 +1736,7 @@ class BackNavigationTests(TestCase):
     def test_boton_volver_carga_js_y_data_attribute(self):
         self.client.force_login(self.cliente)
         r = self.client.get(reverse('portal:perfil'))
-        self.assertContains(r, 'back-button.js')
+        self.assertContains(r, static('js/back-button.js'))
         self.assertContains(r, 'data-back-button')
 
     def test_no_hay_volver_duplicado_en_detalle(self):

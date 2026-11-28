@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[3]
 BASE = ROOT / "docs" / "sustentacion"
 SRC = BASE / "Guion_Sustentacion_10min.md"
 OUT = BASE / "Guion_Sustentacion_10min.docx"
-LOGO = ROOT / "backend" / "static" / "images" / "Logo_ucc.png"
+LOGO = ROOT / "backend" / "static" / "images" / "logo_ucc.png"
 
 NAVY = RGBColor(0x13, 0x27, 0x40)
 TEAL = RGBColor(0x00, 0xAC, 0xC9)
